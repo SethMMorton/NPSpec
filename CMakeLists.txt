@@ -24,8 +24,7 @@ INCLUDE_DIRECTORIES(${INC})
 ###########################################
 
 # Name of NPSolve library
-SET(NPSOLVESHARED  NPSolve)
-SET(NPSOLVESTATIC sNPSolve)
+SET(NPSOLVE NPSolve)
 
 # Add the headers and source for the NPSolve library
 SET(NPSolve_HEADERS ${INC}/NPSolve.h
@@ -43,5 +42,9 @@ SET(NPSolve_SRC ${SRC}/npsolve.cpp
 )
 
 # Compile NPSolve into a shared and static library
-ADD_LIBRARY(${NPSOLVESHARED} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
-ADD_LIBRARY(${NPSOLVESTATIC} STATIC ${NPSolve_SRC} ${NPSolve_HEADERS})
+ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
+
+# Make a framework on Mac
+IF(APPLE)
+    SET_TARGET_PROPERTIES(${NPSOLVESHARED} PROPERTIES FRAMEWORK TRUE)
+ENDIF(APPLE)
