@@ -1,0 +1,13 @@
+#! /usr/bin/env python
+
+from __future__ import print_function
+import pynpsolve
+
+pynpsolve.initiallize_material_index()
+rel_rad_spheroid = [[0.8, 0.8], [0.2, 0.2]]
+rad = [10.0, 10.0]
+indx = [pynpsolve.material_index("Ag"), pynpsolve.material_index("Au")]
+
+qext, qscat, qabs = pynpsolve.npsolve(2, rad, rel_rad_spheroid, indx, 1.0, False)
+
+print(qext)

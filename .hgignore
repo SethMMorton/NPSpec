@@ -1,3 +1,5 @@
+syntax: glob
+
 # Compiled Object files
 *.slo
 *.lo
