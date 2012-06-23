@@ -41,10 +41,40 @@ SET(NPSolve_SRC ${SRC}/npsolve.cpp
                 ${SRC}/wavelengths.cpp
 )
 
-# Compile NPSolve into a shared and static library
+# Define the library
 ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
+# This header is to be installed with the library
+# This automatically adds this header to the framework
+SET_PROPERTY(SOURCE ${INC}/NPSolve.h PROPERTY PUBLIC_HEADER)
 
-# Make a framework on Mac
+# Make a framework on Mac, otherwise just a shared library
 IF(APPLE)
-    SET_TARGET_PROPERTIES(${NPSOLVESHARED} PROPERTIES FRAMEWORK TRUE)
+
+    # Set the version of the framework
+    SET_TARGET_PROPERTIES(${NPSOLVE}
+        PROPERTIES FRAMEWORK TRUE
+        VERSION v0.1
+    )
+
+    # Install to framework location
+    INSTALL(TARGETS ${NPSOLVE}
+        FRAMEWORK DESTINATION /Library/Frameworks
+    )
+
+ELSE()
+
+    # Determine the install library
+    SET(LIBRARY_INSTALL_DIR lib)
+    IF(EXISTS "${CMAKE_INSTALL_PREFIX}/lib32/" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+        SET(LIBRARY_INSTALL_DIR lib32)
+    ELSEIF(EXISTS "${CMAKE_INSTALL_PREFIX}/lib64/" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+        SET(LIBRARY_INSTALL_DIR lib64)
+    ENDIF()
+
+    # Install library and header
+    INSTALL(TARGETS ${NPSOLVE}
+        LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+        PUBLIC_HEADER DESTINATION include
+    ) 
+
 ENDIF(APPLE)
