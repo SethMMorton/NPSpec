@@ -39,10 +39,9 @@ static PyObject* pynpsolve_npsolve (PyObject *self, PyObject *args) {
     {
         return NULL;
     }
+
     /* Ensure the python objects are numpy arrays */
-    if (PyArray_Check(rad_in)) {printf("POOP\n");}
-    printf("HERE\n");
-    rad = (PyArrayObject*) PyArray_FromObject(rad_in, PyArray_DOUBLE, 1, 1);
+    rad = (PyArrayObject*) PyArray_ContiguousFromAny(rad_in, PyArray_DOUBLE, 1, 1);
     if (rad == NULL)
         return NULL;
     rel_rad = (PyArrayObject*) PyArray_ContiguousFromAny(rel_rad_in, PyArray_DOUBLE, 2, 2);
@@ -115,8 +114,39 @@ static PyMethodDef pynpsolve_funcs[] = {
     { NULL, NULL, 0, NULL }
 };
 
+
 /* The initiallization routine */
 PyMODINIT_FUNC initpynpsolve(void) {
-    (void) Py_InitModule3("pynpsolve", pynpsolve_funcs,
-                   "A python wrapper for the NPSolve C library");
+    PyObject *module = Py_InitModule3("pynpsolve", pynpsolve_funcs,
+                                      "A python wrapper for the NPSolve C library");
+    import_array();
+
+    /* Define some python objects to be in the module */
+    PyObject *a = PyInt_FromLong((long) NLAMBDA);
+    npy_intp dims[1] = { NLAMBDA };
+    PyArrayObject *b = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
+    PyArrayObject *c = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
+    PyArrayObject *d = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
+    PyArrayObject *e = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
+    PyArrayObject *f = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
+    npy_intp dims2[2] = { 3, 3 };
+    PyArrayObject *g = (PyArrayObject*) PyArray_EMPTY(2, dims2, PyArray_DOUBLE, 0);
+
+    /* Add the data to these objects */
+    b->data = (double*) wavelengths;
+    c->data = (double*) CIE_X;
+    d->data = (double*) CIE_Y;
+    e->data = (double*) CIE_Z;
+    f->data = (double*) CIE_D65;
+    g->data = (double (*)[3]) CIE_Mat;
+
+    /* Place these objects in the module namespace */
+    PyObject_SetAttrString(module, "NLAMBDA", a);
+    PyObject_SetAttrString(module, "wavelengths", b);
+    PyObject_SetAttrString(module, "CIE_X", c);
+    PyObject_SetAttrString(module, "CIE_Y", d);
+    PyObject_SetAttrString(module, "CIE_Z", e);
+    PyObject_SetAttrString(module, "CIE_D65", f);
+    PyObject_SetAttrString(module, "CIE_Mat", g);
+
 }
