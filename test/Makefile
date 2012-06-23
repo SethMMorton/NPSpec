@@ -5,19 +5,20 @@ CC=gcc
 INC=-I../include
 CCFLAGS=-fPIC -g -Wall ${INC} -Wstrict-prototypes -fno-strict-aliasing
 CXXFLAGS=-fPIC -g -Wall ${INC} -fno-strict-aliasing
-FCFLAGS=-fPIC -g -Wall -fbacktrace ${INC} -J../extensions
+FCFLAGS=-fPIC -g -Wall ${INC} -J../extensions
 CXXLINK=-shared -Wl,-soname,libNPSolve.so
 
-all: verify ctest ftest pynpsolve.so
+#all: verify ctest ftest pynpsolve.so
+all: ctest pynpsolve.so
 
-ftest: libNPSolve.so npsolvemodule.o
-	${FC} ${FCFLAGS} -L. -lNPSolve -o $@ main.f90 npsolvemodule.o
+#ftest: libNPSolve.so npsolvemodule.o
+#	${FC} ${FCFLAGS} -L. -lNPSolve -o $@ main.f90 npsolvemodule.o
 
 ctest: libNPSolve.so
 	${CC} ${CCFLAGS} -L. -lNPSolve -o $@ main.c
 
-verify: main.cpp quasif.o mief.o libNPSolve.so
-	${CXX} ${CXXFLAGS} -lgfortran -L. -lNPSolve -o $@  main.cpp quasif.o mief.o
+#verify: main.cpp quasif.o mief.o libNPSolve.so
+#	${CXX} ${CXXFLAGS} -lgfortran -L. -lNPSolve -o $@  main.cpp quasif.o mief.o
 
 pynpsolve.so: pyNPSolve.o
 	${CC} ${CCFLAGS} -L. -lNPSolve -shared -Wl,-O1 -Wl,-Bsymbolic-functions -o $@ $^
@@ -28,8 +29,8 @@ pyNPSolve.o: ../extensions/pyNPSolve.c libNPSolve.so
 libNPSolve.so: quasic.o miec.o npsolve.o experimental_dielectrics.o wavelengths.o drude_parameters.o standard_color_matching.o material_index.o
 	${CXX} ${CXXFLAGS} ${CXXLINK} -o $@ $^
 
-npsolvemodule.o: ../extensions/NPSolveModule.f90
-	${FC} ${FCFLAGS} -c $< -o $@
+#npsolvemodule.o: ../extensions/NPSolveModule.f90
+#	${FC} ${FCFLAGS} -c $< -o $@
 
 npsolve.o: ../src/npsolve.cpp miec.o quasic.o experimental_dielectrics.o wavelengths.o drude_parameters.o
 	${CXX} ${CXXFLAGS} -c $< -o $@
@@ -55,18 +56,18 @@ material_index.o: ../src/material_index.cpp
 drude_parameters.o: ../src/drude_parameters.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@
 
-mief.o: mie.f90
-	${FC} ${FCFLAGS} -c $< -o $@
+#mief.o: mie.f90
+#	${FC} ${FCFLAGS} -c $< -o $@
 
-quasif.o: quasi.f90
-	${FC} ${FCFLAGS} -c $< -o $@
+#quasif.o: quasi.f90
+#	${FC} ${FCFLAGS} -c $< -o $@
 
 test:
 	LD_LIBRARY_PATH=.
-	./verify
+	#./verify
 	./ctest
-	./ftest
-	#./ptest
+	#./ftest
+	./ptest
 
 clean:
 	rm -rf *.o *.so pyNPSolve.c setup.py verify ctest ftest build/
