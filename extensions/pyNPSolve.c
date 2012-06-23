@@ -8,13 +8,13 @@
 typedef int BOOL;
 
 /* Wrapper for initiallize_material_index */
-static PyObject* pynpsolve_initiallize_material_index (PyObject *self) {
+static PyObject* npsolve_initiallize_material_index (PyObject *self) {
     initiallize_material_index();
     Py_RETURN_NONE;
 }
 
 /* Wrapper for material_index */
-static PyObject* pynpsolve_material_index (PyObject *self, PyObject *arg) {
+static PyObject* npsolve_material_index (PyObject *self, PyObject *arg) {
 
     /* Convert to a C string */
     char* material;
@@ -25,7 +25,7 @@ static PyObject* pynpsolve_material_index (PyObject *self, PyObject *arg) {
 }
 
 /* Wrapper for the actual npsolve routine */
-static PyObject* pynpsolve_npsolve (PyObject *self, PyObject *args) {
+static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
     int nlayers;
     double mrefrac;
     BOOL size_correct;
@@ -103,21 +103,21 @@ static PyObject* pynpsolve_npsolve (PyObject *self, PyObject *args) {
 }
 
 /* An array of the methods contained within */
-static PyMethodDef pynpsolve_funcs[] = {
+static PyMethodDef npsolve_funcs[] = {
     { "initiallize_material_index",
-      (PyCFunction) pynpsolve_initiallize_material_index,
+      (PyCFunction) npsolve_initiallize_material_index,
       METH_NOARGS, "Initiallizes the map used to locate materials" },
-    { "material_index", (PyCFunction) pynpsolve_material_index,
+    { "material_index", (PyCFunction) npsolve_material_index,
       METH_VARARGS, "The corresponding index of a given material is returned" },
-    { "npsolve", (PyCFunction) pynpsolve_npsolve,
+    { "npsolve", (PyCFunction) npsolve_npsolve,
       METH_VARARGS, "Given a nanoparticle description, its spectrum will be calculated" },
     { NULL, NULL, 0, NULL }
 };
 
 
 /* The initiallization routine */
-PyMODINIT_FUNC initpynpsolve(void) {
-    PyObject *module = Py_InitModule3("pynpsolve", pynpsolve_funcs,
+PyMODINIT_FUNC initnpsolve(void) {
+    PyObject *module = Py_InitModule3("npsolve", npsolve_funcs,
                                       "A python wrapper for the NPSolve C library");
     import_array();
 
