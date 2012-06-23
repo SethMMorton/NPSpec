@@ -24,7 +24,8 @@ INCLUDE_DIRECTORIES(${INC})
 ###########################################
 
 # Name of NPSolve library
-SET(NPSOLVE NPSolve)
+SET(NPSOLVESHARED  NPSolve)
+SET(NPSOLVESTATIC sNPSolve)
 
 # Add the headers and source for the NPSolve library
 SET(NPSolve_HEADERS ${INC}/NPSolve.h
@@ -41,7 +42,6 @@ SET(NPSolve_SRC ${SRC}/npsolve.cpp
                 ${SRC}/wavelengths.cpp
 )
 
-# Compile NPSolve into a library
-ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
-#SET_TARGET_PROPERTIES (${NPSOLVE} PROPERTIES
-#                       COMPILE_FLAGS "${C99_C_FLAGS}")
+# Compile NPSolve into a shared and static library
+ADD_LIBRARY(${NPSOLVESHARED} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
+ADD_LIBRARY(${NPSOLVESTATIC} STATIC ${NPSolve_SRC} ${NPSolve_HEADERS})
