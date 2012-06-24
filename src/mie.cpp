@@ -17,8 +17,10 @@ using namespace std;
 
 #define MAXNUM 1000
 #define MAXLAYERS 10
-#define SQR(x) ((x) * (x))
 #define I complex<double>(0.0, 1.0)
+
+/* A square function */
+inline double sqr(double x) { return x*x; }
 
 /**************************************
  * Declarations of supporting functions
@@ -409,7 +411,7 @@ void qq1 (double a, int num1, double *extinct, double *scat,
           complex<double> ra[], complex<double> rb[])
 {
 
-    double b = 2.0 * SQR(a);
+    double b = 2.0 * sqr(a);
     double c = 0.0;
     double d = 0.0;
     complex<double> s = complex<double>(0.0, 0.0);

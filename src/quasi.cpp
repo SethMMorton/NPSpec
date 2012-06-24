@@ -15,8 +15,10 @@
 
 #define MAXLAYERS 2
 #define PI 3.14159265358979323846
-#define SQR(x) ((x) * (x))
-#define QUAD(x) ((x) * (x) * (x) * (x))
+
+/* Square qnd quad functions */
+inline double sqr(double x) { return x*x; }
+inline double quad(double x) { return x*x*x*x; }
 
 using namespace std;
 
@@ -100,7 +102,7 @@ int quasi (int nlayers,              /* Number of layers */
             double e = 1.0 - ( radii[0] / radii[1] );
             double g = sqrt(( 1.0 - e ) / e);
             gf[1][ilayer] = ( g / ( 2.0 * e ) ) * ( ( PI / 2.0 ) - atan(g) )
-                          - ( SQR(g) / 2.0 );
+                          - ( sqr(g) / 2.0 );
 
             /* Set short axis.  Total must be 1 */
             gf[0][ilayer] = 1.0 - 2 * gf[1][ilayer];
@@ -146,7 +148,7 @@ int quasi (int nlayers,              /* Number of layers */
 
     *absorb  = 4.0 * size_param * imag(die[0] + die[1] + die[1]) / 3.0;
     *scat    = abs(( die[0] + die[1] + die[1] ) / 3.0);
-    *scat    = ( 8.0 / 3.0 ) * QUAD(size_param) * SQR(*scat);
+    *scat    = ( 8.0 / 3.0 ) * quad(size_param) * sqr(*scat);
     *extinct = *absorb + *scat;
 
     return 0;
