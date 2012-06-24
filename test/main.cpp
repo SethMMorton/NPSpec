@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     // Main solver test
     int indx[NLAYERS] = { material_index((char*) "Ag"), material_index((char*) "Au") };
     double qext[NLAMBDA], qscat[NLAMBDA], qabs[NLAMBDA];
-    res = npsolve(NLAYERS, rad, rel_rad_spheroid, indx, MEDIUMDIE, false, qext, qscat, qabs);
+    res = npsolve(NLAYERS, rad, rel_rad_spheroid, indx, MEDIUMDIE, false, 1.0, 1.0, Efficiency, qext, qscat, qabs);
     printf("\n\nTHIS IS VERIFY\n\n");
     for (int i = 0; i < 20; i++) {
         printf("NPSolve: Ext %.16f, Sca %.16f, Abs %.16f\n", qext[i], qscat[i], qabs[i]);
