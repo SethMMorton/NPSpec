@@ -15,6 +15,9 @@ typedef int bool;
 #endif
 #endif
 
+/* Enum for spectra type */
+enum { Efficiency, CrossSection, Molar, Absorbance };
+
 /* The wavelengths to calculate at as defined in wavelengths.c */
 extern const double wavelengths[];
 
@@ -36,6 +39,9 @@ int npsolve (int nlayers,
              int indx[],
              double mrefrac,
              bool size_correct,
+             double path_length,
+             double concentration,
+             int spectra_type,
              double extinct[],
              double scat[],
              double absorb[]

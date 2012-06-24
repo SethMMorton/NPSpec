@@ -26,16 +26,17 @@ static PyObject* npsolve_material_index (PyObject *self, PyObject *arg) {
 
 /* Wrapper for the actual npsolve routine */
 static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
-    int nlayers;
-    double mrefrac;
+    int nlayers, spectra_type;
+    double mrefrac, path_length, concentration;
     BOOL size_correct;
     PyObject *rad_in, *rel_rad_in, *indx_in;
     PyArrayObject *rad, *rel_rad, *indx;
 
     /* Read in the input parameters */
-    if (!PyArg_ParseTuple(args, "iOOOdi",
+    if (!PyArg_ParseTuple(args, "iOOOdiddo",
                           &nlayers, &rad_in, &rel_rad_in,
-                          &indx_in, &mrefrac, &size_correct))
+                          &indx_in, &mrefrac, &size_correct,
+                          &path_length, &concentration, &spectra_type))
     {
         return NULL;
     }
@@ -80,6 +81,7 @@ static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
     /* Call the actual routine */
     int retcode = npsolve(nlayers, (double*) rad->data, (double (*)[2]) rel_rad->data,
                          (int *) indx->data, mrefrac, size_correct,
+                         path_length, concentration, spectra_type,
                          (double*) qext->data, (double*) qscat->data,
                          (double*) qabs->data);
 
@@ -140,6 +142,12 @@ PyMODINIT_FUNC initnpsolve(void) {
     f->data = (double*) CIE_D65;
     g->data = (double (*)[3]) CIE_Mat;
 
+    /* Some enums */
+    PyObject *h = PyInt_FromLong((long) Efficiency);
+    PyObject *i = PyInt_FromLong((long) CrossSection);
+    PyObject *j = PyInt_FromLong((long) Molar);
+    PyObject *k = PyInt_FromLong((long) Absorbance);
+
     /* Place these objects in the module namespace */
     PyObject_SetAttrString(module, "NLAMBDA", a);
     PyObject_SetAttrString(module, "wavelengths", b);
@@ -148,5 +156,9 @@ PyMODINIT_FUNC initnpsolve(void) {
     PyObject_SetAttrString(module, "CIE_Z", e);
     PyObject_SetAttrString(module, "CIE_D65", f);
     PyObject_SetAttrString(module, "CIE_Mat", g);
+    PyObject_SetAttrString(module, "Efficiency", h);
+    PyObject_SetAttrString(module, "CrossSection", i);
+    PyObject_SetAttrString(module, "Molar", j);
+    PyObject_SetAttrString(module, "Absorbance", k);
 
 }

@@ -31,15 +31,19 @@
 #define MAXLAYERS 10
 #define PI 3.14159265358979323846
 #define HBAR 6.5821189916e-16
-#define NM2EV(x) (1239.0 / x)
-#define MPERS2EV(x, r) (x * HBAR / ( r * 1.0E-9 ))
-#define SQR(x) ((x) * (x))
-#define I complex<double>(0.0, 1.0)
+#define AVOGADRO 6.0221412927e23
 
 using namespace std;
 
-/* Drude function macro */
-#define DRUDE(x, p, g, s) (p*p / ( x * ( x + I * ( g + s ) ) ))
+/* Conversions */
+inline double sqr(double x) { return x*x; }
+inline double NM2EV(double x) { return 1239.0 / x; }
+inline double MPERS2EV(double x, double r) { return x * HBAR / ( r * 1.0E-9 ); }
+
+/* Drude inline function */
+inline complex<double> drude (double om, double plasmon, double gamma, double sizecorr) {
+    return sqr(plasmon) / ( om * ( om + complex<double>(0.0, 1.0) * ( gamma + sizecorr ) ) );
+}
 
 int npsolve (int nlayers,         /* Number of layers */
              double rad[2],       /* Radius of object */
@@ -47,6 +51,9 @@ int npsolve (int nlayers,         /* Number of layers */
              int indx[],          /* Material index of layers */
              double mrefrac,      /* Refractive index of medium */
              bool size_correct,   /* Use size correction? */
+             double path_length,  /* Path length for absorbance */
+             double concentration,/* The concentration of solution */
+             int spectra_type,    /* What spectra to return */
              double extinct[],    /* Extinction */
              double scat[],       /* Scattering */
              double absorb[]      /* Absorption */
@@ -104,8 +111,8 @@ int npsolve (int nlayers,         /* Number of layers */
 
                 /* Use the drude model to size-correct experimental data */
                 dielec[j] = dielec[j]
-                          - DRUDE(om, pf, gm, 0.0)
-                          + DRUDE(om, pf, gm, MPERS2EV(sc, sphere_rad));
+                          - drude(om, pf, gm, 0.0)
+                          + drude(om, pf, gm, MPERS2EV(sc, sphere_rad));
 
             }
 
@@ -132,18 +139,28 @@ int npsolve (int nlayers,         /* Number of layers */
             if (retval == 1)
                 return 1; /* Product of size param & ref index too large */
         } else {
-            int retval = quasi(nlayers, dielec, SQR(mrefrac), rel_rad,
+            int retval = quasi(nlayers, dielec, sqr(mrefrac), rel_rad,
                                rad, size_param,
                                &extinct[i], &scat[i], &absorb[i]);
             if (retval == 1)
                 return 2; /* Too many layers for quasistatic approx */
         }
-        /* Calculate cross sections */
-        //if (cross_section) {
-        //    extinct[i] *= PI * SQR(sphere_rad);
-        //    scat[i]    *= PI * SQR(sphere_rad);
-        //    absorb[i]  *= PI * SQR(sphere_rad);
-       // }
+        /* Change the spectra type accordingly */
+        if (spectra_type != Efficiency) {
+            extinct[i] *= PI * sqr(sphere_rad);
+            scat[i]    *= PI * sqr(sphere_rad);
+            absorb[i]  *= PI * sqr(sphere_rad);
+        }
+        if (spectra_type == Molar || spectra_type == Absorbance) {
+            extinct[i] *= 1E-14 * AVOGADRO / ( 1000 * log(10) );
+            scat[i]    *= 1E-14 * AVOGADRO / ( 1000 * log(10) );
+            absorb[i]  *= 1E-14 * AVOGADRO / ( 1000 * log(10) );
+        }
+        if (spectra_type == Absorbance) {
+            extinct[i] *= path_length * concentration;
+            scat[i]    *= path_length * concentration;
+            absorb[i]  *= path_length * concentration;
+        }
 
     }
 

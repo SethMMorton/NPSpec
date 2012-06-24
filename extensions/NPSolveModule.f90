@@ -22,16 +22,20 @@ Module NPSolveModule
     Public make_C_string
 
 !   Here is the wavelength and color matching arrays from the NPSolve header
-    Integer(C_INT), Parameter :: NLAMBDA = 800
-    Real(C_DOUBLE), Bind(C, name="wavelengths") :: wavelengths(NLAMBDA)
-    Real(C_DOUBLE), Bind(C, name="CIE_X")       :: CIE_X(NLAMBDA)
-    Real(C_DOUBLE), Bind(C, name="CIE_Y")       :: CIE_Y(NLAMBDA)
-    Real(C_DOUBLE), Bind(C, name="CIE_Z")       :: CIE_Z(NLAMBDA)
-    Real(C_DOUBLE), Bind(C, name="CIE_D65")     :: CIE_D65(NLAMBDA)
+    Integer(C_INT), Parameter                    :: NLAMBDA = 800
+    Integer(C_INT), Bind(C, name="Efficiency")   :: Efficiency
+    Integer(C_INT), Bind(C, name="CrossSection") :: CrossSection
+    Integer(C_INT), Bind(C, name="Molar")        :: Molar
+    Integer(C_INT), Bind(C, name="Absorbance")   :: Absorbance
+    Real(C_DOUBLE), Bind(C, name="wavelengths")  :: wavelengths(NLAMBDA)
+    Real(C_DOUBLE), Bind(C, name="CIE_X")        :: CIE_X(NLAMBDA)
+    Real(C_DOUBLE), Bind(C, name="CIE_Y")        :: CIE_Y(NLAMBDA)
+    Real(C_DOUBLE), Bind(C, name="CIE_Z")        :: CIE_Z(NLAMBDA)
+    Real(C_DOUBLE), Bind(C, name="CIE_D65")      :: CIE_D65(NLAMBDA)
 
 !   Because of the difference in storage order between Fortran and C,
 !   it is easier to simply redefine this matrix
-    Real(C_DOUBLE), Parameter                   :: CIE_Mat(3,3) =       &
+    Real(C_DOUBLE), Parameter                    :: CIE_Mat(3,3) =      &
                                 RESHAPE((/ 3.2410, -0.9692,  0.0556,    &
                                           -1.5374,  1.8760, -0.2040,    &
                                           -0.4986,  0.0416,  1.0570 /), &
@@ -60,6 +64,9 @@ Module NPSolveModule
             Integer(C_INT),  Intent(In)         :: indx(*)
             Real(C_DOUBLE),  Intent(In), Value  :: mrefrac
             Logical(C_BOOL), Intent(In), Value  :: size_correct
+            Real(C_DOUBLE),  Intent(In), Value  :: path_length
+            Real(C_DOUBLE),  Intent(In), Value  :: concentration
+            Integer(C_INT),  Intent(In), Value  :: spectra_type
             Real(C_DOUBLE),  Intent(Out)        :: qext(*)
             Real(C_DOUBLE),  Intent(Out)        :: qscat(*)
             Real(C_DOUBLE),  Intent(Out)        :: qabs(*)
