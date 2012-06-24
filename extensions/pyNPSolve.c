@@ -150,12 +150,12 @@ PyMODINIT_FUNC initnpsolve(void) {
 
     /* Place these objects in the module namespace */
     PyObject_SetAttrString(module, "NLAMBDA", a);
-    PyObject_SetAttrString(module, "wavelengths", b);
-    PyObject_SetAttrString(module, "CIE_X", c);
-    PyObject_SetAttrString(module, "CIE_Y", d);
-    PyObject_SetAttrString(module, "CIE_Z", e);
-    PyObject_SetAttrString(module, "CIE_D65", f);
-    PyObject_SetAttrString(module, "CIE_Mat", g);
+    PyObject_SetAttrString(module, "wavelengths", (PyObject*) b);
+    PyObject_SetAttrString(module, "CIE_X", (PyObject*) c);
+    PyObject_SetAttrString(module, "CIE_Y", (PyObject*) d);
+    PyObject_SetAttrString(module, "CIE_Z", (PyObject*) e);
+    PyObject_SetAttrString(module, "CIE_D65", (PyObject*) f);
+    PyObject_SetAttrString(module, "CIE_Mat", (PyObject*) g);
     PyObject_SetAttrString(module, "Efficiency", h);
     PyObject_SetAttrString(module, "CrossSection", i);
     PyObject_SetAttrString(module, "Molar", j);
