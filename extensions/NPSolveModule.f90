@@ -5,11 +5,15 @@ Module NPSolveModule
 !   Fortran, plus a helper function to make a Fortran string a C-string
 !   ***********************************************************************
 
-    use iso_c_binding, ONLY : C_DOUBLE, C_INT
+    use, intrinsic :: iso_c_binding
 
     Private
 
     Public NLAMBDA
+    Public Efficiency
+    Public CrossSection
+    Public Molar
+    Public Absorbance
     Public wavelengths
     Public CIE_X
     Public CIE_Y
@@ -20,6 +24,11 @@ Module NPSolveModule
     Public material_index
     Public npsolve
     Public make_C_string
+
+!   Bind the C enum
+    !Enum, Bind(C)
+    !    Enumerator :: Efficiency, CrossSection, Molar, Absorbance
+    !End Enum
 
 !   Here is the wavelength and color matching arrays from the NPSolve header
     Integer(C_INT), Parameter                    :: NLAMBDA = 800
@@ -49,15 +58,16 @@ Module NPSolveModule
 
     Interface
         Integer(C_INT) Function material_index (material)  Bind (C)
-            use iso_c_binding, ONLY : C_CHAR, C_INT
+            use, intrinsic :: iso_c_binding
             Character(Kind=C_CHAR), Dimension(*), Intent(In) :: material
         End Function material_index
     End Interface
 
     Interface
-        Subroutine npsolve (nlayers, rad, rel_rad, indx, mrefrac, &
-                            size_correct, qext, qscat, qabs) Bind (C)
-            use iso_c_binding, ONLY : C_INT, C_BOOL, C_DOUBLE
+        Subroutine npsolve (nlayers, rad, rel_rad, indx, mrefrac,     &
+                            size_correct, path_length, concentration, &
+                            spectra_type, qext, qscat, qabs) Bind (C)
+            use, intrinsic :: iso_c_binding
             Integer(C_INT),  Intent(In), Value  :: nlayers
             Real(C_DOUBLE),  Intent(In)         :: rad(*)
             Real(C_DOUBLE),  Intent(In)         :: rel_rad(nlayers,*)
@@ -76,7 +86,7 @@ Module NPSolveModule
 Contains
 
     Subroutine make_C_string(stringin, stringout)
-        use iso_c_binding, ONLY : C_CHAR, C_NULL_CHAR
+        use, intrinsic :: iso_c_binding
         Character(*),                  Intent(In)  :: stringin
         Character(Kind=C_CHAR, Len=*), Intent(Out) :: stringout
 !       NULL terminate the string
