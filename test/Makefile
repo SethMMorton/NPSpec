@@ -51,8 +51,8 @@ drude_parameters.o: ../src/drude_parameters.cpp
 
 c: ctest
 
-ctest: libNPSolve.a
-	${CC} ${CCFLAGS} -L. -lNPSolve -o $@ main.c
+ctest: main.c libNPSolve.a
+	${CC} ${CCFLAGS} -lstdc++ -o $@ $^
 
 ##############
 # FORTRAN TEST
@@ -60,8 +60,8 @@ ctest: libNPSolve.a
 
 fortran: ftest
 
-ftest: libNPSolve.a npsolvemodule.o
-	${FC} ${FCFLAGS} -L. -lNPSolve -o $@ main.f90 npsolvemodule.o
+ftest: main.f90 libNPSolve.a npsolvemodule.o
+	${FC} ${FCFLAGS} -o $@ $^
 
 npsolvemodule.o: ../extensions/NPSolveModule.f90
 	${FC} ${FCFLAGS} -c $< -o $@
@@ -71,7 +71,7 @@ npsolvemodule.o: ../extensions/NPSolveModule.f90
 #############
 
 verify: main.cpp quasif.o mief.o libNPSolve.a
-	${CXX} ${CXXFLAGS} -lgfortran -L. -lNPSolve -o $@  main.cpp quasif.o mief.o
+	${CXX} ${CXXFLAGS} -lgfortran  -o $@ $^
 
 mief.o: mie.f90
 	${FC} ${FCFLAGS} -c $< -o $@
@@ -83,24 +83,24 @@ quasif.o: quasi.f90
 # PYTHON TEST
 #############
 
-npsolve.so: pyNPSolve.o
-	${CC} ${CCFLAGS} -L. -lNPSolve -shared -Wl,-O1 -Wl,-Bsymbolic-functions -o $@ $^
+npsolve.so: pyNPSolve.o libNPSolve.a
+	${CC} ${CCFLAGS} -shared -Wl,-O1 -Wl,-Bsymbolic-functions -o $@ $^
 
-pyNPSolve.o: ../extensions/pyNPSolve.c libNPSolve.a
+pyNPSolve.o: ../extensions/pyNPSolve.c
 	${CC} ${CCFLAGS} -I/usr/include/python2.6 -c $< -o $@
-
-test:
-	[ -e verify ] && /verify
-	[ -e ctest ] && ./ctest
-	[ -e ftest ] && ./ftest
-	[ -e npsolve.so ] &&./ptest
 
 ########
 # EXTRAS
 ########
 
+test:
+	if test -e verify; then ./verify; fi
+	if test -e ctest; then ./ctest; fi
+	if test -e ftest; then ./ftest; fi
+	if test -e npsolve.so; then ./ptest; fi
+
 clean:
-	rm -rf *.o *.so *.a pyNPSolve.c setup.py verify ctest ftest build/
+	rm -rf *.o *.so *.a pyNPSolve.c setup.py verify ctest ftest build/ *.dSYM/
 
 #  Make sure we don't remove this by accident if interrupted at the wrong time.
 .PRECIOUS: Makefile
