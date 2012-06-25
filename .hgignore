@@ -17,6 +17,11 @@ syntax: glob
 # Fortran modules
 *.mod
 
+# Testing executables
+ctest
+ftest
+verify
+
 # CMake
 CMakeCache.txt
 cmake_install.cmake
