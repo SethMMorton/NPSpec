@@ -61,7 +61,7 @@ ctest: main.c libNPSolve.a
 fortran: ftest
 
 ftest: main.f90 libNPSolve.a npsolvemodule.o
-	${FC} ${FCFLAGS} -o $@ $^
+	${FC} ${FCFLAGS} -lstdc++ -o $@ $^
 
 npsolvemodule.o: ../extensions/NPSolveModule.f90
 	${FC} ${FCFLAGS} -c $< -o $@
@@ -83,8 +83,10 @@ quasif.o: quasi.f90
 # PYTHON TEST
 #############
 
+python: npsolve.so
+
 npsolve.so: pyNPSolve.o libNPSolve.a
-	${CC} ${CCFLAGS} -shared -Wl,-O1 -Wl,-Bsymbolic-functions -o $@ $^
+	${CC} ${CCFLAGS} -lstdc++ -shared -Wl,-O1 -Wl,-Bsymbolic-functions -o $@ $^
 
 pyNPSolve.o: ../extensions/pyNPSolve.c
 	${CC} ${CCFLAGS} -I/usr/include/python2.6 -c $< -o $@

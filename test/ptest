@@ -1,13 +1,22 @@
 #! /usr/bin/env python
 
 from __future__ import print_function
-import pynpsolve
+from npsolve import *
 
-pynpsolve.initiallize_material_index()
+initiallize_material_index()
 rel_rad_spheroid = [[0.8, 0.8], [0.2, 0.2]]
 rad = [10.0, 10.0]
-indx = [pynpsolve.material_index("Ag"), pynpsolve.material_index("Au")]
+indx = [material_index("Ag"), material_index("Au")]
 
-qext, qscat, qabs = pynpsolve.npsolve(2, rad, rel_rad_spheroid, indx, 1.0, False)
+qext, qscat, qabs = npsolve(2, rad, rel_rad_spheroid, indx, 1.0, False, 1.0, 1.0, Efficiency)
 
-print(qext)
+print()
+print()
+print('THIS IS PTEST')
+print()
+
+f = 'NPSOLVE: Ext {0:.16f}, Sca {1:.16f}, Abs {2:.16}'
+for i, (e, s, a) in enumerate(zip(qext, qscat, qabs)):
+    print(f.format(e, s, a))
+    if not i < 20:
+        break
