@@ -33,7 +33,7 @@ static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
     PyArrayObject *rad, *rel_rad, *indx;
 
     /* Read in the input parameters */
-    if (!PyArg_ParseTuple(args, "iOOOdiddo",
+    if (!PyArg_ParseTuple(args, "iOOOdiddi",
                           &nlayers, &rad_in, &rel_rad_in,
                           &indx_in, &mrefrac, &size_correct,
                           &path_length, &concentration, &spectra_type))
@@ -41,14 +41,15 @@ static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
         return NULL;
     }
 
+    
     /* Ensure the python objects are numpy arrays */
-    rad = (PyArrayObject*) PyArray_ContiguousFromAny(rad_in, PyArray_DOUBLE, 1, 1);
+    rad = (PyArrayObject*) PyArray_ContiguousFromAny(rad_in, NPY_DOUBLE, 1, 1);
     if (rad == NULL)
         return NULL;
-    rel_rad = (PyArrayObject*) PyArray_ContiguousFromAny(rel_rad_in, PyArray_DOUBLE, 2, 2);
+    rel_rad = (PyArrayObject*) PyArray_ContiguousFromAny(rel_rad_in, NPY_DOUBLE, 2, 2);
     if (rel_rad == NULL)
         return NULL;
-    indx = (PyArrayObject*) PyArray_ContiguousFromAny(indx_in, PyArray_LONG, 1, 1);
+    indx = (PyArrayObject*) PyArray_ContiguousFromAny(indx_in, NPY_INT, 1, 1);
     if (indx == NULL)
         return NULL;
 
@@ -74,9 +75,9 @@ static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
     /* Prep the result data */
     npy_intp dims[1] = { 800 };
     PyArrayObject *qext, *qscat, *qabs;
-    qext  = (PyArrayObject *) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
-    qscat = (PyArrayObject *) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
-    qabs  = (PyArrayObject *) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
+    qext  = (PyArrayObject *) PyArray_EMPTY(1, dims, NPY_DOUBLE, 0);
+    qscat = (PyArrayObject *) PyArray_EMPTY(1, dims, NPY_DOUBLE, 0);
+    qabs  = (PyArrayObject *) PyArray_EMPTY(1, dims, NPY_DOUBLE, 0);
 
     /* Call the actual routine */
     int retcode = npsolve(nlayers, (double*) rad->data, (double (*)[2]) rel_rad->data,
@@ -126,15 +127,16 @@ PyMODINIT_FUNC initnpsolve(void) {
     /* Define some python objects to be in the module */
     PyObject *a = PyInt_FromLong((long) NLAMBDA);
     npy_intp dims[1] = { NLAMBDA };
-    PyArrayObject *b = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
-    PyArrayObject *c = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
-    PyArrayObject *d = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
-    PyArrayObject *e = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
-    PyArrayObject *f = (PyArrayObject*) PyArray_EMPTY(1, dims, PyArray_DOUBLE, 0);
+    PyArrayObject *b = (PyArrayObject*) PyArray_EMPTY(1, dims, NPY_DOUBLE, 0);
+    PyArrayObject *c = (PyArrayObject*) PyArray_EMPTY(1, dims, NPY_DOUBLE, 0);
+    PyArrayObject *d = (PyArrayObject*) PyArray_EMPTY(1, dims, NPY_DOUBLE, 0);
+    PyArrayObject *e = (PyArrayObject*) PyArray_EMPTY(1, dims, NPY_DOUBLE, 0);
+    PyArrayObject *f = (PyArrayObject*) PyArray_EMPTY(1, dims, NPY_DOUBLE, 0);
     npy_intp dims2[2] = { 3, 3 };
-    PyArrayObject *g = (PyArrayObject*) PyArray_EMPTY(2, dims2, PyArray_DOUBLE, 0);
+    PyArrayObject *g = (PyArrayObject*) PyArray_EMPTY(2, dims2, NPY_DOUBLE, 0);
 
-    /* Add the data to these objects */
+    /* Add the data to these objects.
+       Ignore the warnings about incompatible pointer type */
     b->data = (double*) wavelengths;
     c->data = (double*) CIE_X;
     d->data = (double*) CIE_Y;
