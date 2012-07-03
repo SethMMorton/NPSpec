@@ -1,8 +1,12 @@
 #! /usr/bin/env python
 
+# In case setuptools is not installed
+import ez_setup
+ez_setup.use_setuptools()
+
 from os.path import join
 from glob import glob
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 from numpy import get_include
 
 # Create a list of all the source files
