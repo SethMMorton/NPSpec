@@ -10,7 +10,7 @@ files = ('CMakeCache.txt', 'cmake_install.cmake', 'install_manifest.txt',
 dirs  = ('CMakeFiles', 'modules', 'lib', 'build', 'dist', 'NPSolve.framework',)
 
 # Removes the cmake files
-for f in files+tuple(glob('libNPSolve.*')):
+for f in files+tuple(glob('libNPSolve.*')+glob('*.pyc')):
     try:
         remove(f)
     except OSError:
