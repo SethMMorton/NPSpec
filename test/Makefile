@@ -63,7 +63,7 @@ fortran: ftest
 ftest: main.f90 libNPSolve.a npsolvemodule.o
 	${FC} ${FCFLAGS} -lstdc++ -o $@ $^
 
-npsolvemodule.o: ../NPSolveModule.f90
+npsolvemodule.o: ../include/NPSolveModule.f90
 	${FC} ${FCFLAGS} -c $< -o $@
 
 #############
