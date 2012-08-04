@@ -1,0 +1,4 @@
+include pyNPSolve.c libNPSolve.a
+include README
+include *.py
+include include/NPSolve.h

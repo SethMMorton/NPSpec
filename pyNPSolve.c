@@ -28,14 +28,14 @@ static PyObject* npsolve_material_index (PyObject *self, PyObject *arg) {
 static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
     int nlayers, spectra_type;
     double mrefrac, path_length, concentration;
-    BOOL size_correct;
+    BOOL size_correct, coarse;
     PyObject *rad_in, *rel_rad_in, *indx_in;
     PyArrayObject *rad, *rel_rad, *indx;
 
     /* Read in the input parameters */
-    if (!PyArg_ParseTuple(args, "iOOOdiddi",
+    if (!PyArg_ParseTuple(args, "iOOOdiiddi",
                           &nlayers, &rad_in, &rel_rad_in,
-                          &indx_in, &mrefrac, &size_correct,
+                          &indx_in, &mrefrac, &size_correct, &coarse,
                           &path_length, &concentration, &spectra_type))
     {
         return NULL;
@@ -54,9 +54,9 @@ static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
         return NULL;
 
     /* Verify that the size of rad, rel_rad, and indx is correct */
-    if (rad->nd != 1 || rad->dimensions[0] != nlayers) {
+    if (rad->nd != 1 || rad->dimensions[0] != 2) {
         PyErr_SetString(PyExc_ValueError, 
-                        "rad must be one-dimensional of length nlayers");
+                        "rad must be one-dimensional of length 2");
         return NULL;
     }
     if (rel_rad->nd != 2 || 
@@ -81,7 +81,7 @@ static PyObject* npsolve_npsolve (PyObject *self, PyObject *args) {
 
     /* Call the actual routine */
     int retcode = npsolve(nlayers, (double*) rad->data, (double (*)[2]) rel_rad->data,
-                         (int *) indx->data, mrefrac, size_correct,
+                         (int *) indx->data, mrefrac, size_correct, coarse,
                          path_length, concentration, spectra_type,
                          (double*) qext->data, (double*) qscat->data,
                          (double*) qabs->data);
@@ -135,14 +135,13 @@ PyMODINIT_FUNC initnpsolve(void) {
     npy_intp dims2[2] = { 3, 3 };
     PyArrayObject *g = (PyArrayObject*) PyArray_EMPTY(2, dims2, NPY_DOUBLE, 0);
 
-    /* Add the data to these objects.
-       Ignore the warnings about incompatible pointer type */
-    b->data = (double*) wavelengths;
-    c->data = (double*) CIE_X;
-    d->data = (double*) CIE_Y;
-    e->data = (double*) CIE_Z;
-    f->data = (double*) CIE_D65;
-    g->data = (double (*)[3]) CIE_Mat;
+    /* Add the data to these objects. */
+    b->data = (char*) wavelengths;
+    c->data = (char*) CIE_X;
+    d->data = (char*) CIE_Y;
+    e->data = (char*) CIE_Z;
+    f->data = (char*) CIE_D65;
+    g->data = (char (*)[3]) CIE_Mat;
 
     /* Some enums */
     PyObject *h = PyInt_FromLong((long) Efficiency);
