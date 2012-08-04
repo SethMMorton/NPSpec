@@ -8,34 +8,29 @@ PROJECT(NPSolve CXX)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-# Choose the library type
+# Default to static library
+OPTION(STATIC    "Compile a static library" OFF)
+OPTION(SHARED    "Compile a shared library" OFF)
+OPTION(FRAMEWORK "Compile a library framework (Mac OS X only)" OFF)
+
+# Choose the library type.
 IF(STATIC AND SHARED)
-    MESSAGE(FATAL "Cannot define both STATIC and SHARED")
+    MESSAGE(FATAL "Cannot compile both STATIC and SHARED")
 ELSEIF(STATIC AND FRAMEWORK)
-    MESSAGE(FATAL "Cannot define both STATIC and FRAMEWORK")
-ELSEIF(FRAMEWORK AND SHARED)
-    MESSAGE(FATAL "Cannot define both FRAMEWORK and SHARED")
-ELSEIF(STATIC)
-    SET(STATIC 1 CACHE BOOL "Make static library" FORCE)
-    SET(SHARED 0 CACHE BOOL "Make shared library" FORCE)
-    SET(FRAMEWORK 0 CACHE BOOL "Make framework" FORCE)
-ELSEIF(SHARED)
-    SET(SHARED 1 CACHE BOOL "Make shared library" FORCE)
-    SET(STATIC 0 CACHE BOOL "Make static library" FORCE)
-    SET(FRAMEWORK 0 CACHE BOOL "Make framework" FORCE)
+    MESSAGE(FATAL "Cannot compile both STATIC and FRAMEWORK")
+ELSEIF(SHARED AND FRAMEWORK)
+    MESSAGE(FATAL "Cannot compile both SHARED and FRAMEWORK")
 ELSEIF(FRAMEWORK)
     IF(NOT APPLE)
         MESSAGE(FATAL "FRAMEWORK only available on Mac OS X")
     ENDIF(NOT APPLE)
-    SET(FRAMEWORK 1 CACHE BOOL "Make framework" FORCE)
-    SET(STATIC 0 CACHE BOOL "Make static library" FORCE)
-    SET(SHARED 0 CACHE BOOL "Make shared library" FORCE)
 ELSE()
-    MESSAGE(STATUS "No library type defined, assuming STATIC")
-    SET(STATIC 1 CACHE BOOL "Make static library" FORCE)
-    SET(SHARED 0 CACHE BOOL "Make shared library" FORCE)
-    SET(FRAMEWORK 0 CACHE BOOL "Make framework" FORCE)
+    # Default to static
+    SET(STATIC ON)
 ENDIF()
+
+# Define the compiler flags
+INCLUDE(${CMAKE_MODULE_PATH}/SetCXXFlags.cmake)
 
 ##############################################
 # DEFINE THE FILES AND FOLDERS IN THIS PACKAGE
@@ -62,20 +57,29 @@ SET(NPSolve_HEADERS ${INC}/NPSolve.h
 
 SET(NPSolve_SRC ${SRC}/npsolve.cpp
                 ${SRC}/drude_parameters.cpp
-                ${SRC}/experimental_dielectrics.cpp
                 ${SRC}/mie.cpp
                 ${SRC}/material_index.cpp
                 ${SRC}/quasi.cpp
                 ${SRC}/standard_color_matching.cpp
                 ${SRC}/wavelengths.cpp
 )
+# All these get the compile flag -O2
+SET_SOURCE_FILES_PROPERTIES(${NPSolve_SRC} PROPERTIES
+                            COMPILE_FLAGS "-O2")
+
+# The experimental dielectrics file takes too long with -O2,
+# so we change this one only to -O0
+SET_SOURCE_FILES_PROPERTIES(${SRC}/experimental_dielectrics.cpp PROPERTIES
+                            COMPILE_FLAGS "-O0")
+# Now add this file to the source list
+SET(NPSolve_SRC ${NPSolve_SRC} ${SRC}/experimental_dielectrics.cpp)
 
 # Define the library
-IF(STATIC)
+IF(STATIC OR PYTHON)
     ADD_LIBRARY(${NPSOLVE} STATIC ${NPSolve_SRC} ${NPSolve_HEADERS})
 ELSE()
     ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
-ENDIF(STATIC)
+ENDIF(STATIC OR PYTHON)
 
 # This header is to be installed with the library
 # This automatically adds this header to the framework
