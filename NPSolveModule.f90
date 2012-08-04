@@ -59,7 +59,7 @@ Module NPSolveModule
     Interface
         Integer(C_INT) Function material_index (material)  Bind (C)
             use, intrinsic :: iso_c_binding
-            Character(Kind=C_CHAR, Len=*), Intent(In) :: material
+            Character(Kind=C_CHAR), Dimension(*), Intent(In) :: material
         End Function material_index
     End Interface
 
