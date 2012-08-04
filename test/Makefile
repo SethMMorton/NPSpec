@@ -9,7 +9,7 @@ CC=gcc
 INC=-I../include
 CCFLAGS=-fPIC -g -Wall ${INC} -Wstrict-prototypes -fno-strict-aliasing
 CXXFLAGS=-fPIC -g -Wall ${INC} -fno-strict-aliasing
-FCFLAGS=-fPIC -g -Wall ${INC} -J../extensions
+FCFLAGS=-fPIC -g -Wall ${INC} -J.
 
 all: verify c fortran python
 
@@ -63,7 +63,7 @@ fortran: ftest
 ftest: main.f90 libNPSolve.a npsolvemodule.o
 	${FC} ${FCFLAGS} -lstdc++ -o $@ $^
 
-npsolvemodule.o: ../extensions/NPSolveModule.f90
+npsolvemodule.o: ../NPSolveModule.f90
 	${FC} ${FCFLAGS} -c $< -o $@
 
 #############
@@ -88,7 +88,7 @@ python: npsolve.so
 npsolve.so: pyNPSolve.o libNPSolve.a
 	${CC} ${CCFLAGS} -lstdc++ -shared -Wl,-O1 -Wl,-Bsymbolic-functions -o $@ $^
 
-pyNPSolve.o: ../extensions/pyNPSolve.c
+pyNPSolve.o: ../pyNPSolve.c
 	${CC} ${CCFLAGS} -I/usr/include/python2.6 -c $< -o $@
 
 ########
@@ -102,7 +102,7 @@ test:
 	if test -e npsolve.so; then ./ptest; fi
 
 clean:
-	rm -rf *.o *.so *.a pyNPSolve.c setup.py verify ctest ftest build/ *.dSYM/
+	rm -rf *.o *.so *.a *.mod pyNPSolve.c setup.py verify ctest ftest build/ *.dSYM/
 
 #  Make sure we don't remove this by accident if interrupted at the wrong time.
 .PRECIOUS: Makefile

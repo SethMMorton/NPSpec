@@ -8,7 +8,7 @@ rel_rad_spheroid = [[0.8, 0.8], [0.2, 0.2]]
 rad = [10.0, 10.0]
 indx = [material_index("Ag"), material_index("Au")]
 
-qext, qscat, qabs = npsolve(2, rad, rel_rad_spheroid, indx, 1.0, False, 1.0, 1.0, Efficiency)
+qext, qscat, qabs = npsolve(2, rad, rel_rad_spheroid, indx, 1.0, False, False, 1.0, 1.0, Efficiency)
 
 print()
 print()

@@ -10,6 +10,7 @@ program main
     Integer(C_INT)  :: indx(NLAYERS)
     Real(C_DOUBLE)  :: qext(NLAMBDA), qscat(NLAMBDA), qabs(NLAMBDA)
     Logical(C_BOOL) :: size_correct = .false.
+    Logical(C_BOOL) :: coarse = .false.
     Character(Kind=C_CHAR,Len=14) :: mat
     Integer :: i
     Character(*), Parameter :: f = "('NPSOLVE: Ext ',F18.16, ', Sca ', F18.16, ', Abs ', F18.16)"
@@ -17,6 +18,8 @@ program main
 !   Note that this must be transposed from what the C routine expects because of
 !   the way C lays out arrays in memory
     Real(C_DOUBLE)  :: rel_rad_spheroid(NLAYERS,2) = RESHAPE((/0.8, 0.8, 0.2, 0.2/), (/NLAYERS, 2/))
+
+    Real(C_DOUBLE), Parameter :: ONE = 1.0_C_DOUBLE
 
 !   Prep the material index
     call initiallize_material_index ()
@@ -28,8 +31,8 @@ program main
     indx(2) = material_index(mat)
 
 !   Now solve.  
-    call npsolve (NLAYERS, rad, rel_rad_spheroid, indx, REAL(1.0, C_DOUBLE), &
-                  size_correct, REAL(1.0, C_DOUBLE), REAL(1.0, C_DOUBLE),    &
+    call npsolve (NLAYERS, rad, rel_rad_spheroid, indx, ONE, &
+                  size_correct, coarse, ONE, ONE,            &
                   Efficiency, qext, qscat, qabs)
     write(*,*) 
     write(*,*) 
