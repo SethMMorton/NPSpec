@@ -81,9 +81,10 @@ ELSE()
     ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
 ENDIF(STATIC OR PYTHON)
 
-# This header is to be installed with the library
+# These headers are to be installed with the library
 # This automatically adds this header to the framework
 SET_PROPERTY(SOURCE ${INC}/NPSolve.h PROPERTY PUBLIC_HEADER)
+SET_PROPERTY(SOURCE ${INC}/NPSolveModule.f90 PROPERTY PUBLIC_HEADER)
 
 # Define the framework properties and location if framework
 IF(FRAMEWORK)
