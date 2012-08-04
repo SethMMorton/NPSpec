@@ -1,6 +1,10 @@
 #include <complex>
 #include "material_parameters.h"
 
+/* Splined dielectric contstants select materials.
+ * All values are taken from the Handbook of Palik.
+ * Where no values are given, a real one is inserted */
+
 using namespace std;
 
 #define CMPLX(r, i) (complex<double>((r), (i)))

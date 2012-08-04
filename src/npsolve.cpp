@@ -51,6 +51,7 @@ int npsolve (int nlayers,         /* Number of layers */
              int indx[],          /* Material index of layers */
              double mrefrac,      /* Refractive index of medium */
              bool size_correct,   /* Use size correction? */
+             bool coarse,         /* Calculate fewer wavelenths */
              double path_length,  /* Path length for absorbance */
              double concentration,/* The concentration of solution */
              int spectra_type,    /* What spectra to return */
@@ -62,6 +63,9 @@ int npsolve (int nlayers,         /* Number of layers */
 
     /* Dielectric function and refractive index */
     complex<double> dielec[MAXLAYERS], refrac_indx[MAXLAYERS];
+
+    /* Determine the counting increment; 5 if coarse, 1 otherwise */
+    int inc = coarse ? 5 : 1;
 
     /* If the second or third components are negative, it is a sphere
        and thus Mie theory is used.  Otherwise, quasistatic is used. */
@@ -80,7 +84,7 @@ int npsolve (int nlayers,         /* Number of layers */
      * Loop over each wavelength to calculate properties
      ***************************************************/
 
-    for (int i = 0; i < NLAMBDA; i++) {
+    for (int i = 0; i < NLAMBDA; i += inc) {
 
         /* Determine size parameter */
         double size_param = 2.0 * PI * sphere_rad * mrefrac / wavelengths[i];
