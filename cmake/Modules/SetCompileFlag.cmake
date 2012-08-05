@@ -5,7 +5,7 @@
 # will be given.
 # 
 # Call is:
-# SET_COMPILE_FLAG(FLAGVAR FLAGVAL (FORTRAN|C|CXX) <REQUIRED> flag1 flag2...)
+# SET_COMPILE_FLAG(FLAGVAR FLAGVAL (Fortran|C|CXX) <REQUIRED> flag1 flag2...)
 # 
 # For example, if you have the flag CMAKE_C_FLAGS and you want to add
 # warnings and want to fail if this is not possible, you might call this
@@ -30,6 +30,22 @@ INCLUDE (${CMAKE_ROOT}/Modules/CheckCXXCompilerFlag.cmake)
 
 FUNCTION (SET_COMPILE_FLAG FLAGVAR FLAGVAL LANG)
 
+    # Do some up front setup if Fortran
+    IF (LANG STREQUAL "Fortran")
+        # Create a list of error messages from compilers
+        SET(FAIL_REGEX
+            "ignoring unknown option"             # Intel
+            "invalid argument"                    # Intel
+            "unrecognized .*option"               # GNU
+            "[Uu]nknown switch"                   # Portland Group
+            "ignoring unknown option"             # MSVC
+            "warning D9002"                       # MSVC, any lang
+            "[Uu]nknown option"                   # HP
+            "[Ww]arning: [Oo]ption"               # SunPro
+            "command option .* is not recognized" # XL
+           )
+    ENDIF (LANG STREQUAL "Fortran")
+
     # Make a variable holding the flags.  Filter out REQUIRED if it is there
     SET(FLAG_REQUIRED FALSE)
     SET(FLAG_FOUND FALSE)
@@ -52,22 +68,27 @@ FUNCTION (SET_COMPILE_FLAG FLAGVAR FLAGVAL LANG)
             CHECK_C_COMPILER_FLAG("${flag}" FLAG_WORKS)
         ELSEIF(LANG STREQUAL "CXX")
             CHECK_CXX_COMPILER_FLAG("${flag}" FLAG_WORKS)
-        ELSEIF(LANG STREQUAL "FORTRAN")
+        ELSEIF(LANG STREQUAL "Fortran")
             # There is no nice function to do this for FORTRAN, so we must manually
-            # create a test program and check if it compiles with a given flag
-            SET(TESTFILE ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY})
-            SET(TESTFILE ${TESTFILE}/CMakeTmp/testFortranFlags.f90)
-            # Generate a test code
-            FILE (WRITE ${TESTFILE}
+            # create a test program and check if it compiles with a given flag.
+            SET(TESTFILE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}")
+            SET(TESTFILE "${TESTFILE}/CMakeTmp/testFortranFlags.f90")
+            FILE (WRITE "${TESTFILE}"
 "
 program dummyprog
   i = 5
 end program dummyprog
 ")
-            # Check that this code compiles with the given flag
-            SET(TESTFILE CMakeTmp/testFortranFlags.f90)
             TRY_COMPILE (FLAG_WORKS ${CMAKE_BINARY_DIR} ${TESTFILE}
-                COMPILE_DEFINITIONS "${flag}")
+                COMPILE_DEFINITIONS "${flag}" OUTPUT_VARIABLE OUTPUT)
+            
+            # Check that the output message doesn't match any errors
+            FOREACH(rx ${FAIL_REGEX})
+                IF("${OUTPUT}" MATCHES "${rx}")
+                    SET(FLAG_WORKS FALSE)
+                ENDIF("${OUTPUT}" MATCHES "${rx}")
+            ENDFOREACH(rx ${FAIL_REGEX})
+
         ELSE()
             MESSAGE(FATAL_ERROR "Unknown language in SET_COMPILE_FLAGS: ${LANG}")
         ENDIF(LANG STREQUAL "C")
