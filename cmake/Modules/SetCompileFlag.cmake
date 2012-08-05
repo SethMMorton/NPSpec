@@ -1,4 +1,4 @@
-###########################################################################
+#############################################################################
 # Given a list of flags, this function will try each, one at a time,
 # and choose the first flag that works.  If no flags work, then nothing
 # will be set, unless the REQUIRED key is given, in which case an error
@@ -6,7 +6,24 @@
 # 
 # Call is:
 # SET_COMPILE_FLAG(FLAGVAR FLAGVAL (FORTRAN|C|CXX) <REQUIRED> flag1 flag2...)
-###########################################################################
+# 
+# For example, if you have the flag CMAKE_C_FLAGS and you want to add
+# warnings and want to fail if this is not possible, you might call this
+# function in this manner:
+# SET_COMPILE_FLAGS(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" C REQUIRED
+#                   "-Wall"     # GNU
+#                   "-warn all" # Intel
+#                  )
+# The optin "-Wall" will be checked first, and if it works, will be
+# appended to the CMAKE_C_FLAGS variable.  If it doesn't work, then
+# "-warn all" will be tried.  If this doesn't work then checking will
+# terminate because REQUIRED was given.  
+#
+# The reasong that the variable must be given twice (first as the name then
+# as the value in quotes) is because of the way CMAKE handles the passing
+# of variables in functions; it is difficult to extract a variable's
+# contents and assign new values to it from within a function.
+#############################################################################
 
 INCLUDE (${CMAKE_ROOT}/Modules/CheckCCompilerFlag.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/CheckCXXCompilerFlag.cmake)
