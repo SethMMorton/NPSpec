@@ -4,19 +4,13 @@
 import ez_setup
 ez_setup.use_setuptools()
 
-from os.path import join, exists
+from os.path import join
 from glob import glob
 from setuptools import setup, Extension
 import numpy
 
 # Create a list of all the source files
-if not exists('libNPSolve.a'):
-    from sys import exit
-    exit('''\
-Please compile the static version of libNPSolve and place it into
-this directory before attempting to compile the python extension.
-''')
-sourcefiles = ['pyNPSolve.c']
+sourcefiles = ['pyNPSolve.c'] + glob(join('src', '*'))
 
 # Define the build
 setup(name='npsolve',
@@ -28,7 +22,6 @@ setup(name='npsolve',
       ext_modules=[
         Extension('npsolve', sourcefiles,
                   include_dirs=['include', numpy.get_include()],
-                  libraries=['NPSolve', 'stdc++'], library_dirs=['.'],
                  )
         ],
       )

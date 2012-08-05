@@ -57,22 +57,13 @@ SET(NPSolve_HEADERS ${INC}/NPSolve.h
 
 SET(NPSolve_SRC ${SRC}/npsolve.cpp
                 ${SRC}/drude_parameters.cpp
+                ${SRC}/experimental_dielectrics.cpp
                 ${SRC}/mie.cpp
                 ${SRC}/material_index.cpp
                 ${SRC}/quasi.cpp
                 ${SRC}/standard_color_matching.cpp
                 ${SRC}/wavelengths.cpp
 )
-# All these get the compile flag -O2
-SET_SOURCE_FILES_PROPERTIES(${NPSolve_SRC} PROPERTIES
-                            COMPILE_FLAGS "-O2")
-
-# The experimental dielectrics file takes too long with -O2,
-# so we change this one only to -O0
-SET_SOURCE_FILES_PROPERTIES(${SRC}/experimental_dielectrics.cpp PROPERTIES
-                            COMPILE_FLAGS "-O0")
-# Now add this file to the source list
-SET(NPSolve_SRC ${NPSolve_SRC} ${SRC}/experimental_dielectrics.cpp)
 
 # Define the library
 IF(STATIC OR PYTHON)
