@@ -36,3 +36,6 @@ dist/*
 
 # VIM
 *.swp
+
+# Qt Creator
+CMakeLists.txt.user
