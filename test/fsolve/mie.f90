@@ -9,9 +9,9 @@
 !--------------------------------------------------------------------
 Subroutine mie (nlayers, refrac_indx, rel_rad, size_param, &
                 extinct, scat, absorb,                     &
-                backscat, rad_pressure, albedo, asymmetry) bind ( C, name="mief")
+                backscat, rad_pressure, albedo, asymmetry) bind ( C, name="miefort")
 
-   use iso_c_binding
+   use, intrinsic :: iso_c_binding
 
    Implicit None
 

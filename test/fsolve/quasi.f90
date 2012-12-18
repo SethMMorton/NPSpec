@@ -10,9 +10,9 @@
 !--------------------------------------------------------------------
 !Subroutine quasi (nlayers, dielec, mdie, rel_rad, rad, size_param, &
 Subroutine quasi (nlayers, dielec, mdie, rr, rad, size_param, &
-                  extinct, scat, absorb) bind ( C, name="quasif" )
+                  extinct, scat, absorb) bind ( C, name="quasifort" )
 
-   use iso_c_binding
+   use, intrinsic :: iso_c_binding
 
    Implicit None
 
