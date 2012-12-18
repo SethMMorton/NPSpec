@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
 # In case setuptools is not installed
-import ez_setup
-ez_setup.use_setuptools()
+from distribute_setup import use_setuptools
+use_setuptools()
 
 from os.path import join
 from glob import glob
