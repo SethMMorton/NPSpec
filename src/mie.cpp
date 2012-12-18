@@ -26,15 +26,15 @@ inline double sqr(double x) { return x*x; }
  * Declarations of supporting functions
  **************************************/
 
-int nm(double x);
+int nm(const double x);
 
-void aa1 (complex<double> rx, int num, complex<double> ru[]);
+void aa1 (const complex<double> rx, const int num, complex<double> ru[]);
 
-void aax (double a, int num, double ru[]);
+void aax (const double a, const int num, double ru[]);
 
-int abn1 (int nlayers,
-          complex<double> refrac_indx[],
-          int num,
+int abn1 (const int nlayers,
+          const complex<double> refrac_indx[],
+          const int num,
           complex<double> rrbb[][MAXNUM],
           complex<double> rrd1[][MAXNUM],
           complex<double> rrd2[][MAXNUM],
@@ -49,14 +49,14 @@ int abn1 (int nlayers,
           complex<double> rb[]
         );
 
-void bcd (complex<double> rx, int num,
+void bcd (const complex<double> rx, const int num,
           complex<double> rd1[], complex<double> rd2[],
           complex<double> rbb[]);
 
-void cd3x (double x, int num, double d1x[],
+void cd3x (const double x, const int num, double d1x[],
            complex<double> rd3x[], complex<double> rcx[]);
 
-void qq1 (double a, int num1, double *extinct, double *scat,
+void qq1 (const double a, const int num1, double *extinct, double *scat,
           double *backscat, double *rad_pressure,
           complex<double> ra[], complex<double> rb[]);
 
@@ -64,17 +64,17 @@ void qq1 (double a, int num1, double *extinct, double *scat,
  * The main Mie theory solver 
  ****************************/
 
-int mie (int nlayers,                  /* Number of layers */
-         complex<double> refrac_indx[], /* Refractive index of layers */
-         double rel_rad[],             /* Relative radii of layers */
-         double size_param,            /* Size parameter */
-         double *extinct,              /* Extinction */
-         double *scat,                 /* Scattering */
-         double *absorb,               /* Absorption */
-         double *backscat,             /* Backscattering */
-         double *rad_pressure,         /* Radiation pressure */
-         double *albedo,               /* Albedo */
-         double *asymmetry             /* Asymmetry */
+int mie (const int nlayers,                   /* Number of layers */
+         const complex<double> refrac_indx[], /* Refractive index of layers */
+         const double rel_rad[],              /* Relative radii of layers */
+         const double size_param,             /* Size parameter */
+         double *extinct,                     /* Extinction */
+         double *scat,                        /* Scattering */
+         double *absorb,                      /* Absorption */
+         double *backscat,                    /* Backscattering */
+         double *rad_pressure,                /* Radiation pressure */
+         double *albedo,                      /* Albedo */
+         double *asymmetry                    /* Asymmetry */
         )
 {
 
@@ -169,7 +169,7 @@ int mie (int nlayers,                  /* Number of layers */
  *     for X>1 value of NM was raised
  *  August 1989, AO LGU
  **************************************************/
-int nm(double x) {
+int nm(const double x) {
 
       if (x < 1) {
          return (int) ( 7.5 * x + 9.0 );
@@ -192,7 +192,7 @@ int nm(double x) {
  *   RI - complex refractive index.
  * August 1989, AO LGU
  ****************************************************************/
-void aa1 (complex<double> rx, int num, complex<double> ru[]) {
+void aa1 (const complex<double> rx, const int num, complex<double> ru[]) {
 
     complex<double> s = 1.0 / rx;
     int num1 = num - 1;
@@ -217,7 +217,7 @@ void aa1 (complex<double> rx, int num, complex<double> ru[]) {
  *   A=1/X (X=2*PI*A(particle radius)/LAMBDA - size parameter).
  * March 1999, AI SPbU
  ****************************************************************/
-void aax (double a, int num, double ru[]) {
+void aax (const double a, const int num, double ru[]) {
 
     int num1 = num - 1;
     ru[num1] = double( num + 1 ) * a;
@@ -242,9 +242,9 @@ void aax (double a, int num, double ru[]) {
  *   RA-array of coefficients A(N), RB-array of coefficients B(N)
  * March 1999, AI SPbU
  ************************************************************************/
-int abn1 (int nlayers,
-          complex<double> refrac_indx[],
-          int num,
+int abn1 (const int nlayers,
+          const complex<double> refrac_indx[],
+          const int num,
           complex<double> rrbb[][MAXNUM],
           complex<double> rrd1[][MAXNUM],
           complex<double> rrd2[][MAXNUM],
@@ -336,7 +336,7 @@ int abn1 (int nlayers,
  *    rx - (refr. index) * (size parameter)
  * March 1999, AI SPbU
  ********************************************************************/
-void bcd (complex<double> rx, int num,
+void bcd (const complex<double> rx, const int num,
           complex<double> rd1[], complex<double> rd2[],
           complex<double> rbb[])
 {
@@ -381,7 +381,7 @@ void bcd (complex<double> rx, int num,
  *    X - size parameter
  * March 1999, AI SPbU
  ********************************************************************/
-void cd3x (double x, int num, double d1x[],
+void cd3x (const double x, const int num, double d1x[],
            complex<double> rd3x[], complex<double> rcx[]) {
 
     double ax = 1.0 / x;
@@ -406,7 +406,7 @@ void cd3x (double x, int num, double d1x[],
  *    and radiation pressure (QPR) for spherical particles.
  *  August 1989, AO LGU
  ****************************************************************/
-void qq1 (double a, int num1, double *extinct, double *scat,
+void qq1 (const double a, const int num1, double *extinct, double *scat,
           double *backscat, double *rad_pressure,
           complex<double> ra[], complex<double> rb[])
 {

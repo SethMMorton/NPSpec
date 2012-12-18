@@ -1,9 +1,7 @@
 #include "NPSolve.h"
 
-#include <iostream>
 #include <string>
 #include <map>
-
 
 static std::map<std::string,int> matindx;
 

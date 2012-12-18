@@ -45,19 +45,19 @@ inline complex<double> drude (double om, double plasmon, double gamma, double si
     return sqr(plasmon) / ( om * ( om + complex<double>(0.0, 1.0) * ( gamma + sizecorr ) ) );
 }
 
-int npsolve (int nlayers,         /* Number of layers */
-             double rad[2],       /* Radius of object */
-             double rel_rad[][2], /* Relative radii of layers */
-             int indx[],          /* Material index of layers */
-             double mrefrac,      /* Refractive index of medium */
-             bool size_correct,   /* Use size correction? */
-             bool coarse,         /* Calculate fewer wavelenths */
-             double path_length,  /* Path length for absorbance */
-             double concentration,/* The concentration of solution */
-             int spectra_type,    /* What spectra to return */
-             double extinct[],    /* Extinction */
-             double scat[],       /* Scattering */
-             double absorb[]      /* Absorption */
+int npsolve (const int nlayers,         /* Number of layers */
+             const double rad[2],       /* Radius of object */
+             const double rel_rad[][2], /* Relative radii of layers */
+             const int indx[],          /* Material index of layers */
+             const double mrefrac,      /* Refractive index of medium */
+             const bool size_correct,   /* Use size correction? */
+             const bool coarse,         /* Calculate fewer wavelenths */
+             const double path_length,  /* Path length for absorbance */
+             const double concentration,/* The concentration of solution */
+             const int spectra_type,    /* What spectra to return */
+             double extinct[],          /* Extinction */
+             double scat[],             /* Scattering */
+             double absorb[]            /* Absorption */
            )
 {
 

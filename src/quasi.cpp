@@ -14,7 +14,7 @@
 #include "solvers.h"
 
 #define MAXLAYERS 2
-#define PI 3.14159265358979323846
+const double pi = 4.0 * atan(1.0);
 
 /* Square qnd quad functions */
 inline double sqr(double x) { return x*x; }
@@ -22,22 +22,22 @@ inline double quad(double x) { return x*x*x*x; }
 
 using namespace std;
 
-int quasi (int nlayers,              /* Number of layers */
-           complex<double> dielec[], /* Dielectric for the layers */
-           double mdie,              /* Dielectric of external medium */
-           double rel_rad[][2],      /* Relative radii of the layers */
-           double rad[2],            /* Radius of particle */
-           double size_param,        /* Size parameter */
-           double *extinct,          /* Extinction */
-           double *scat,             /* Scattering */
-           double *absorb)           /* Absorption */
+int quasi (const int nlayers,              /* Number of layers */
+           const complex<double> dielec[], /* Dielectric for the layers */
+           const double mdie,              /* Dielectric of external medium */
+           const double rel_rad[][2],      /* Relative radii of the layers */
+           const double rad[2],            /* Radius of particle */
+           const double size_param,        /* Size parameter */
+           double *extinct,                /* Extinction */
+           double *scat,                   /* Scattering */
+           double *absorb)                 /* Absorption */
 {
 
     /*********************
      * Perform some checks
      *********************/
 
-    /* Too many layers for quasistatic approximatio */
+    /* Too many layers for quasistatic approximation */
     if (nlayers > MAXLAYERS) return 1;
 
     /*******************************
@@ -81,7 +81,7 @@ int quasi (int nlayers,              /* Number of layers */
         if (fabs(radii[0] - radii[1]) < 1E-3) { /* Sphere */
 
             /* All values are 1/3 */
-            for (int i = 0; i < 3; i++) { gf[i][ilayer] = 1.0 / 3.0; }
+            for (int i = 0; i < 2; i++) { gf[i][ilayer] = 1.0 / 3.0; }
 
         } else if (radii[0] > radii[1]) { /* Prolate (cigar) */
 
@@ -101,7 +101,7 @@ int quasi (int nlayers,              /* Number of layers */
             double gf[2][MAXLAYERS];
             double e = 1.0 - ( radii[0] / radii[1] );
             double g = sqrt(( 1.0 - e ) / e);
-            gf[1][ilayer] = ( g / ( 2.0 * e ) ) * ( ( PI / 2.0 ) - atan(g) )
+            gf[1][ilayer] = ( g / ( 2.0 * e ) ) * ( ( pi / 2.0 ) - atan(g) )
                           - ( sqr(g) / 2.0 );
 
             /* Set short axis.  Total must be 1 */
@@ -116,27 +116,29 @@ int quasi (int nlayers,              /* Number of layers */
     *********************************/
 
     complex<double> die[2];
-    complex<double> a[2];
-    a[0] = dielec[0] - mdie;
-    a[1] = dielec[1] - mdie;
     /* One layer */
     if (nlayers == 1) {
-        for (int i = 0; i < 3; i++) {
-            die[i] = a[0] / ( 3.0 * ( mdie + gf[i][0] * a[0] ) );
+        for (int i = 0; i < 2; i++) {
+            die[i] = ( dielec[0] - mdie ) 
+                   / ( 3.0 * ( mdie + gf[i][0] * ( dielec[0] - mdie ) ) );
         }
     /* Two layers */
     } else if (nlayers == 2) {
         /* Numerator and denominator */
-        complex<double> num[2], den[2], b = dielec[0] - dielec[1];
+        complex<double> num[2], den[2];//, b = dielec[0] - dielec[1];
         for (int i = 0; i < 2; i++) {
             /* Numerator */
-            num[i] = a[1] 
-                   * ( dielec[1] + b * ( gf[i][0] - rel_vol[0] * gf[i][1] ) );
-            num[i] += rel_vol[0] * dielec[1] * b;
+            num[i] = ( dielec[0] - dielec[1] ) 
+                   * ( gf[i][0] - rel_vol[0] * gf[i][1] );
+            num[i] = ( dielec[1] - mdie ) * ( dielec[1] + num[i] );
+            num[i] += rel_vol[0] * dielec[1] * ( dielec[0] - dielec[1] );
             /* Denominator */
-            den[i] = ( dielec[1] + b * ( gf[i][0] - rel_vol[0] * gf[i][1] )  )
+            den[i] = ( dielec[0] - dielec[1] ) 
+                   * ( gf[i][0] - rel_vol[0] * gf[i][1] );
+            den[i] = ( dielec[1] + den[i] ) 
                    * ( mdie + ( dielec[1] - mdie ) * gf[i][1] );
-            den[i] += rel_vol[0] * gf[i][1] * dielec[1] * b;
+            den[i] += rel_vol[0] * gf[i][1] * dielec[1] 
+                    * ( dielec[0] - dielec[1] );
             /* The whole thing */
             die[i] = num[i] / ( 3.0 * den[i] );
         }
