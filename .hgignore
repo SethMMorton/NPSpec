@@ -25,14 +25,28 @@ syntax: glob
 ctest
 ftest
 verify
+testNPSolve
+verifyNPSolve
+testNPSolveFortran
 
 # CMake
 CMakeCache.txt
+CTestTestfile.cmake
 cmake_install.cmake
 CMakeFiles/*
 Makefile
 build/*
 dist/*
+test/fsolve/CMakeCache.txt
+test/fsolve/CMakeFiles/*
+test/fsolve/Makefile
+
+# GTest
+ThirdParty/*
+Testing/*
+
+# Clang
+*.dSYM
 
 # VIM
 *.swp
