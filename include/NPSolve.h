@@ -33,23 +33,23 @@ int material_index(char *material);
 void initiallize_material_index(void);
 
 /* The actual npsolve function declaration */
-int npsolve (int nlayers,
-             double rad[],
-             double rel_rad[][2],
-             int indx[],
-             double mrefrac,
-             bool size_correct,
-             bool coarse,
-             double path_length,
-             double concentration,
-             int spectra_type,
+int npsolve (const int nlayers,
+             const double rad[],
+             const double rel_rad[][2],
+             const int indx[],
+             const double mrefrac,
+             const bool size_correct,
+             const bool coarse,
+             const double path_length,
+             const double concentration,
+             const int spectra_type,
              double extinct[],
              double scat[],
              double absorb[]
            );
 
 #ifdef __cplusplus
-}
+} // extern 
 #endif
 
 #endif /* NPSOLVE_H */

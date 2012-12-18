@@ -5,22 +5,22 @@
 using namespace std;
 
 /* Quasistatic approx */
-int quasi (int nlayers,
-           complex<double> dielec[],
-           double mdie,
-           double rel_rad[][2],
-           double rad[],
-           double size_param,
+int quasi (const int nlayers,
+           const complex<double> dielec[],
+           const double mdie,
+           const double rel_rad[][2],
+           const double rad[],
+           const double size_param,
            double *extinct,
            double *scat,
            double *absorb
          );
 
 /* Mie theory */
-int mie (int nlayers,
-         complex<double> refrac_indx[],
-         double rel_rad[],
-         double size_param,
+int mie (const int nlayers,
+         const complex<double> refrac_indx[],
+         const double rel_rad[],
+         const double size_param,
          double *extinct,
          double *scat,
          double *absorb,
