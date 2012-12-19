@@ -43,7 +43,6 @@ SET(NPSOLVE NPSolve)
 
 # Build the NPSolve library and place it into lib
 ADD_SUBDIRECTORY(${SRC} ${LIB})
-#ADD_SUBDIRECTORY(${INC})
 
 # Unit testing (only if requested)
 IF (TESTING)

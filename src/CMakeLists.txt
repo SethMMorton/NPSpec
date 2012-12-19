@@ -13,38 +13,30 @@ SET(NPSolve_SRC npsolve.cpp
 
 # Define the library
 IF(STATIC)
-    ADD_LIBRARY(${NPSOLVE} STATIC ${NPSolve_SRC} 
-        ${INC}/NPSolve.h ${INC}/NPSolveModule.f90)
+    ADD_LIBRARY(${NPSOLVE} STATIC ${NPSolve_SRC} ${INC}/NPSolve.h)
 ELSE()
-    ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} 
-        ${INC}/NPSolve.h ${INC}/NPSolveModule.f90)
+    ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${INC}/NPSolve.h)
 ENDIF(STATIC)
 
 # These headers are to be installed with the library
 IF(FRAMEWORK)
     SET_PROPERTY(SOURCE ${INC}/NPSolve.h 
         PROPERTY MACOSX_PACKAGE_LOCATION Headers)
-    SET_PROPERTY(SOURCE ${INC}/NPSolveModule.f90 
-        PROPERTY MACOSX_PACKAGE_LOCATION Headers)
-#ELSE()
-#    SET_PROPERTY(SOURCE ${INC}/NPSolve.h PROPERTY PUBLIC_HEADER)
-#    SET_PROPERTY(SOURCE ${INC}/NPSolveModule.f90 PROPERTY PUBLIC_HEADER)
 ENDIF()
 
 # Define the framework properties and location if framework
 IF(FRAMEWORK)
 
     # Set the version of the framework
-    SET_TARGET_PROPERTIES(${NPSOLVE}
-        PROPERTIES FRAMEWORK TRUE
-        VERSION v${NPSOLVE_VERSION}
-    )
+    SET_TARGET_PROPERTIES(${NPSOLVE} PROPERTIES FRAMEWORK TRUE
+                                     VERSION v${VERSION})
 
     # Install to framework location
-    INSTALL(TARGETS ${NPSOLVE}
-        FRAMEWORK DESTINATION
-        /Library/Frameworks
-    )
+    SET(FRAMELIB /Library/Frameworks)
+    SET(FRAMENAME ${NPSOLVE}.framework)
+    INSTALL(TARGETS ${NPSOLVE} FRAMEWORK DESTINATION ${FRAMELIB})
+    INSTALL(FILES ${INC}/NPSolveModule.f90 
+        DESTINATION ${FRAMELIB}/${FRAMENAME}/Versions/v${VERSION}/Headers)
 
 # Otherwise install to the usual locations
 ELSE()
@@ -58,12 +50,8 @@ ELSE()
     ENDIF()
 
     # Install library and header
-    INSTALL(TARGETS ${NPSOLVE}
-            LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-            ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-    ) 
-    INSTALL(FILES ${INC}/NPSolve.h ${INC}/NPSolveModule.f90 
-            DESTINATION include
-    )
+    INSTALL(TARGETS ${NPSOLVE} LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+                               ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}) 
+    INSTALL(FILES ${INC}/NPSolve.h ${INC}/NPSolveModule.f90 DESTINATION include)
 
 ENDIF(FRAMEWORK)

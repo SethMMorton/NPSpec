@@ -29,7 +29,7 @@ ExternalProject_Get_Property(googletest binary_dir)
 LINK_DIRECTORIES(${binary_dir})
 
 # Add test executable target
-ADD_EXECUTABLE(testNPSolve ${PROJECT_SOURCE_DIR}/test/test_npsolve.cpp)
+ADD_EXECUTABLE(testNPSolve test_npsolve.cpp)
 
 # Create dependency of testNPSolve on googletest
 ADD_DEPENDENCIES(testNPSolve googletest)
@@ -42,10 +42,8 @@ ADD_TEST(testNPSolve "testNPSolve")
 
 # Test Fortran code?
 IF (FORTRAN)
-    ENABLE_LANGUAGE(Fortran)
-    # Make sure that Fortran recognizes iso_c_binding
-    INCLUDE(${CMAKE_MODULE_PATH}/CheckFortranSupportsIsoCBinding.cmake)
     # The following function will properly link Fortran routines to C++
+    ENABLE_LANGUAGE(Fortran)
     INCLUDE(CMakeAddFortranSubdirectory)
     CMAKE_ADD_Fortran_SUBDIRECTORY(fsolve
         PROJECT FortranSOLVERS  # project name in toplevel CMakeLists.txt
@@ -53,9 +51,18 @@ IF (FORTRAN)
         LIBRARIES fSolve # target libraries created
         NO_EXTERNAL_INSTALL TRUE # Don't install
     )
-    # Create the executable and add depencencies, etc.
-    ADD_EXECUTABLE(verifyNPSolve ${PROJECT_SOURCE_DIR}/test/verify_npsolve.cpp)
-    ADD_DEPENDENCIES(verifyNPSolve googletest, fSolve)
+    # Create the executable for verifying C++ routines against Fortran standards
+    ADD_EXECUTABLE(verifyNPSolve verify_npsolve.cpp)
+    ADD_DEPENDENCIES(verifyNPSolve googletest fSolve NPSolve)
     TARGET_LINK_LIBRARIES(verifyNPSolve gtest NPSolve fSolve)
     ADD_TEST(verifyNPSolve "verifyNPSolve")
+    # Create the executable that tests the Fortran wrappers of the C++ code
+    #CMAKE_ADD_Fortran_SUBDIRECTORY(fruit
+    #    PROJECT FRUIT ARCHIVE_DIR fruit LIBRARIES Fruit
+    #    NO_EXTERNAL_INSTALL TRUE
+    #)
+    #ADD_EXECUTABLE(testFortranWrapper test_fortran_wrapper.f90)
+    #ADD_DEPENDENCIES(testFortranWrapper Fruit NPSolve)
+    #TARGET_LINK_LIBRARIES(testFortranWrapper Fruit NPSolve)
+    #ADD_TEST(testFortranWrapper "testFortranWrapper")
 ENDIF(FORTRAN)
