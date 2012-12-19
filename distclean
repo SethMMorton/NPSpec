@@ -1,25 +1,46 @@
 #! /usr/bin/env python
 
 from glob import glob
-from os import remove, system
+from os import remove, system, getcwd, walk
 from os.path import join
 from shutil import rmtree
+from fnmatch import filter as ffilter
 
-# Make a list of what to delete
-files = ('CMakeCache.txt', 'cmake_install.cmake', 'install_manifest.txt',
-'Makefile', 'CTestTestfile.cmake', 'testNPSolve','verifyNPSolve', 'libfSolve')
-dirs  = ('CMakeFiles', 'modules', 'lib', 'build', 'dist', 'NPSolve.framework',
-         'npsolve.egg-info', 'ThirdParty', 'Testing', )
+# Package specific files
+package = ('libNPSolve.*', 'testNPSolve', 'verifyNPSolve', 'libfSolve.*',)
+
+# Get all files in all directories
+rmfiles = []
+rmdirs = []
+for d, dirs, files in walk(getcwd()):
+    # Find the files to remove
+    for fname in ('CMakeCache.txt', 
+                  'cmake_install.cmake',
+                  'install_manifest.txt',
+                  'Makefile', 
+                  'CTestTestfile.cmake',
+                  '*.pyc',)+package:
+        rmfiles.extend([join(d, f) for f in ffilter(files, fname)])
+    # Find the directories to remove
+    for dname in ('CMakeFiles', 
+                  'modules', 
+                  'build', 
+                  'dist',
+                  '*.framework',
+                  '*.egg-info', 
+                  'ThirdParty', 
+                  'Testing',):
+        rmdirs.extend([join(d, dr) for dr in ffilter(dirs, dname)])
 
 # Removes the cmake files
-for f in files+tuple(glob('libNPSolve.*')+glob('*.pyc')):
+for f in rmfiles:
     try:
         remove(f)
     except OSError:
         pass
 
 # Removes the directories
-for d in dirs:
+for d in rmdirs:
     try:
         rmtree(d)
     except OSError:
