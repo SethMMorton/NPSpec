@@ -44,6 +44,7 @@ ADD_TEST(testNPSolve "testNPSolve")
 IF (FORTRAN)
     # The following function will properly link Fortran routines to C++
     ENABLE_LANGUAGE(Fortran)
+    SET (CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
     INCLUDE(CMakeAddFortranSubdirectory)
     CMAKE_ADD_Fortran_SUBDIRECTORY(fsolve
         PROJECT FortranSOLVERS  # project name in toplevel CMakeLists.txt
@@ -57,12 +58,13 @@ IF (FORTRAN)
     TARGET_LINK_LIBRARIES(verifyNPSolve gtest NPSolve fSolve)
     ADD_TEST(verifyNPSolve "verifyNPSolve")
     # Create the executable that tests the Fortran wrappers of the C++ code
-    #CMAKE_ADD_Fortran_SUBDIRECTORY(fruit
-    #    PROJECT FRUIT ARCHIVE_DIR fruit LIBRARIES Fruit
-    #    NO_EXTERNAL_INSTALL TRUE
-    #)
-    #ADD_EXECUTABLE(testFortranWrapper test_fortran_wrapper.f90)
-    #ADD_DEPENDENCIES(testFortranWrapper Fruit NPSolve)
-    #TARGET_LINK_LIBRARIES(testFortranWrapper Fruit NPSolve)
-    #ADD_TEST(testFortranWrapper "testFortranWrapper")
+    CMAKE_ADD_Fortran_SUBDIRECTORY(fruit
+        PROJECT FRUIT ARCHIVE_DIR fruit LIBRARIES Fruit
+        NO_EXTERNAL_INSTALL TRUE
+    )
+    ADD_EXECUTABLE(testFortranWrapper test_fortran_wrapper.f90
+                                      ${INC}/NPSolveModule.f90)
+    ADD_DEPENDENCIES(testFortranWrapper Fruit NPSolve)
+    TARGET_LINK_LIBRARIES(testFortranWrapper Fruit NPSolve)
+    ADD_TEST(testFortranWrapper "testFortranWrapper")
 ENDIF(FORTRAN)
