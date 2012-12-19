@@ -16,11 +16,10 @@ Subroutine quasi (nlayers, dielec, mdie, rr, rad, size_param, &
 
    Implicit None
 
-   Integer(C_INT),        Intent(In)  :: nlayers            ! Number of layers
+   Integer(C_INT),        Intent(In)  :: nlayers        ! Number of layers
    Complex(C_DOUBLE_COMPLEX), Intent(In)  :: dielec(nlayers)    ! Dielectric of layers
    Real(C_DOUBLE),    Intent(In)  :: mdie               ! Dielectric of medium
-   !Real(C_DOUBLE),    Intent(In)  :: rel_rad(nlayers,3) ! Relative layer radius
-   Real(C_DOUBLE),    Intent(In)  :: rr(nlayers*3) ! Relative layer radius
+   Real(C_DOUBLE),    Intent(In)  :: rr(nlayers*3)      ! Relative layer radius
    Real(C_DOUBLE),    Intent(In)  :: rad(3)             ! Radius of each axis
    Real(C_DOUBLE),    Intent(In)  :: size_param         ! Size parameter
    Real(C_DOUBLE),    Intent(Out) :: extinct            ! Extiction

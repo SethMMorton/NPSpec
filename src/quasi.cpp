@@ -98,7 +98,6 @@ int quasi (const int nlayers,              /* Number of layers */
         } else { /* Oblate (pancake) */
 
             /* Determine long axes */
-            double gf[2][MAXLAYERS];
             double e = 1.0 - ( radii[0] / radii[1] );
             double g = sqrt(( 1.0 - e ) / e);
             gf[1][ilayer] = ( g / ( 2.0 * e ) ) * ( ( pi / 2.0 ) - atan(g) )
