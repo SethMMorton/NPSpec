@@ -31,13 +31,19 @@ testNPSolveFortran
 CMakeCache.txt
 CTestTestfile.cmake
 cmake_install.cmake
+install_manifest.txt
 CMakeFiles/*
 Makefile
 build/*
 dist/*
-test/fsolve/CMakeCache.txt
-test/fsolve/CMakeFiles/*
-test/fsolve/Makefile
+*/CMakeCache.txt
+*/CTestTestfile.cmake
+*/cmake_install.cmake
+*/CMakeFiles/*
+*/install_manifest.txt
+
+# Mac OS X Frameworks
+*.framework
 
 # GTest
 ThirdParty/*
