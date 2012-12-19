@@ -7,7 +7,8 @@ from shutil import rmtree
 from fnmatch import filter as ffilter
 
 # Package specific files
-package = ('libNPSolve.*', 'testNPSolve', 'verifyNPSolve', 'libfSolve.*',)
+package = ('libNPSolve.*', 'testNPSolve', 'verifyNPSolve', 'libfSolve.*',
+           'testFortranWrapper',)
 
 # Get all files in all directories
 rmfiles = []
@@ -19,7 +20,8 @@ for d, dirs, files in walk(getcwd()):
                   'install_manifest.txt',
                   'Makefile', 
                   'CTestTestfile.cmake',
-                  '*.pyc',)+package:
+                  '*.pyc',
+                  '*.mod',)+package:
         rmfiles.extend([join(d, f) for f in ffilter(files, fname)])
     # Find the directories to remove
     for dname in ('CMakeFiles', 
