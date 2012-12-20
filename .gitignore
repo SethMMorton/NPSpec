@@ -25,7 +25,7 @@ ftest
 verify
 testNPSolve
 verifyNPSolve
-testNPSolveFortran
+testFortranWrapper
 
 # CMake
 CMakeCache.txt
@@ -41,6 +41,11 @@ dist/*
 */cmake_install.cmake
 */CMakeFiles/*
 */install_manifest.txt
+*/*/CMakeCache.txt
+*/*/CTestTestfile.cmake
+*/*/cmake_install.cmake
+*/*/CMakeFiles/*
+*/*/install_manifest.txt
 
 # Mac OS X Frameworks
 *.framework
