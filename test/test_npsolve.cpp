@@ -2,7 +2,7 @@
 #include "NPSolve.h"
 
 // Check that the number of wavelengths is 800
-TEST(SanityTest, NLAMBDA_CHECK) {
+TEST(SanityTest, NLAMBDA_Check) {
     EXPECT_EQ(NLAMBDA, 800);
 }
 
