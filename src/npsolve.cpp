@@ -28,12 +28,12 @@
 #include "material_parameters.h"
 #include "NPSolve.h"
 
+using namespace std;
+
 const int    maxlayers = 10;
 const double pi        = 4.0 * atan(1.0);
 const double hbar      = 6.5821189916e-16;
 const double avogadro  = 6.0221412927e23;
-
-using namespace std;
 
 /* Conversions */
 inline double sqr(double x) { return x*x; }
@@ -67,7 +67,7 @@ int npsolve (const int nlayers,         /* Number of layers */
     /* Determine the counting increment; 5 if coarse, 1 otherwise */
     int inc = coarse ? 5 : 1;
 
-    /* If the second or third components are negative, it is a sphere
+    /* If the second component is negative, it is a sphere
        and thus Mie theory is used.  Otherwise, quasistatic is used. */
     bool lmie = false;
     if (rad[1] < 0.0)
@@ -84,7 +84,7 @@ int npsolve (const int nlayers,         /* Number of layers */
      * Loop over each wavelength to calculate properties
      ***************************************************/
 
-    #pragma omp parallel for private(
+    //#pragma omp parallel for private(
     for (int i = 0; i < NLAMBDA; i += inc) {
 
         /* Determine size parameter */
