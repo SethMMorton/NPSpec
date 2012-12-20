@@ -88,7 +88,7 @@ int npsolve (const int nlayers,         /* Number of layers */
     for (int i = 0; i < NLAMBDA; i += inc) {
 
         /* Determine size parameter */
-        double size_param = 2.0 * PI * sphere_rad * mrefrac / wavelengths[i];
+        double size_param = 2.0 * pi * sphere_rad * mrefrac / wavelengths[i];
 
         /* Skip if size_param is too small */
         if (size_param < 0.1E-6)
@@ -152,9 +152,9 @@ int npsolve (const int nlayers,         /* Number of layers */
         }
         /* Change the spectra type accordingly */
         if (spectra_type != Efficiency) {
-            extinct[i] *= PI * sqr(sphere_rad);
-            scat[i]    *= PI * sqr(sphere_rad);
-            absorb[i]  *= PI * sqr(sphere_rad);
+            extinct[i] *= pi * sqr(sphere_rad);
+            scat[i]    *= pi * sqr(sphere_rad);
+            absorb[i]  *= pi * sqr(sphere_rad);
         }
         if (spectra_type == Molar || spectra_type == Absorbance) {
             extinct[i] *= 1E-14 * avogadro / ( 1000 * log(10) );
