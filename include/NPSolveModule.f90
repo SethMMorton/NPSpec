@@ -64,7 +64,7 @@ Module NPSolveModule
     End Interface
 
     Interface
-        Subroutine npsolve (nlayers, rad, rel_rad, indx, mrefrac,             &
+        Integer(C_INT) Function npsolve (nlayers, rad, rel_rad, indx, mrefrac,&
                             size_correct, coarse, path_length, concentration, &
                             spectra_type, qext, qscat, qabs) Bind (C)
             use, intrinsic :: iso_c_binding
@@ -81,7 +81,7 @@ Module NPSolveModule
             Real(C_DOUBLE),  Intent(Out)        :: qext(*)
             Real(C_DOUBLE),  Intent(Out)        :: qscat(*)
             Real(C_DOUBLE),  Intent(Out)        :: qabs(*)
-        End Subroutine npsolve
+        End Function npsolve
     End Interface
 
 Contains

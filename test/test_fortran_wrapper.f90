@@ -2,27 +2,22 @@ module test_fortran_wrapper
 
     use, intrinsic :: iso_c_binding
     use fruit
+    use NPSolveModule, ONLY : NLAMBDA
 
-    Implicit None
+    implicit none
 
-    Private
-    Public run_all_tests
+    private
+    public run_all_tests
 
-!    Integer(C_INT), Parameter :: NLAYERS = 2
-!    Real(C_DOUBLE)  :: rad(2) = (/ 10.0, 10.0 /)
-!    Integer(C_INT)  :: indx(NLAYERS)
-!    Real(C_DOUBLE)  :: qext(NLAMBDA), qscat(NLAMBDA), qabs(NLAMBDA)
-!    Logical(C_BOOL) :: size_correct = .false.
-!    Logical(C_BOOL) :: coarse = .false.
-!    Character(Kind=C_CHAR,Len=14) :: mat
-!    Integer :: i
-!    Character(*), Parameter :: f = "('NPSOLVE: Ext ',F18.16, ', Sca ', F18.16, ', Abs ', F18.16)"
+    real(C_DOUBLE), parameter :: relative_radius_spheroid1(1,2) = & 
+                                    RESHAPE((/1.0, 1.0/), (/1, 2/))
+    real(C_DOUBLE), parameter :: relative_radius_spheroid2(2,2) = &
+                                    RESHAPE((/0.6, 0.6, 0.4, 0.4/), (/2, 2/))
+    real(C_DOUBLE), parameter :: relative_radius_spheroid3(3,2) = &
+                                    RESHAPE((/0.2, 0.2, 0.3, 0.3, 0.5, 0.5/), (/3, 2/))
 
-!   Note that this must be transposed from what the C routine expects because of
-!   the way C lays out arrays in memory
-!    Real(C_DOUBLE)  :: rel_rad_spheroid(NLAYERS,2) = RESHAPE((/0.8, 0.8, 0.2, 0.2/), (/NLAYERS, 2/))
-
-!    Real(C_DOUBLE), Parameter :: ONE = 1.0_C_DOUBLE
+    integer(C_INT) :: index1(1), index2(2), index3(3)
+    real(C_DOUBLE) :: qext(NLAMBDA), qabs(NLAMBDA), qscat(NLAMBDA)
 
 contains
 
@@ -32,6 +27,18 @@ contains
         call run_test_case(CIE_MAT_check, 'CIE_MAT')
         call run_test_case(mat_indx, 'MatIndx')
     end subroutine
+
+    subroutine setup
+        use NPSolveModule, ONLY : material_index, make_C_string
+        character(kind=C_CHAR, len=14) :: matAg, matSiO2, matTiO2
+        call make_C_string("Ag", matAg)
+        call make_C_string("TiO2", matSiO2)
+        call make_C_string("SiO2", matTiO2)
+        index1 = (/ material_index(matAg) /)
+        index2 = (/ material_index(matAg), material_index(matSiO2) /)
+        index3 = (/ material_index(matAg), material_index(matSiO2), &
+                    material_index(matTiO2) /)
+    end subroutine setup
 
     subroutine NLAMBDA_check
         use NPSolveModule, ONLY : NLAMBDA
@@ -49,7 +56,7 @@ contains
 
     subroutine CIE_MAT_check
         use NPSolveModule, ONLY : CIE_MAT
-        Double Precision :: check(3,3) = RESHAPE((/ 3.2410, -0.9692,  0.0556, &
+        double precision :: check(3,3) = RESHAPE((/ 3.2410, -0.9692,  0.0556, &
                                                    -1.5374,  1.8760, -0.2040, &
                                                    -0.4986,  0.0416,  1.0570  &
                                                   /), (/3, 3/))
@@ -69,9 +76,51 @@ contains
         call assert_equals(material_index(mat), -1)
     end subroutine mat_indx
 
-!   Now solve.  
-!    call npsolve (NLAYERS, rad, rel_rad_spheroid, indx, ONE, &
-!                  size_correct, coarse, ONE, ONE,            &
-!                  Efficiency, qext, qscat, qabs)
+    subroutine Mie1Layer
+        use NPSolveModule, ONLY : NLAMBDA, Efficiency, npsolve
+        integer(C_INT),  parameter :: nlayers = 1
+        real(C_DOUBLE),  parameter :: medium_dielectric = 1.0d0
+        real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
+        logical(C_BOOL), parameter :: size_correct = .false., coarse = .false.
+        integer(C_INT) :: retval
+
+!       Now solve.  
+        retval = npsolve (NLAYERS, radius, relative_radius_spheroid1, index1,&
+                      medium_dielectric, size_correct, coarse, 1.0d0, 1.0d0, &
+                      Efficiency, qext, qscat, qabs)
+
+        call assert_equals(retval, 0);
+!       Extinction
+        call assert_equals(qext(1),   2.2285778886683643d0, 1d-14)
+        call assert_equals(qext(251), 0.2386953127709600d0, 1d-14)
+        call assert_equals(qext(501), 0.0133494242710007d0, 1d-14)
+!       Scattering
+        call assert_equals(qscat(1),   0.3062750316703077d0, 1d-14)
+        call assert_equals(qscat(251), 0.0572390734717247d0, 1d-14)
+        call assert_equals(qscat(501), 0.0039184205430821d0, 1d-14)
+!       Absorption
+        call assert_equals(qabs(1),   1.9223028569980565d0, 1d-14)
+        call assert_equals(qabs(251), 0.1814562392992353d0, 1d-14)
+        call assert_equals(qabs(501), 0.0094310037279186d0, 1d-14)
+
+    end subroutine Mie1Layer
 
 end module test_fortran_wrapper
+
+program fruit_driver
+    use fruit
+    use test_fortran_wrapper, ONLY : run_all_tests
+    use NPSolveModule, ONLY : initiallize_material_index
+    integer :: numfailures
+    call initiallize_material_index
+    call init_fruit
+    call run_all_tests
+    call fruit_summary
+    call get_failed_count(numfailures)
+    if (numfailures > 0) then
+        call exit(1)
+    else
+        call exit(0)
+    end if
+end program fruit_driver
+
