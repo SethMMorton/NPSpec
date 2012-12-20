@@ -28,17 +28,17 @@
 #include "material_parameters.h"
 #include "NPSolve.h"
 
-#define MAXLAYERS 10
-#define PI 3.14159265358979323846
-#define HBAR 6.5821189916e-16
-#define AVOGADRO 6.0221412927e23
+const int    maxlayers = 10;
+const double pi        = 4.0 * atan(1.0);
+const double hbar      = 6.5821189916e-16;
+const double avogadro  = 6.0221412927e23;
 
 using namespace std;
 
 /* Conversions */
 inline double sqr(double x) { return x*x; }
-inline double NM2EV(double x) { return 1239.0 / x; }
-inline double MPERS2EV(double x, double r) { return x * HBAR / ( r * 1.0E-9 ); }
+inline double nm2ev(double x) { return 1239.0 / x; }
+inline double mPerS2eV(double x, double r) { return x * hbar / ( r * 1.0E-9 ); }
 
 /* Drude inline function */
 inline complex<double> drude (double om, double plasmon, double gamma, double sizecorr) {
@@ -62,7 +62,7 @@ int npsolve (const int nlayers,         /* Number of layers */
 {
 
     /* Dielectric function and refractive index */
-    complex<double> dielec[MAXLAYERS], refrac_indx[MAXLAYERS];
+    complex<double> dielec[maxlayers], refrac_indx[maxlayers];
 
     /* Determine the counting increment; 5 if coarse, 1 otherwise */
     int inc = coarse ? 5 : 1;
@@ -84,6 +84,7 @@ int npsolve (const int nlayers,         /* Number of layers */
      * Loop over each wavelength to calculate properties
      ***************************************************/
 
+    #pragma omp parallel for private(
     for (int i = 0; i < NLAMBDA; i += inc) {
 
         /* Determine size parameter */
@@ -111,12 +112,12 @@ int npsolve (const int nlayers,         /* Number of layers */
                 double sc = drude_parameters[indx[j]][2];
 
                 /* Energy in electron volts (omega) */
-                double om = NM2EV(wavelengths[i]);
+                double om = nm2ev(wavelengths[i]);
 
                 /* Use the drude model to size-correct experimental data */
                 dielec[j] = dielec[j]
                           - drude(om, pf, gm, 0.0)
-                          + drude(om, pf, gm, MPERS2EV(sc, sphere_rad));
+                          + drude(om, pf, gm, mPerS2eV(sc, sphere_rad));
 
             }
 
@@ -133,7 +134,7 @@ int npsolve (const int nlayers,         /* Number of layers */
         /* Solve using the appropriate inputs and theory */
         if (lmie) {
             /* Relative radius for sphere */
-            double srrad[MAXLAYERS];
+            double srrad[maxlayers];
             for (int k = 0; k < nlayers; k++)
                 srrad[k] = rel_rad[k][0];
             double backscat, rad_pressure, albedo, asymmetry;
@@ -156,9 +157,9 @@ int npsolve (const int nlayers,         /* Number of layers */
             absorb[i]  *= PI * sqr(sphere_rad);
         }
         if (spectra_type == Molar || spectra_type == Absorbance) {
-            extinct[i] *= 1E-14 * AVOGADRO / ( 1000 * log(10) );
-            scat[i]    *= 1E-14 * AVOGADRO / ( 1000 * log(10) );
-            absorb[i]  *= 1E-14 * AVOGADRO / ( 1000 * log(10) );
+            extinct[i] *= 1E-14 * avogadro / ( 1000 * log(10) );
+            scat[i]    *= 1E-14 * avogadro / ( 1000 * log(10) );
+            absorb[i]  *= 1E-14 * avogadro / ( 1000 * log(10) );
         }
         if (spectra_type == Absorbance) {
             extinct[i] *= path_length * concentration;
