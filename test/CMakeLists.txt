@@ -62,7 +62,8 @@ IF (FORTRAN)
         PROJECT FRUIT ARCHIVE_DIR fruit LIBRARIES Fruit
         NO_EXTERNAL_INSTALL TRUE
     )
-    ADD_EXECUTABLE(testFortranWrapper test_fortran_wrapper.f90
+    ADD_EXECUTABLE(testFortranWrapper fruit_driver.f90
+                                      test_fortran_wrapper.f90
                                       ${INC}/NPSolveModule.f90)
     ADD_DEPENDENCIES(testFortranWrapper Fruit NPSolve)
     TARGET_LINK_LIBRARIES(testFortranWrapper Fruit NPSolve)
