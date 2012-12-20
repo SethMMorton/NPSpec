@@ -32,8 +32,8 @@ contains
         use NPSolveModule, ONLY : material_index, make_C_string
         character(kind=C_CHAR, len=14) :: matAg, matSiO2, matTiO2
         call make_C_string("Ag", matAg)
-        call make_C_string("TiO2", matSiO2)
-        call make_C_string("SiO2", matTiO2)
+        call make_C_string("Quartz", matSiO2)
+        call make_C_string("TiO2", matTiO2)
         index1 = (/ material_index(matAg) /)
         index2 = (/ material_index(matAg), material_index(matSiO2) /)
         index3 = (/ material_index(matAg), material_index(matSiO2), &
