@@ -360,6 +360,8 @@ TEST_F(TestSolver, TestSizeCorrect) {
 
 };
 
+// TODO test Efficiency alternatives, and conc. / pathlength
+
     /*
     int i;
     printf("    // Checks\n");

@@ -87,7 +87,8 @@ int npsolve (const int nlayers,         /* Number of layers */
      * Loop over each wavelength to calculate properties
      ***************************************************/
 
-    //#pragma omp parallel for private(
+    int retval = 0;
+    #pragma omp parallel for private(dielec, refrac_indx, retval)
     for (int i = 0; i < NLAMBDA; i += increment) {
 
         /* Determine size parameter */
@@ -141,17 +142,15 @@ int npsolve (const int nlayers,         /* Number of layers */
             for (int k = 0; k < nlayers; k++)
                 srrad[k] = rel_rad[k][0];
             double backscat, rad_pressure, albedo, asymmetry;
-            int retval = mie(nlayers, refrac_indx, srrad, size_param,
+            if (!retval) /* Only do this if no error has occured yet */
+                retval = mie(nlayers, refrac_indx, srrad, size_param,
                              &extinct[i], &scat[i], &absorb[i],
                              &backscat, &rad_pressure, &albedo, &asymmetry);
-            if (retval == 1)
-                return 1; /* Product of size param & ref index too large */
         } else {
-            int retval = quasi(nlayers, dielec, sqr(mrefrac), rel_rad,
+            if (!retval) /* Only do this if no error has occured yet */
+                retval = quasi(nlayers, dielec, sqr(mrefrac), rel_rad,
                                rad, size_param,
                                &extinct[i], &scat[i], &absorb[i]);
-            if (retval == 1)
-                return 2; /* Too many layers for quasistatic approx */
         }
         /* Change the spectra type accordingly */
         if (spectra_type != Efficiency) {
@@ -172,6 +171,13 @@ int npsolve (const int nlayers,         /* Number of layers */
 
     }
 
-    return 0;
+    if (retval) {
+        if (lmie)
+            return 1; /* Product of size param & ref index too large */
+        else
+            return 2; /* Too many layers for quasistatic approx */
+    } else {
+        return 0;
+    }
 
 }
