@@ -81,12 +81,12 @@ contains
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_dielectric = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
-        logical(C_BOOL), parameter :: size_correct = .false., coarse = .false.
+        logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
 
 !       Now solve.  
         retval = npsolve (NLAYERS, radius, relative_radius_spheroid1, index1,&
-                      medium_dielectric, size_correct, coarse, 1.0d0, 1.0d0, &
+                      medium_dielectric, size_correct, 1, 1.0d0, 1.0d0, &
                       Efficiency, qext, qscat, qabs)
 
         call assert_equals(retval, 0);
