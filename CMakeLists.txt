@@ -32,6 +32,9 @@ ENDIF()
 # Define the compiler flags
 INCLUDE(${CMAKE_MODULE_PATH}/SetCXXFlags.cmake)
 
+# Can we use OpenMP?
+FIND_PACKAGE(OpenMP)
+
 # The source and include directories
 SET(SRC  ${CMAKE_SOURCE_DIR}/src)
 SET(INC  ${CMAKE_SOURCE_DIR}/include)
