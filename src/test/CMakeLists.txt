@@ -1,32 +1,13 @@
-INCLUDE(ExternalProject)
-
-# Set default ExternalProject root directory
-SET_DIRECTORY_PROPERTIES(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/ThirdParty)
-
-# Install gtest as part of this project
-ExternalProject_Add(
-    googletest
-    SVN_REPOSITORY http://googletest.googlecode.com/svn/trunk/
-    TIMEOUT 10
-    # Force separate output paths for debug and release builds to allow easy
-    # identification of correct lib in subsequent TARGET_LINK_LIBRARIES
-    # commands
-    CMAKE_ARGS -Dgtest_force_shared_crt=ON -DBUILD_SHARED_LIBS=ON
-    # Disable install step
-    INSTALL_COMMAND ""
-    # Wrap download, configure and build steps in a script to log output
-    LOG_DOWNLOAD ON
-    LOG_CONFIGURE ON
-    LOG_BUILD ON
-)
+# Add the googletest framework
+ADD_SUBDIRECTORY(googletest ${LIB}/gtest)
 
 # Specify include dir
-ExternalProject_Get_Property(googletest source_dir)
-INCLUDE_DIRECTORIES(${INC} ${source_dir}/include)
+#ExternalProject_Get_Property(googletest source_dir)
+INCLUDE_DIRECTORIES(${INC} googletest/include)
 
 # Specify link dir
-ExternalProject_Get_Property(googletest binary_dir)
-LINK_DIRECTORIES(${binary_dir})
+#ExternalProject_Get_Property(googletest binary_dir)
+LINK_DIRECTORIES(${LIB}/gtest)
 
 # Add test executable target
 ADD_EXECUTABLE(testNPSolve test_npsolve.cpp)
@@ -44,7 +25,7 @@ ADD_TEST(testNPSolve "testNPSolve")
 IF (FORTRAN)
     # The following function will properly link Fortran routines to C++
     ENABLE_LANGUAGE(Fortran)
-    SET (CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+    SET (CMAKE_Fortran_MODULE_DIRECTORY ${LIB}/modules)
     INCLUDE(CMakeAddFortranSubdirectory)
     CMAKE_ADD_Fortran_SUBDIRECTORY(fsolve
         PROJECT FortranSOLVERS  # project name in toplevel CMakeLists.txt

@@ -2,7 +2,7 @@
 PROJECT(NPSolve CXX)
 SET(NPSOLVE_VERSION 0.2.0)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules/")
+SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 # Default to static library
 OPTION(STATIC    "Compile a static library" OFF)
@@ -33,10 +33,10 @@ ENDIF()
 INCLUDE(${CMAKE_MODULE_PATH}/SetCXXFlags.cmake)
 
 # The source and include directories
-SET(SRC  ${PROJECT_SOURCE_DIR}/src)
-SET(INC  ${PROJECT_SOURCE_DIR}/include)
-SET(LIB  ${PROJECT_SOURCE_DIR}/lib)
-SET(TEST ${PROJECT_SOURCE_DIR}/test)
+SET(SRC  ${CMAKE_SOURCE_DIR}/src)
+SET(INC  ${CMAKE_SOURCE_DIR}/include)
+SET(LIB  ${CMAKE_SOURCE_DIR}/lib)
+SET(TEST ${CMAKE_SOURCE_DIR}/test)
 
 # Name of NPSolve library
 SET(NPSOLVE NPSolve)
@@ -47,5 +47,5 @@ ADD_SUBDIRECTORY(${SRC} ${LIB})
 # Unit testing (only if requested)
 IF (TESTING)
     ENABLE_TESTING()
-    ADD_SUBDIRECTORY(${TEST})
+    ADD_SUBDIRECTORY(${SRC}/test ${TEST})
 ENDIF(TESTING)

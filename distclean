@@ -1,38 +1,16 @@
 #! /usr/bin/env python
 
 from glob import glob
-from os import remove, system, getcwd, walk
+from os import remove, getcwd, walk
 from os.path import join
 from shutil import rmtree
 from fnmatch import filter as ffilter
 
-# Package specific files
-package = ('libNPSolve.*', 'testNPSolve', 'verifyNPSolve', 'libfSolve.*',
-           'testFortranWrapper',)
-
 # Get all files in all directories
 rmfiles = []
-rmdirs = []
 for d, dirs, files in walk(getcwd()):
     # Find the files to remove
-    for fname in ('CMakeCache.txt', 
-                  'cmake_install.cmake',
-                  'install_manifest.txt',
-                  'Makefile', 
-                  'CTestTestfile.cmake',
-                  '*.pyc',
-                  '*.mod',)+package:
-        rmfiles.extend([join(d, f) for f in ffilter(files, fname)])
-    # Find the directories to remove
-    for dname in ('CMakeFiles', 
-                  'modules', 
-                  'build', 
-                  'dist',
-                  '*.framework',
-                  '*.egg-info', 
-                  'ThirdParty', 
-                  'Testing',):
-        rmdirs.extend([join(d, dr) for dr in ffilter(dirs, dname)])
+    rmfiles.extend([join(d, f) for f in ffilter(files, "*.pyc")])
 
 # Removes the cmake files
 for f in rmfiles:
@@ -41,8 +19,8 @@ for f in rmfiles:
     except OSError:
         pass
 
-# Removes the directories
-for d in rmdirs:
+# Removes directories
+for d in ['lib', 'dist', 'build', 'test']+glob('*.egg-info'):
     try:
         rmtree(d)
     except OSError:
