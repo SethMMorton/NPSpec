@@ -62,12 +62,19 @@ FUNCTION (SET_COMPILE_FLAG FLAGVAR FLAGVAL LANG)
     # Now, loop over each flag
     FOREACH(flag ${FLAGLIST})
 
+        UNSET(FLAG_WORKS_TEMP CACHE)
         UNSET(FLAG_WORKS)
         # Check the flag for the given language
         IF(LANG STREQUAL "C")
-            CHECK_C_COMPILER_FLAG("${flag}" FLAG_WORKS)
+            CHECK_C_COMPILER_FLAG("${flag}" FLAG_WORKS_TEMP)
+            IF(FLAG_WORKS_TEMP)
+                SET(FLAG_WORKS TRUE)
+            ENDIF()
         ELSEIF(LANG STREQUAL "CXX")
-            CHECK_CXX_COMPILER_FLAG("${flag}" FLAG_WORKS)
+            CHECK_CXX_COMPILER_FLAG("${flag}" FLAG_WORKS_TEMP)
+            IF(FLAG_WORKS_TEMP)
+                SET(FLAG_WORKS TRUE)
+            ENDIF()
         ELSEIF(LANG STREQUAL "Fortran")
             # There is no nice function to do this for FORTRAN, so we must manually
             # create a test program and check if it compiles with a given flag.
