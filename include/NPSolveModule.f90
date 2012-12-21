@@ -64,8 +64,8 @@ Module NPSolveModule
     End Interface
 
     Interface
-        Integer(C_INT) Function npsolve (nlayers, rad, rel_rad, indx, mrefrac,&
-                            size_correct, coarse, path_length, concentration, &
+        Integer(C_INT) Function npsolve (nlayers, rad, rel_rad, indx, mrefrac,   &
+                            size_correct, increment, path_length, concentration, &
                             spectra_type, qext, qscat, qabs) Bind (C)
             use, intrinsic :: iso_c_binding
             Integer(C_INT),  Intent(In), Value  :: nlayers
@@ -74,7 +74,7 @@ Module NPSolveModule
             Integer(C_INT),  Intent(In)         :: indx(*)
             Real(C_DOUBLE),  Intent(In), Value  :: mrefrac
             Logical(C_BOOL), Intent(In), Value  :: size_correct
-            Logical(C_BOOL), Intent(In), Value  :: coarse
+            Integer(C_INT),  Intent(In), Value  :: increment
             Real(C_DOUBLE),  Intent(In), Value  :: path_length
             Real(C_DOUBLE),  Intent(In), Value  :: concentration
             Integer(C_INT),  Intent(In), Value  :: spectra_type

@@ -51,7 +51,7 @@ int npsolve (const int nlayers,         /* Number of layers */
              const int indx[],          /* Material index of layers */
              const double mrefrac,      /* Refractive index of medium */
              const bool size_correct,   /* Use size correction? */
-             const bool coarse,         /* Calculate fewer wavelenths */
+             const int increment,       /* Increment of wavelengths */
              const double path_length,  /* Path length for absorbance */
              const double concentration,/* The concentration of solution */
              const int spectra_type,    /* What spectra to return */
@@ -64,8 +64,11 @@ int npsolve (const int nlayers,         /* Number of layers */
     /* Dielectric function and refractive index */
     complex<double> dielec[maxlayers], refrac_indx[maxlayers];
 
-    /* Determine the counting increment; 5 if coarse, 1 otherwise */
-    int inc = coarse ? 5 : 1;
+    /* Make sure the increment is a factor of 800, and is positive */
+    if (increment < 0)
+        return 3;
+    else if (fmod((double) NLAMBDA, (double) increment) > 0.000001)
+        return 3;
 
     /* If the second component is negative, it is a sphere
        and thus Mie theory is used.  Otherwise, quasistatic is used. */
@@ -85,7 +88,7 @@ int npsolve (const int nlayers,         /* Number of layers */
      ***************************************************/
 
     //#pragma omp parallel for private(
-    for (int i = 0; i < NLAMBDA; i += inc) {
+    for (int i = 0; i < NLAMBDA; i += increment) {
 
         /* Determine size parameter */
         double size_param = 2.0 * pi * sphere_rad * mrefrac / wavelengths[i];
