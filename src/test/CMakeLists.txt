@@ -18,18 +18,6 @@ ADD_DEPENDENCIES(testNPSolve googletest)
 # Specify testNPSolve's link libraries
 TARGET_LINK_LIBRARIES(testNPSolve gtest NPSolve)
 
-# Add OpenMP flags
-IF(OPENMP_FOUND)
-    IF("${OpenMP_CXX_FLAGS}" STREQUAL "-fopenmp")
-        SET_TARGET_PROPERTIES (testNPSolve PROPERTIES
-            COMPILE_FLAGS "${OpenMP_CXX_FLAGS}"
-            LINK_FLAGS "-lgomp")
-    ELSE()
-        SET_TARGET_PROPERTIES (testNPSolve PROPERTIES
-            COMPILE_FLAGS "${OpenMP_CXX_FLAGS}")
-    ENDIF()
-ENDIF(OPENMP_FOUND)
-
 # Add the c++ only unit tests
 ADD_TEST(testNPSolve "testNPSolve")
 

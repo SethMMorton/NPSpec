@@ -18,18 +18,6 @@ ELSE()
     ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${INC}/NPSolve.h)
 ENDIF(STATIC)
 
-# Add OpenMP support if found
-IF (OPENMP_FOUND)
-    IF("${OpenMP_CXX_FLAGS}" STREQUAL "-fopenmp")
-        SET_TARGET_PROPERTIES (${NPSOLVE} PROPERTIES
-            COMPILE_FLAGS "${OpenMP_CXX_FLAGS}"
-            LINK_FLAGS "-lgomp")
-    ELSE()
-        SET_TARGET_PROPERTIES (${NPSOLVE} PROPERTIES
-            COMPILE_FLAGS "${OpenMP_CXX_FLAGS}")
-    ENDIF()
-ENDIF (OPENMP_FOUND)
-
 # These headers are to be installed with the library
 IF(FRAMEWORK)
     SET_PROPERTY(SOURCE ${INC}/NPSolve.h 
