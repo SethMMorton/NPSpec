@@ -35,6 +35,41 @@ class TestSolver : public ::testing::Test {
 
 };
 
+class TestSpectraTypes : public ::testing::Test {
+ protected:
+
+    virtual void SetUp() { 
+        // Initiallize the variables
+        pi        = 4.0 * atan(1.0);
+        avogadro  = 6.0221412927e23;
+        index[0] = material_index((char*) "Ag");
+        relative_radius[0][0] = 1.0;
+        relative_radius[0][1] = 1.0;
+        nlayers = 1;
+        inc = 80;
+        medium_refrac = 1.0;
+        radius[0] = 10.0;
+        radius[1] = -1.0;
+        npsolve(nlayers, radius, relative_radius, index,
+                medium_refrac, false, inc, 1.0, 1.0, Efficiency,
+                qext1, qscat1, qabs1);
+    }
+
+    inline double sqr(double x) { return x*x; };
+
+    double pi;
+    double avogadro;
+    int nlayers;
+    int inc;
+    int index[1];
+    double medium_refrac;
+    double radius[2];
+    double relative_radius[1][2];
+    double qext1[NLAMBDA], qabs1[NLAMBDA], qscat1[NLAMBDA];
+    double qext2[NLAMBDA], qabs2[NLAMBDA], qscat2[NLAMBDA];
+
+};
+
 // Check that the number of wavelengths is 800
 TEST(SanityTest, NLAMBDA_Check) {
     EXPECT_EQ(NLAMBDA, 800);
@@ -75,10 +110,10 @@ TEST(SanityTest, MatIndx) {
 
 TEST_F(TestSolver, Mie1Layer) {
     const int nlayers = 1;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 20.0, -1.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
-                         medium_dielectric, false, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -99,10 +134,10 @@ TEST_F(TestSolver, Mie1Layer) {
 
 TEST_F(TestSolver, Mie2Layer) {
     const int nlayers = 2;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 20.0, -1.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid2, index2,
-                         medium_dielectric, false, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -124,10 +159,10 @@ TEST_F(TestSolver, Mie2Layer) {
 
 TEST_F(TestSolver, Mie3Layer) {
     const int nlayers = 3;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 20.0, -1.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid3, index3,
-                         medium_dielectric, false, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -149,10 +184,10 @@ TEST_F(TestSolver, Mie3Layer) {
 
 TEST_F(TestSolver, Quasi1Layer) {
     const int nlayers = 1;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, 10.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
-                         medium_dielectric, false, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -174,10 +209,10 @@ TEST_F(TestSolver, Quasi1Layer) {
 
 TEST_F(TestSolver, Quasi2Layer) {
     const int nlayers = 2;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, 10.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid2, index2,
-                         medium_dielectric, false, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -199,10 +234,10 @@ TEST_F(TestSolver, Quasi2Layer) {
     
 TEST_F(TestSolver, Quasi3Layer) {
     const int nlayers = 3;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, 10.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid3, index3,
-                         medium_dielectric, false, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // This should fail - 2 means too many layers for quasi
@@ -212,10 +247,10 @@ TEST_F(TestSolver, Quasi3Layer) {
 
 TEST_F(TestSolver, QuasiProlate) {
     const int nlayers = 1;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, 5.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
-                         medium_dielectric, false, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -237,10 +272,10 @@ TEST_F(TestSolver, QuasiProlate) {
 
 TEST_F(TestSolver, QuasiOblate) {
     const int nlayers = 1;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 5.0, 10.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
-                         medium_dielectric, false, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -262,7 +297,7 @@ TEST_F(TestSolver, QuasiOblate) {
 
 TEST_F(TestSolver, TestIncrement5) {
     const int nlayers = 1;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, -1.0 };
     for (int i = 0; i < NLAMBDA; i++) {
         qext[i] = 0.0;
@@ -270,7 +305,7 @@ TEST_F(TestSolver, TestIncrement5) {
         qabs[i] = 0.0;
     }
     int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
-                         medium_dielectric, false, 5, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 5, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -301,7 +336,7 @@ TEST_F(TestSolver, TestIncrement5) {
 
 TEST_F(TestSolver, TestIncrement7) {
     const int nlayers = 1;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, -1.0 };
     for (int i = 0; i < NLAMBDA; i++) {
         qext[i] = 0.0;
@@ -309,7 +344,7 @@ TEST_F(TestSolver, TestIncrement7) {
         qabs[i] = 0.0;
     }
     int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
-                         medium_dielectric, false, 7, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, 7, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Bad increment should return 3
@@ -319,7 +354,7 @@ TEST_F(TestSolver, TestIncrement7) {
 
 TEST_F(TestSolver, TestIncrementNegative) {
     const int nlayers = 1;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, -1.0 };
     for (int i = 0; i < NLAMBDA; i++) {
         qext[i] = 0.0;
@@ -327,7 +362,7 @@ TEST_F(TestSolver, TestIncrementNegative) {
         qabs[i] = 0.0;
     }
     int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
-                         medium_dielectric, false, -1, 1.0, 1.0, Efficiency,
+                         medium_refrac, false, -1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Bad increment should return 3
@@ -337,10 +372,10 @@ TEST_F(TestSolver, TestIncrementNegative) {
 
 TEST_F(TestSolver, TestSizeCorrect) {
     const int nlayers = 1;
-    const double medium_dielectric = 1.0;
+    const double medium_refrac = 1.0;
     const double radius[2] = { 5.0, -1.0 };
     int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
-                         medium_dielectric, true, 1, 1.0, 1.0, Efficiency,
+                         medium_refrac, true, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
     // Checks
@@ -360,34 +395,165 @@ TEST_F(TestSolver, TestSizeCorrect) {
 
 };
 
-// TODO test Efficiency alternatives, and conc. / pathlength
+TEST_F(TestSolver, TestMediumRefractiveIndex) {
+    const int nlayers = 1;
+    const double medium_refrac = 2.0;
+    const double radius[2] = { 20.0, -1.0 };
+    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
+                         qext, qscat, qabs);
 
-    /*
-    int i;
-    printf("    // Checks\n");
-    printf("    EXPECT_EQ(result, 0);\n");
-    printf("    // Extinction\n");
-    i = 0;
-    printf("    EXPECT_NEAR(qext[%d],   %.16f, 1e-14);\n", i, qext[i]);
-    i = 250;
-    printf("    EXPECT_NEAR(qext[%d], %.16f, 1e-14);\n", i, qext[i]);
-    i = 500;
-    printf("    EXPECT_NEAR(qext[%d], %.16f, 1e-14);\n", i, qext[i]);
-    printf("    // Scattering\n");
-    i = 0;
-    printf("    EXPECT_NEAR(qscat[%d],   %.16f, 1e-14);\n", i, qscat[i]);
-    i = 250;
-    printf("    EXPECT_NEAR(qscat[%d], %.16f, 1e-14);\n", i, qscat[i]);
-    i = 500;
-    printf("    EXPECT_NEAR(qscat[%d], %.16f, 1e-14);\n", i, qscat[i]);
-    printf("    // Absorption\n");
-    i = 0;
-    printf("    EXPECT_NEAR(qabs[%d],   %.16f, 1e-14);\n", i, qabs[i]);
-    i = 250;
-    printf("    EXPECT_NEAR(qabs[%d], %.16f, 1e-14);\n", i, qabs[i]);
-    i = 500;
-    printf("    EXPECT_NEAR(qabs[%d], %.16f, 1e-14);\n", i, qabs[i]);
-    */
+    // Checks
+    EXPECT_EQ(result, 0);
+    // Extinction
+    EXPECT_NEAR(qext[0],   2.8328562530696506, 1e-14);
+    EXPECT_NEAR(qext[250], 2.0565291634339800, 1e-14);
+    EXPECT_NEAR(qext[500], 0.0970864882507346, 1e-14);
+    // Scattering
+    EXPECT_NEAR(qscat[0],   1.0698792522825473, 1e-14);
+    EXPECT_NEAR(qscat[250], 1.4426586799505641, 1e-14);
+    EXPECT_NEAR(qscat[500], 0.0718406948561757, 1e-14);
+    // Absorption
+    EXPECT_NEAR(qabs[0],   1.7629770007871033, 1e-14);
+    EXPECT_NEAR(qabs[250], 0.6138704834834159, 1e-14);
+    EXPECT_NEAR(qabs[500], 0.0252457933945589, 1e-14);
+
+};
+
+TEST_F(TestSolver, TestMieQuasiSmall) {
+    const int nlayers = 1;
+    const double medium_refrac = 1.0;
+    const double radius[2] = { 3.0, -1.0 };
+    /* Mie */
+    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+                         medium_refrac, false, 1, 1.0, 1.0, Efficiency,
+                         qext, qscat, qabs);
+    EXPECT_EQ(result, 0);
+    const double radius2[2] = { 3.0, 3.0 };
+    double qext2[NLAMBDA], qscat2[NLAMBDA], qabs2[NLAMBDA];
+    /* Quasistatic */
+    result = npsolve(nlayers, radius2, relative_radius_spheroid1, index1,
+                     medium_refrac, false, 1, 1.0, 1.0, Efficiency,
+                     qext2, qscat2, qabs2);
+    EXPECT_EQ(result, 0);
+
+    // Extinction
+    EXPECT_NEAR(qext[0],   qext2[0],   2e-3);
+    EXPECT_NEAR(qext[250], qext2[250], 2e-3);
+    EXPECT_NEAR(qext[500], qext2[500], 2e-3);
+    // Scattering
+    EXPECT_NEAR(qscat[0],   qscat2[0],   2e-3);
+    EXPECT_NEAR(qscat[250], qscat2[250], 2e-3);
+    EXPECT_NEAR(qscat[500], qscat2[500], 2e-3);
+    // Absorption
+    EXPECT_NEAR(qabs[0],   qabs2[0],   2e-3);
+    EXPECT_NEAR(qabs[250], qabs2[250], 2e-3);
+    EXPECT_NEAR(qabs[500], qabs2[500], 2e-3);
+
+};
+
+TEST_F(TestSpectraTypes, TestCrossSection) {
+    int result = npsolve(nlayers, radius, relative_radius, index, 
+                         medium_refrac, false, inc, 1.0, 1.0, CrossSection,
+                         qext2, qscat2, qabs2);
+    EXPECT_EQ(result, 0);
+    // Extinction
+    EXPECT_FLOAT_EQ(qext1[0]   * pi * sqr(radius[0]), qext2[0]);
+    EXPECT_FLOAT_EQ(qext1[160] * pi * sqr(radius[0]), qext2[160]);
+    EXPECT_FLOAT_EQ(qext1[640] * pi * sqr(radius[0]), qext2[640]);
+    // Scattering
+    EXPECT_FLOAT_EQ(qscat1[0]   * pi * sqr(radius[0]), qscat2[0]);
+    EXPECT_FLOAT_EQ(qscat1[160] * pi * sqr(radius[0]), qscat2[160]);
+    EXPECT_FLOAT_EQ(qscat1[640] * pi * sqr(radius[0]), qscat2[640]);
+    // Absorbance
+    EXPECT_FLOAT_EQ(qabs1[0]   * pi * sqr(radius[0]), qabs2[0]);
+    EXPECT_FLOAT_EQ(qabs1[160] * pi * sqr(radius[0]), qabs2[160]);
+    EXPECT_FLOAT_EQ(qabs1[640] * pi * sqr(radius[0]), qabs2[640]);
+};
+
+TEST_F(TestSpectraTypes, TestMolar) {
+    int result = npsolve(nlayers, radius, relative_radius, index, 
+                         medium_refrac, false, inc, 1.0, 1.0, Molar,
+                         qext2, qscat2, qabs2);
+    EXPECT_EQ(result, 0);
+    // Extinction
+    EXPECT_FLOAT_EQ(qext1[0]   * pi * sqr(radius[0]) 
+                               * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qext2[0]);
+    EXPECT_FLOAT_EQ(qext1[160] * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qext2[160]);
+    EXPECT_FLOAT_EQ(qext1[640] * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qext2[640]);
+    // Scattering
+    EXPECT_FLOAT_EQ(qscat1[0]   * pi * sqr(radius[0])
+                                * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qscat2[0]);
+    EXPECT_FLOAT_EQ(qscat1[160] * pi * sqr(radius[0])
+                                * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qscat2[160]);
+    EXPECT_FLOAT_EQ(qscat1[640] * pi * sqr(radius[0])
+                                * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qscat2[640]);
+    // Absorbance
+    EXPECT_FLOAT_EQ(qabs1[0]   * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qabs2[0]);
+    EXPECT_FLOAT_EQ(qabs1[160] * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qabs2[160]);
+    EXPECT_FLOAT_EQ(qabs1[640] * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) ),
+                    qabs2[640]);
+};
+
+TEST_F(TestSpectraTypes, TestAbsorbance) {
+    const double path_length = 1.5, molarity = 0.004;
+    int result = npsolve(nlayers, radius, relative_radius, index, 
+                         medium_refrac, false, inc, path_length, molarity,
+                         Absorbance, qext2, qscat2, qabs2);
+    EXPECT_EQ(result, 0);
+    // Extinction
+    EXPECT_FLOAT_EQ(qext1[0]   * pi * sqr(radius[0]) 
+                               * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qext2[0]);
+    EXPECT_FLOAT_EQ(qext1[160] * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qext2[160]);
+    EXPECT_FLOAT_EQ(qext1[640] * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qext2[640]);
+    // Scattering
+    EXPECT_FLOAT_EQ(qscat1[0]   * pi * sqr(radius[0])
+                                * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qscat2[0]);
+    EXPECT_FLOAT_EQ(qscat1[160] * pi * sqr(radius[0])
+                                * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qscat2[160]);
+    EXPECT_FLOAT_EQ(qscat1[640] * pi * sqr(radius[0])
+                                * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qscat2[640]);
+    // Absorbance
+    EXPECT_FLOAT_EQ(qabs1[0]   * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qabs2[0]);
+    EXPECT_FLOAT_EQ(qabs1[160] * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qabs2[160]);
+    EXPECT_FLOAT_EQ(qabs1[640] * pi * sqr(radius[0])
+                               * 1e-14 * avogadro / ( 1000 * log(10) )
+                               * path_length * molarity,
+                    qabs2[640]);
+};
 
 // Run the tests
 int main(int argc, char **argv) {

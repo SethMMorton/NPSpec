@@ -25,17 +25,8 @@ Module NPSolveModule
     Public npsolve
     Public make_C_string
 
-!   Bind the C enum
-    !Enum, Bind(C)
-    !    Enumerator :: Efficiency, CrossSection, Molar, Absorbance
-    !End Enum
-
 !   Here is the wavelength and color matching arrays from the NPSolve header
     Integer(C_INT), Parameter                    :: NLAMBDA = 800
-    Integer(C_INT), Bind(C, name="Efficiency")   :: Efficiency
-    Integer(C_INT), Bind(C, name="CrossSection") :: CrossSection
-    Integer(C_INT), Bind(C, name="Molar")        :: Molar
-    Integer(C_INT), Bind(C, name="Absorbance")   :: Absorbance
     Real(C_DOUBLE), Bind(C, name="wavelengths")  :: wavelengths(NLAMBDA)
     Real(C_DOUBLE), Bind(C, name="CIE_X")        :: CIE_X(NLAMBDA)
     Real(C_DOUBLE), Bind(C, name="CIE_Y")        :: CIE_Y(NLAMBDA)
@@ -49,6 +40,12 @@ Module NPSolveModule
                                           -1.5374,  1.8760, -0.2040,    &
                                           -0.4986,  0.0416,  1.0570 /), &
                                         (/3, 3/))
+
+!   Had a hell of a time getting an enum to bind, so I am just redefining it here
+    Integer(C_INT), Parameter :: Efficiency   = 0
+    Integer(C_INT), Parameter :: CrossSection = 1
+    Integer(C_INT), Parameter :: Molar        = 2
+    Integer(C_INT), Parameter :: Absorbance   = 3
 
 !   Interfaces to the C routines
     Interface

@@ -73,6 +73,6 @@ int material_index(char *material) {
     std::string mat(material);
     if (matindx.count(mat) > 0)
         return matindx[mat];
-    else
+    else 
         return -1;
 }

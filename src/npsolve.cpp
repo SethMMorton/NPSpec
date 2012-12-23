@@ -141,10 +141,19 @@ int npsolve (const int nlayers,         /* Number of layers */
             for (int k = 0; k < nlayers; k++)
                 srrad[k] = rel_rad[k][0];
             double backscat, rad_pressure, albedo, asymmetry;
+            //if (nlayers == 2 && i == 0) {
+            //    cout << "nlayers " << nlayers << endl;
+            //    cout << "refrac_indx " << refrac_indx[0] << ' ' << refrac_indx[1] << endl;
+            //    cout << "indx " << indx[0] << ' ' << indx[1] << endl;
+            //    cout << "srrad " << srrad[0] << ' ' << srrad[1] << endl;
+            //    cout << "size_param " << size_param << endl;
+            //}
             int retval = mie(nlayers, refrac_indx, srrad, size_param,
                              &extinct[i], &scat[i], &absorb[i],
                              &backscat, &rad_pressure, &albedo, &asymmetry);
             if (retval > 0) return 1;
+            //if (nlayers == 2 && i == 0)
+            //    cout << "extinct " << extinct[i] << endl;
         } else {
             int retval = quasi(nlayers, dielec, sqr(mrefrac), rel_rad,
                                rad, size_param,
