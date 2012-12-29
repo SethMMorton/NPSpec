@@ -15,31 +15,15 @@ Module NPSolveModule
     Public Molar
     Public Absorbance
     Public wavelengths
-    Public CIE_X
-    Public CIE_Y
-    Public CIE_Z
-    Public CIE_D65
-    Public CIE_Mat
-    Public initiallize_material_index
     Public material_index
     Public npsolve
+    Public RGB
+    Public RGB_to_HSV
     Public make_C_string
 
 !   Here is the wavelength and color matching arrays from the NPSolve header
     Integer(C_INT), Parameter                    :: NLAMBDA = 800
     Real(C_DOUBLE), Bind(C, name="wavelengths")  :: wavelengths(NLAMBDA)
-    Real(C_DOUBLE), Bind(C, name="CIE_X")        :: CIE_X(NLAMBDA)
-    Real(C_DOUBLE), Bind(C, name="CIE_Y")        :: CIE_Y(NLAMBDA)
-    Real(C_DOUBLE), Bind(C, name="CIE_Z")        :: CIE_Z(NLAMBDA)
-    Real(C_DOUBLE), Bind(C, name="CIE_D65")      :: CIE_D65(NLAMBDA)
-
-!   Because of the difference in storage order between Fortran and C,
-!   it is easier to simply redefine this matrix
-    Real(C_DOUBLE), Parameter                    :: CIE_Mat(3,3) =      &
-                                RESHAPE((/ 3.2410, -0.9692,  0.0556,    &
-                                          -1.5374,  1.8760, -0.2040,    &
-                                          -0.4986,  0.0416,  1.0570 /), &
-                                        (/3, 3/))
 
 !   Had a hell of a time getting an enum to bind, so I am just redefining it here
     Integer(C_INT), Parameter :: Efficiency   = 0
@@ -48,11 +32,6 @@ Module NPSolveModule
     Integer(C_INT), Parameter :: Absorbance   = 3
 
 !   Interfaces to the C routines
-    Interface
-        Subroutine initiallize_material_index () Bind (C)
-        End Subroutine initiallize_material_index
-    End Interface
-
     Interface
         Integer(C_INT) Function material_index (material)  Bind (C)
             use, intrinsic :: iso_c_binding
@@ -79,6 +58,31 @@ Module NPSolveModule
             Real(C_DOUBLE),  Intent(Out)        :: qscat(*)
             Real(C_DOUBLE),  Intent(Out)        :: qabs(*)
         End Function npsolve
+    End Interface
+
+    Interface
+        Subroutine RGB (spec_in, inc, trans, r, g, b, o) Bind(C)
+            use, intrinsic :: iso_c_binding
+            Real(C_DOUBLE),  Intent(In)         :: spec_in(*)
+            Integer(C_INT),  Intent(In),  Value :: inc
+            Logical(C_BOOL), Intent(In),  Value :: trans
+            Real(C_DOUBLE),  Intent(Out)        :: r
+            Real(C_DOUBLE),  Intent(Out)        :: g
+            Real(C_DOUBLE),  Intent(Out)        :: b
+            Real(C_DOUBLE),  Intent(Out)        :: o
+        End Subroutine RGB
+    End Interface
+
+    Interface
+        Subroutine HSV_to_RGB (r, g, b, h, s, v) Bind(C)
+            use, intrinsic :: iso_c_binding
+            Real(C_DOUBLE),  Intent(In),  Value :: r
+            Real(C_DOUBLE),  Intent(In),  Value :: g
+            Real(C_DOUBLE),  Intent(In),  Value :: b
+            Real(C_DOUBLE),  Intent(Out)        :: h
+            Real(C_DOUBLE),  Intent(Out)        :: s
+            Real(C_DOUBLE),  Intent(Out)        :: v
+        End Subroutine HSV_to_RGB
     End Interface
 
 Contains
