@@ -274,7 +274,7 @@ TEST_F(VerifyAgainstFortran, QuasiMediumDielectric) {
 
 // Run the tests
 int main(int argc, char **argv) {
-    initiallize_material_index();
+    //initiallize_material_index();
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

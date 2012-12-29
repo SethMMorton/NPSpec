@@ -27,7 +27,6 @@ contains
         call run_test_case(NLAMBDA_check, 'NLAMBDA_Check')
         call run_test_case(wavelengths_check, 'Wavelengths')
         call run_test_case(enum_check, 'Enum_Check')
-        call run_test_case(CIE_MAT_check, 'CIE_MAT')
         call run_test_case(mat_indx, 'MatIndx')
         call run_test_case(Mie1Layer, 'Mie1Layer')
         call run_test_case(Mie2Layer, 'Mie2Layer')
@@ -90,17 +89,7 @@ contains
         call assert_equals(1, CrossSection)
         call assert_equals(2, Molar)
         call assert_equals(3, Absorbance)
-end subroutine enum_check
-
-    subroutine CIE_MAT_check
-        use NPSolveModule, ONLY : CIE_MAT
-        double precision :: check(3,3) = RESHAPE((/ 3.2410, -0.9692,  0.0556, &
-                                                   -1.5374,  1.8760, -0.2040, &
-                                                   -0.4986,  0.0416,  1.0570  &
-                                                  /), (/3, 3/))
-        call setup
-        call assert_equals (CIE_MAT, check, 3, 3)
-    end subroutine CIE_MAT_check
+    end subroutine enum_check
 
     subroutine mat_indx
         use NPSolveModule, ONLY : material_index, make_C_string
@@ -595,9 +584,7 @@ end module test_fortran_wrapper
 program fruit_driver
     use fruit
     use test_fortran_wrapper, ONLY : run_all_tests
-    use NPSolveModule, ONLY : initiallize_material_index
     integer :: numfailures
-    call initiallize_material_index
     call init_fruit
     call run_all_tests
     call fruit_summary

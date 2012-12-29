@@ -84,23 +84,9 @@ TEST(SanityTest, Wavelengths) {
     EXPECT_EQ(wavelengths[799], 999.0);
 }
 
-// Check that the CIE matrix is correct
-TEST(SanityTest, CIE_MAT) {
-    EXPECT_EQ(CIE_Mat[0][0],  3.2410);
-    EXPECT_EQ(CIE_Mat[0][1], -1.5374);
-    EXPECT_EQ(CIE_Mat[0][2], -0.4986);
-    EXPECT_EQ(CIE_Mat[1][0], -0.9692);
-    EXPECT_EQ(CIE_Mat[1][1],  1.8760);
-    EXPECT_EQ(CIE_Mat[1][2],  0.0416);
-    EXPECT_EQ(CIE_Mat[2][0],  0.0556);
-    EXPECT_EQ(CIE_Mat[2][1], -0.2040);
-    EXPECT_EQ(CIE_Mat[2][2],  1.0570);
-};
-
 // Test that the material index works
 TEST(SanityTest, MatIndx) {
     // Get the correct material indices
-    // Remember that initiallize_material_index has already been called
     EXPECT_EQ(material_index((char*) "Au"), 4);
     EXPECT_EQ(material_index((char*) "Diamond"), 13);
     EXPECT_EQ(material_index((char*) "TiO2"), 43);
@@ -557,7 +543,6 @@ TEST_F(TestSpectraTypes, TestAbsorbance) {
 
 // Run the tests
 int main(int argc, char **argv) {
-    initiallize_material_index();
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
