@@ -2,7 +2,7 @@
 #define MATERIAL_PARAMETERS_H
 
 #include <complex>
-#include "NPSolve.h"
+#include "constants.h"
 using namespace std;
 
 extern const double drude_parameters[][3];

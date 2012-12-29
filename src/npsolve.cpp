@@ -27,6 +27,7 @@
 #include <iostream>
 #include "solvers.h"
 #include "material_parameters.h"
+#include "constants.h"
 #include "NPSolve.h"
 
 using namespace std;
@@ -46,19 +47,19 @@ inline complex<double> drude (double om, double plasmon, double gamma, double si
     return sqr(plasmon) / ( om * ( om + complex<double>(0.0, 1.0) * ( gamma + sizecorr ) ) );
 }
 
-int npsolve (const int nlayers,         /* Number of layers */
-             const double rad[2],       /* Radius of object */
-             const double rel_rad[][2], /* Relative radii of layers */
-             const int indx[],          /* Material index of layers */
-             const double mrefrac,      /* Refractive index of medium */
-             const bool size_correct,   /* Use size correction? */
-             const int increment,       /* Increment of wavelengths */
-             const double path_length,  /* Path length for absorbance */
-             const double concentration,/* The concentration of solution */
-             const int spectra_type,    /* What spectra to return */
-             double extinct[],          /* Extinction */
-             double scat[],             /* Scattering */
-             double absorb[]            /* Absorption */
+int npsolve (const int nlayers,              /* Number of layers */
+             const double rad[2],            /* Radius of object */
+             const double rel_rad[][2],      /* Relative radii of layers */
+             const int indx[],               /* Material index of layers */
+             const double mrefrac,           /* Refractive index of medium */
+             const bool size_correct,        /* Use size correction? */
+             const int increment,            /* Increment of wavelengths */
+             const double path_length,       /* Path length for absorbance */
+             const double concentration,     /* The concentration of solution */
+             const SpectraType spectra_type, /* What spectra to return */
+             double extinct[],               /* Extinction */
+             double scat[],                  /* Scattering */
+             double absorb[]                 /* Absorption */
            )
 {
 
