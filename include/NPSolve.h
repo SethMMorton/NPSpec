@@ -1,8 +1,6 @@
 #ifndef NPSOLVE_H
 #define NPSOLVE_H
 
-#define NLAMBDA 800
-
 /* Protect as C if C++ so that library can be called from C or Fortran */
 #ifdef __cplusplus
 extern "C" {
@@ -12,25 +10,16 @@ extern "C" {
 #include <stdbool.h>
 #else
 typedef int bool;
+const bool false = 0;
+const bool true  = 1;:
 #endif
 #endif
 
-/* Enum for spectra type */
-enum { Efficiency, CrossSection, Molar, Absorbance };
-
-/* The wavelengths to calculate at as defined in wavelengths.c */
-extern const double wavelengths[];
-
-/* Color matching data found in standard_color_matching.c */
-extern const double CIE_Mat[3][3];
-extern const double CIE_X[];
-extern const double CIE_Y[];
-extern const double CIE_Z[];
-extern const double CIE_D65[];
+/* Pull in some constants */
+#include "constants.h"
 
 /* Function to return the index of a material, from material_index.c */
 int material_index(char *material);
-void initiallize_material_index(void);
 
 /* The actual npsolve function declaration */
 int npsolve (const int nlayers,
@@ -42,11 +31,28 @@ int npsolve (const int nlayers,
              const int increment,
              const double path_length,
              const double concentration,
-             const int spectra_type,
+             const SpectraType spectra_type,
              double extinct[],
              double scat[],
              double absorb[]
            );
+
+/* Determine color based on spectra */
+void RGB(const double spec_in[], 
+         const int inc, 
+         const bool trans, 
+         double *r, 
+         double *g,
+         double *b,
+         double *o);
+
+/* Color conversion */
+void RGB_to_HSV(const double r,
+                const double g,
+                const double b,
+                double *h,
+                double *s,
+                double *v);
 
 #ifdef __cplusplus
 } // extern 
