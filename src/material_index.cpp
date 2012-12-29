@@ -1,11 +1,9 @@
 #include "NPSolve.h"
 
-#include <string>
-#include <map>
+#include <string.h>
 
-static std::map<std::string,int> matindx;
-
-void initiallize_material_index() {
+int material_index(char *material) {
+    /* If the material is not in the list, return -1 */ 
 
     /* The array defining the known materials  */
     static const char mindx[][14] = {
@@ -60,19 +58,16 @@ void initiallize_material_index() {
         "ZnTe",          /* 48 */
     };
     
-    /* Initiallize the map */
-    int mindxsize = sizeof mindx / sizeof mindx[0];
-    for (int i = 0; i < mindxsize; i++) {
-        matindx.insert( std::pair<std::string,int>(mindx[i], i) );
+    /* Get the number of materials known */
+    static const int nmat = sizeof(mindx) / sizeof(mindx[0]);
+
+    /* Find the index of the given material */
+    for (int i = 0; i < nmat; i++) {
+        if (strcmp(mindx[i], material) == 0) 
+            return i;
     }
 
-}
+    /* If we have gotten here, the material is not known.  Return -1 */
+    return -1;
 
-int material_index(char *material) {
-    /* If the material is not in the list, return -1 */ 
-    std::string mat(material);
-    if (matindx.count(mat) > 0)
-        return matindx[mat];
-    else 
-        return -1;
 }
