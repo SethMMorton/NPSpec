@@ -13,7 +13,7 @@ Module NPSolveModule
     Public Efficiency
     Public CrossSection
     Public Molar
-    Public Absorbance
+    Public Absorbtion
     Public wavelengths
     Public material_index
     Public npsolve
@@ -29,7 +29,7 @@ Module NPSolveModule
     Integer(C_INT), Parameter :: Efficiency   = 0
     Integer(C_INT), Parameter :: CrossSection = 1
     Integer(C_INT), Parameter :: Molar        = 2
-    Integer(C_INT), Parameter :: Absorbance   = 3
+    Integer(C_INT), Parameter :: Absorbtion   = 3
 
 !   Interfaces to the C routines
     Interface
@@ -45,7 +45,7 @@ Module NPSolveModule
                             spectra_type, qext, qscat, qabs) Bind (C)
             use, intrinsic :: iso_c_binding
             Integer(C_INT),  Intent(In), Value  :: nlayers
-            Real(C_DOUBLE),  Intent(In)         :: rad(*)
+            Real(C_DOUBLE),  Intent(In)         :: rad(2)
             Real(C_DOUBLE),  Intent(In)         :: rel_rad(nlayers,*)
             Integer(C_INT),  Intent(In)         :: indx(*)
             Real(C_DOUBLE),  Intent(In), Value  :: mrefrac
