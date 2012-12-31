@@ -1,7 +1,10 @@
 # Directories containing include files
 INCLUDE_DIRECTORIES(${INC})
 
+# All cpp files
 SET(NPSolve_SRC npsolve.cpp
+                nanoparticle.cpp
+                calculate_color.cpp
                 drude_parameters.cpp
                 experimental_dielectrics.cpp
                 mie.cpp
@@ -11,16 +14,22 @@ SET(NPSolve_SRC npsolve.cpp
                 wavelengths.cpp
 )
 
+# These are the headers to be public
+SET(NPSolve_HEADERS ${INC}/NPSolve.h
+                    ${INC}/constants.h
+                    ${INC}/nanoparticle.h
+)
+
 # Define the library
 IF(STATIC)
-    ADD_LIBRARY(${NPSOLVE} STATIC ${NPSolve_SRC} ${INC}/NPSolve.h)
+    ADD_LIBRARY(${NPSOLVE} STATIC ${NPSolve_SRC} ${NPSolve_HEADERS})
 ELSE()
-    ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${INC}/NPSolve.h)
+    ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
 ENDIF(STATIC)
 
 # These headers are to be installed with the library
 IF(FRAMEWORK)
-    SET_PROPERTY(SOURCE ${INC}/NPSolve.h 
+    SET_PROPERTY(SOURCE ${NPSolve_HEADERS}
         PROPERTY MACOSX_PACKAGE_LOCATION Headers)
 ENDIF()
 
@@ -52,6 +61,6 @@ ELSE()
     # Install library and header
     INSTALL(TARGETS ${NPSOLVE} LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
                                ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}) 
-    INSTALL(FILES ${INC}/NPSolve.h ${INC}/NPSolveModule.f90 DESTINATION include)
+    INSTALL(FILES ${NPSolve_HEADERS} ${INC}/NPSolveModule.f90 DESTINATION include)
 
 ENDIF(FRAMEWORK)

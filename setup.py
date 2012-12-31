@@ -10,7 +10,8 @@ from setuptools import setup, Extension
 import numpy
 
 # Create a list of all the source files
-sourcefiles = ['pyNPSolve.c'] + glob(join('src', '*'))
+sourcefiles = ([join('src', 'python','pyNPSolve.c')] 
+             + glob(join('src', '*.cpp')))
 
 # Define the build
 setup(name='npsolve',
