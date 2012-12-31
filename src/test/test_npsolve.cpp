@@ -50,7 +50,7 @@ class TestSpectraTypes : public ::testing::Test {
         medium_refrac = 1.0;
         radius[0] = 10.0;
         radius[1] = -1.0;
-        npsolve(nlayers, radius, relative_radius, index,
+        npspec(nlayers, radius, relative_radius, index,
                 medium_refrac, false, inc, 1.0, 1.0, Efficiency,
                 qext1, qscat1, qabs1);
     }
@@ -111,7 +111,7 @@ TEST_F(TestSolver, Mie1Layer) {
     const int nlayers = 1;
     const double medium_refrac = 1.0;
     const double radius[2] = { 20.0, -1.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -135,7 +135,7 @@ TEST_F(TestSolver, Mie2Layer) {
     const int nlayers = 2;
     const double medium_refrac = 1.0;
     const double radius[2] = { 20.0, -1.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid2, index2,
+    int result = npspec(nlayers, radius, relative_radius_spheroid2, index2,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -160,7 +160,7 @@ TEST_F(TestSolver, Mie3Layer) {
     const int nlayers = 3;
     const double medium_refrac = 1.0;
     const double radius[2] = { 20.0, -1.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid3, index3,
+    int result = npspec(nlayers, radius, relative_radius_spheroid3, index3,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -185,7 +185,7 @@ TEST_F(TestSolver, Quasi1Layer) {
     const int nlayers = 1;
     const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, 10.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -210,7 +210,7 @@ TEST_F(TestSolver, Quasi2Layer) {
     const int nlayers = 2;
     const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, 10.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid2, index2,
+    int result = npspec(nlayers, radius, relative_radius_spheroid2, index2,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -235,7 +235,7 @@ TEST_F(TestSolver, Quasi3Layer) {
     const int nlayers = 3;
     const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, 10.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid3, index3,
+    int result = npspec(nlayers, radius, relative_radius_spheroid3, index3,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -248,7 +248,7 @@ TEST_F(TestSolver, QuasiProlate) {
     const int nlayers = 1;
     const double medium_refrac = 1.0;
     const double radius[2] = { 10.0, 5.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -273,7 +273,7 @@ TEST_F(TestSolver, QuasiOblate) {
     const int nlayers = 1;
     const double medium_refrac = 1.0;
     const double radius[2] = { 5.0, 10.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -303,7 +303,7 @@ TEST_F(TestSolver, TestIncrement5) {
         qscat[i] = 0.0;
         qabs[i] = 0.0;
     }
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, 5, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -342,7 +342,7 @@ TEST_F(TestSolver, TestIncrement7) {
         qscat[i] = 0.0;
         qabs[i] = 0.0;
     }
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, 7, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -360,7 +360,7 @@ TEST_F(TestSolver, TestIncrementNegative) {
         qscat[i] = 0.0;
         qabs[i] = 0.0;
     }
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, -1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -373,7 +373,7 @@ TEST_F(TestSolver, TestSizeCorrect) {
     const int nlayers = 1;
     const double medium_refrac = 1.0;
     const double radius[2] = { 5.0, -1.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, true, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -398,7 +398,7 @@ TEST_F(TestSolver, TestMediumRefractiveIndex) {
     const int nlayers = 1;
     const double medium_refrac = 2.0;
     const double radius[2] = { 20.0, -1.0 };
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
 
@@ -424,14 +424,14 @@ TEST_F(TestSolver, TestMieQuasiSmall) {
     const double medium_refrac = 1.0;
     const double radius[2] = { 3.0, -1.0 };
     /* Mie */
-    int result = npsolve(nlayers, radius, relative_radius_spheroid1, index1,
+    int result = npspec(nlayers, radius, relative_radius_spheroid1, index1,
                          medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                          qext, qscat, qabs);
     EXPECT_EQ(0, result);
     const double radius2[2] = { 3.0, 3.0 };
     double qext2[NLAMBDA], qscat2[NLAMBDA], qabs2[NLAMBDA];
     /* Quasistatic */
-    result = npsolve(nlayers, radius2, relative_radius_spheroid1, index1,
+    result = npspec(nlayers, radius2, relative_radius_spheroid1, index1,
                      medium_refrac, false, 1, 1.0, 1.0, Efficiency,
                      qext2, qscat2, qabs2);
     EXPECT_EQ(0, result);
@@ -452,7 +452,7 @@ TEST_F(TestSolver, TestMieQuasiSmall) {
 };
 
 TEST_F(TestSpectraTypes, TestCrossSection) {
-    int result = npsolve(nlayers, radius, relative_radius, index, 
+    int result = npspec(nlayers, radius, relative_radius, index,
                          medium_refrac, false, inc, 1.0, 1.0, CrossSection,
                          qext2, qscat2, qabs2);
     EXPECT_EQ(0, result);
@@ -471,7 +471,7 @@ TEST_F(TestSpectraTypes, TestCrossSection) {
 };
 
 TEST_F(TestSpectraTypes, TestMolar) {
-    int result = npsolve(nlayers, radius, relative_radius, index, 
+    int result = npspec(nlayers, radius, relative_radius, index,
                          medium_refrac, false, inc, 1.0, 1.0, Molar,
                          qext2, qscat2, qabs2);
     EXPECT_EQ(0, result);
@@ -507,11 +507,11 @@ TEST_F(TestSpectraTypes, TestMolar) {
                                * 1e-14 * avogadro / ( 1000 * log(10) ));
 };
 
-TEST_F(TestSpectraTypes, TestAbsorbance) {
+TEST_F(TestSpectraTypes, TestAbsorbtion) {
     const double path_length = 1.5, molarity = 0.004;
-    int result = npsolve(nlayers, radius, relative_radius, index, 
+    int result = npspec(nlayers, radius, relative_radius, index,
                          medium_refrac, false, inc, path_length, molarity,
-                         Absorbance, qext2, qscat2, qabs2);
+                         Absorbtion, qext2, qscat2, qabs2);
     EXPECT_EQ(0, result);
     // Extinction
     EXPECT_FLOAT_EQ(qext2[0],
@@ -559,11 +559,10 @@ TEST_F(TestSpectraTypes, TestAbsorbance) {
 
 TEST_F(TestColors, TestBlack) {
     // Black will from all zero's
-    RGB(spec, 1, false, &r, &g, &b, &o);
+    RGB(spec, 1, false, &r, &g, &b);
     EXPECT_FLOAT_EQ(0.0, r);
     EXPECT_FLOAT_EQ(0.0, g);
     EXPECT_FLOAT_EQ(0.0, b);
-    EXPECT_FLOAT_EQ(0.0, o);
     RGB_to_HSV(r, g, b, &h, &s, &v);
     EXPECT_FLOAT_EQ(0.0, h);
     EXPECT_FLOAT_EQ(0.0, s);
@@ -574,11 +573,10 @@ TEST_F(TestColors, TestWhite) {
     // White will from all one's
     for (int i = 0; i < NLAMBDA; i++) 
         spec[i] = 1.0;
-    RGB(spec, 1, false, &r, &g, &b, &o);
+    RGB(spec, 1, false, &r, &g, &b);
     EXPECT_FLOAT_EQ(1.0,        r);
     EXPECT_FLOAT_EQ(0.97691756, g);
     EXPECT_FLOAT_EQ(0.95884293, b);
-    EXPECT_FLOAT_EQ(1.0,        o);
     RGB_to_HSV(r, g, b, &h, &s, &v);
     EXPECT_FLOAT_EQ(26.349688,   h);
     EXPECT_FLOAT_EQ(0.041157044, s);
@@ -592,11 +590,10 @@ TEST_F(TestColors, TestRed) {
         if (wavelengths[i] == 700.0)
             spec[i] = 1.0;
     }
-    RGB(spec, 1, false, &r, &g, &b, &o);
+    RGB(spec, 1, false, &r, &g, &b);
     EXPECT_FLOAT_EQ(1.0,        r);
     EXPECT_FLOAT_EQ(0.97691756, g);
     EXPECT_FLOAT_EQ(0.95884293, b);
-    EXPECT_FLOAT_EQ(1.0,        o);
     RGB_to_HSV(r, g, b, &h, &s, &v);
     EXPECT_FLOAT_EQ(26.349688,   h);
     EXPECT_FLOAT_EQ(0.041157044, s);

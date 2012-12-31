@@ -94,9 +94,9 @@ TEST_F(VerifyAgainstFortran, Mie1Layer) {
             &fextinct, &fscat,  &fabs, &back, &radpres, &alb, &asym);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 
@@ -115,9 +115,9 @@ TEST_F(VerifyAgainstFortran, Mie2Layer) {
             &fextinct, &fscat,  &fabs, &back, &radpres, &alb, &asym);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 
@@ -136,9 +136,9 @@ TEST_F(VerifyAgainstFortran, Mie3Layer) {
             &fextinct, &fscat,  &fabs, &back, &radpres, &alb, &asym);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 
@@ -157,9 +157,9 @@ TEST_F(VerifyAgainstFortran, MieMediumDielectric) {
             &fextinct, &fscat,  &fabs, &back, &radpres, &alb, &asym);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 
@@ -178,9 +178,9 @@ TEST_F(VerifyAgainstFortran, Quasi1LayerSphere) {
               &fextinct, &fscat,  &fabs);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 
@@ -199,9 +199,9 @@ TEST_F(VerifyAgainstFortran, Quasi2LayerSphere) {
               &fextinct, &fscat,  &fabs);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 
@@ -222,9 +222,9 @@ TEST_F(VerifyAgainstFortran, QuasiProlate) {
               &fextinct, &fscat,  &fabs);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 
@@ -245,9 +245,9 @@ TEST_F(VerifyAgainstFortran, QuasiOblate) {
               &fextinct, &fscat,  &fabs);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 
@@ -266,9 +266,9 @@ TEST_F(VerifyAgainstFortran, QuasiMediumDielectric) {
               &fextinct, &fscat,  &fabs);
 
     // Make sure results are correct
-    EXPECT_NEAR(cextinct, fextinct, 1e-14);
-    EXPECT_NEAR(cscat,    fscat,    1e-14);
-    EXPECT_NEAR(cabs,     fabs,     1e-14);
+    EXPECT_NEAR(fextinct, cextinct, 1e-14);
+    EXPECT_NEAR(fscat,    cscat,    1e-14);
+    EXPECT_NEAR(fabs,     cabs,     1e-14);
 
 }
 

@@ -44,7 +44,7 @@ contains
         call run_test_case(TestMieQuasiSmall, 'TestMieQuasiSmall')
         call run_test_case(TestCrossSection, 'TestCrossSection')
         call run_test_case(TestMolar, 'TestMolar')
-        call run_test_case(TestAbsorbance, 'TestAbsorbance')
+        call run_test_case(TestAbsorbtion, 'TestAbsorbtion')
     end subroutine
 
     subroutine setup
@@ -83,12 +83,12 @@ contains
     end subroutine wavelengths_check
 
     subroutine enum_check
-        use NPSolveModule, ONLY : Efficiency, CrossSection, Molar, Absorbance
+        use NPSolveModule, ONLY : Efficiency, CrossSection, Molar, Absorbtion
         call setup
         call assert_equals(0, Efficiency)
         call assert_equals(1, CrossSection)
         call assert_equals(2, Molar)
-        call assert_equals(3, Absorbance)
+        call assert_equals(3, Absorbtion)
     end subroutine enum_check
 
     subroutine mat_indx
@@ -542,8 +542,8 @@ contains
                                   / ( 1000d0 * log(10d0) ), NLAMBDA, 1d-6)
     end subroutine
 
-    subroutine TestAbsorbance
-        use NPsolveModule, ONLY : Efficiency, Absorbance, npsolve, NLAMBDA
+    subroutine TestAbsorbtion
+        use NPsolveModule, ONLY : Efficiency, Absorbtion, npsolve, NLAMBDA
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -563,7 +563,7 @@ contains
         call assert_equals(0, retval)
         retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, path_length, molarity,&
-                         Absorbance, qext2, qscat2, qabs2)
+                         Absorbtion, qext2, qscat2, qabs2)
         call assert_equals(0, retval)
         ! Extinction
         call assert_equals(qext2, qext * pi * radius(1)**2 &
