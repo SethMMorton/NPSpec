@@ -1,4 +1,4 @@
-#include "NPSolve.h"
+#include "NPSpec.h"
 using namespace NPSpec;
 
 const double wavelengths[NLAMBDA] = 

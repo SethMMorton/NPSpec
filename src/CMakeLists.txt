@@ -2,34 +2,34 @@
 INCLUDE_DIRECTORIES(${INC})
 
 # All cpp files
-SET(NPSolve_SRC npsolve.cpp
-                nanoparticle.cpp
-                calculate_color.cpp
-                drude_parameters.cpp
-                experimental_dielectrics.cpp
-                mie.cpp
-                material_index.cpp
-                quasi.cpp
-                standard_color_matching.cpp
-                wavelengths.cpp
+SET(NPSpec_SRC npspec.cpp
+               nanoparticle.cpp
+               calculate_color.cpp
+               drude_parameters.cpp
+               experimental_dielectrics.cpp
+               mie.cpp
+               material_index.cpp
+               quasi.cpp
+               standard_color_matching.cpp
+               wavelengths.cpp
 )
 
 # These are the headers to be public
-SET(NPSolve_HEADERS ${INC}/NPSolve.h
-                    ${INC}/constants.h
-                    ${INC}/nanoparticle.h
+SET(NPSpec_HEADERS ${INC}/NPSpec.h
+                   ${INC}/constants.h
+                   ${INC}/nanoparticle.h
 )
 
 # Define the library
 IF(STATIC)
-    ADD_LIBRARY(${NPSOLVE} STATIC ${NPSolve_SRC} ${NPSolve_HEADERS})
+    ADD_LIBRARY(${NPSPEC} STATIC ${NPSpec_SRC} ${NPSpec_HEADERS})
 ELSE()
-    ADD_LIBRARY(${NPSOLVE} SHARED ${NPSolve_SRC} ${NPSolve_HEADERS})
+    ADD_LIBRARY(${NPSPEC} SHARED ${NPSpec_SRC} ${NPSpec_HEADERS})
 ENDIF(STATIC)
 
 # These headers are to be installed with the library
 IF(FRAMEWORK)
-    SET_PROPERTY(SOURCE ${NPSolve_HEADERS}
+    SET_PROPERTY(SOURCE ${NPSpec_HEADERS}
         PROPERTY MACOSX_PACKAGE_LOCATION Headers)
 ENDIF()
 
@@ -37,14 +37,14 @@ ENDIF()
 IF(FRAMEWORK)
 
     # Set the version of the framework
-    SET_TARGET_PROPERTIES(${NPSOLVE} PROPERTIES FRAMEWORK TRUE
+    SET_TARGET_PROPERTIES(${NPSPEC} PROPERTIES FRAMEWORK TRUE
                                      VERSION v${VERSION})
 
     # Install to framework location
     SET(FRAMELIB /Library/Frameworks)
-    SET(FRAMENAME ${NPSOLVE}.framework)
-    INSTALL(TARGETS ${NPSOLVE} FRAMEWORK DESTINATION ${FRAMELIB})
-    INSTALL(FILES ${INC}/NPSolveModule.f90 
+    SET(FRAMENAME ${NPSPEC}.framework)
+    INSTALL(TARGETS ${NPSPEC} FRAMEWORK DESTINATION ${FRAMELIB})
+    INSTALL(FILES ${INC}/NPSpecModule.f90 
         DESTINATION ${FRAMELIB}/${FRAMENAME}/Versions/v${VERSION}/Headers)
 
 # Otherwise install to the usual locations
@@ -59,8 +59,8 @@ ELSE()
     ENDIF()
 
     # Install library and header
-    INSTALL(TARGETS ${NPSOLVE} LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+    INSTALL(TARGETS ${NPSPEC} LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
                                ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}) 
-    INSTALL(FILES ${NPSolve_HEADERS} ${INC}/NPSolveModule.f90 DESTINATION include)
+    INSTALL(FILES ${NPSpec_HEADERS} ${INC}/NPSpecModule.f90 DESTINATION include)
 
 ENDIF(FRAMEWORK)

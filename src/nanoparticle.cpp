@@ -2,7 +2,7 @@
 #include <cstring>
 #include <cmath>
 /* Wrap this header in a namespace to avoid clobbering things */
-#include "NPSolve.h"
+#include "NPSpec.h"
 
 using namespace NPSpec;
 

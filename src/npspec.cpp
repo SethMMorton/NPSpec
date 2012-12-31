@@ -27,7 +27,7 @@
 #include <iostream>
 #include "solvers.h"
 #include "material_parameters.h"
-#include "NPSolve.h"
+#include "NPSpec.h"
 
 using namespace std;
 using namespace NPSpec;

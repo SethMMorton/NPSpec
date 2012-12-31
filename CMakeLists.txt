@@ -1,6 +1,6 @@
 # Set up environment
-PROJECT(NPSolve CXX)
-SET(NPSOLVE_VERSION 0.2.0)
+PROJECT(NPSpec CXX)
+SET(NPSPEC_VERSION 0.2.0)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
@@ -38,10 +38,10 @@ SET(INC  ${CMAKE_SOURCE_DIR}/include)
 SET(LIB  ${CMAKE_SOURCE_DIR}/lib)
 SET(TEST ${CMAKE_SOURCE_DIR}/test)
 
-# Name of NPSolve library
-SET(NPSOLVE NPSolve)
+# Name of NPSpec library
+SET(NPSPEC NPSpec)
 
-# Build the NPSolve library and place it into lib
+# Build the NPSpec library and place it into lib
 ADD_SUBDIRECTORY(${SRC} ${LIB})
 
 # Unit testing (only if requested)

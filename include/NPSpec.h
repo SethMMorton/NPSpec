@@ -1,5 +1,5 @@
-#ifndef NPSOLVE_H
-#define NPSOLVE_H
+#ifndef NPSPEC_H
+#define NPSPEC_H
 
 /* Protect as C if C++ so that library can be called from C or Fortran */
 #ifdef __cplusplus
@@ -59,4 +59,4 @@ void RGB_to_HSV(const double r,
 } // NPSpec namespace
 #endif
 
-#endif /* NPSOLVE_H */
+#endif /* NPSPEC_H */

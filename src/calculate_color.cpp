@@ -3,7 +3,7 @@
 #include <numeric>
 #include "constants.h"
 #include "standard_color_matching.h"
-#include "NPSolve.h"
+#include "NPSpec.h"
 using namespace NPSpec;
 
 /* Static variables that need to be calculated only once */

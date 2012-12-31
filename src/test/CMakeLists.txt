@@ -10,16 +10,16 @@ INCLUDE_DIRECTORIES(${INC} googletest/include)
 LINK_DIRECTORIES(${LIB}/gtest)
 
 # Add test executable target
-ADD_EXECUTABLE(testNPSolve test_npsolve.cpp)
+ADD_EXECUTABLE(testNPSpec test_npsolve.cpp)
 
-# Create dependency of testNPSolve on googletest
-ADD_DEPENDENCIES(testNPSolve googletest)
+# Create dependency of testNPSpec on googletest
+ADD_DEPENDENCIES(testNPSpec googletest)
 
-# Specify testNPSolve's link libraries
-TARGET_LINK_LIBRARIES(testNPSolve gtest NPSolve)
+# Specify testNPSpec's link libraries
+TARGET_LINK_LIBRARIES(testNPSpec gtest NPSpec)
 
 # Add the c++ only unit tests
-ADD_TEST(testNPSolve "testNPSolve")
+ADD_TEST(testNPSpec "testNPSpec")
 
 # Test Fortran code?
 IF (FORTRAN)
@@ -34,18 +34,18 @@ IF (FORTRAN)
         NO_EXTERNAL_INSTALL TRUE # Don't install
     )
     # Create the executable for verifying C++ routines against Fortran standards
-    ADD_EXECUTABLE(verifyNPSolve verify_npsolve.cpp)
-    ADD_DEPENDENCIES(verifyNPSolve googletest fSolve NPSolve)
-    TARGET_LINK_LIBRARIES(verifyNPSolve gtest NPSolve fSolve)
-    ADD_TEST(verifyNPSolve "verifyNPSolve")
+    ADD_EXECUTABLE(verifyNPSpec verify_npsolve.cpp)
+    ADD_DEPENDENCIES(verifyNPSpec googletest fSolve NPSpec)
+    TARGET_LINK_LIBRARIES(verifyNPSpec gtest NPSpec fSolve)
+    ADD_TEST(verifyNPSpec "verifyNPSpec")
     # Create the executable that tests the Fortran wrappers of the C++ code
     CMAKE_ADD_Fortran_SUBDIRECTORY(fruit
         PROJECT FRUIT ARCHIVE_DIR fruit LIBRARIES Fruit
         NO_EXTERNAL_INSTALL TRUE
     )
     ADD_EXECUTABLE(testFortranWrapper test_fortran_wrapper.f90
-                                      ${INC}/NPSolveModule.f90)
-    ADD_DEPENDENCIES(testFortranWrapper Fruit NPSolve)
-    TARGET_LINK_LIBRARIES(testFortranWrapper Fruit NPSolve)
+                                      ${INC}/NPSpecModule.f90)
+    ADD_DEPENDENCIES(testFortranWrapper Fruit NPSpec)
+    TARGET_LINK_LIBRARIES(testFortranWrapper Fruit NPSpec)
     ADD_TEST(testFortranWrapper "testFortranWrapper")
 ENDIF(FORTRAN)

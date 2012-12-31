@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <Python.h>
 #include <numpy/arrayobject.h>
-#include "NPSolve.h"
+#include "NPSpec.h"
 
 /* Wrapper for initiallize_material_index */
 static PyObject* npsolve_initiallize_material_index (PyObject *self) {
@@ -34,7 +34,7 @@ static PyObject* npsolve_npsolve (PyObject *self, PyObject *args, PyObject *kwar
     double refrac_indx = 1.0;
     double path_length = 1.0;
     double concentration = 1.0;
-    bool size_correct = 0; // bool is ensured to be defined in NPSolve.h
+    bool size_correct = 0; // bool is ensured to be defined in NPSpec.h
 
     /* Array objects needed later, and other */
     PyArrayObject *rad, *rel_rad, *indx;
@@ -142,7 +142,7 @@ static PyMethodDef npsolve_funcs[] = {
 PyMODINIT_FUNC initnpsolve(void) {
     /* Initiallize the module */
     PyObject *module = Py_InitModule3("npsolve", npsolve_funcs,
-                                      "A python wrapper for the NPSolve C library");
+                                      "A python wrapper for the NPSpec C library");
 
     /* Make sure the array module is loaded */
     import_array();

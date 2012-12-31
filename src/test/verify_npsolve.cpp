@@ -3,7 +3,7 @@
 #include <complex>
 #include "gtest/gtest.h"
 #include "solvers.h"
-#include "NPSolve.h"
+#include "NPSpec.h"
 
 using namespace::std;
 

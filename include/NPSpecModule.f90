@@ -1,7 +1,7 @@
-Module NPSolveModule
+Module NPSpecModule
 
 !   ***********************************************************************
-!   This module conatins interfaces needed to call the NPSolve library from
+!   This module conatins interfaces needed to call the NPSpec library from
 !   Fortran, plus a helper function to make a Fortran string a C-string
 !   ***********************************************************************
 
@@ -21,7 +21,7 @@ Module NPSolveModule
     Public RGB_to_HSV
     Public make_C_string
 
-!   Here is the wavelength and color matching arrays from the NPSolve header
+!   Here is the wavelength and color matching arrays from the NPSpec header
     Integer(C_INT), Parameter                    :: NLAMBDA = 800
     Real(C_DOUBLE), Bind(C, name="wavelengths")  :: wavelengths(NLAMBDA)
 
@@ -95,4 +95,4 @@ Contains
         stringout = stringin//C_NULL_CHAR
     End Subroutine make_C_string
 
-End Module NPSolveModule
+End Module NPSpecModule

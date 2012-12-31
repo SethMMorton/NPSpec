@@ -2,7 +2,7 @@ module test_fortran_wrapper
 
     use, intrinsic :: iso_c_binding
     use fruit
-    use NPSolveModule, ONLY : NLAMBDA
+    use NPSpecModule, ONLY : NLAMBDA
 
     implicit none
 
@@ -48,7 +48,7 @@ contains
     end subroutine
 
     subroutine setup
-        use NPSolveModule, ONLY : material_index, make_C_string
+        use NPSpecModule, ONLY : material_index, make_C_string
         character(kind=C_CHAR, len=14) :: mat
         call make_C_string("Ag", mat)
         index1(1) = material_index(mat)
@@ -67,13 +67,13 @@ contains
     end subroutine setup
 
     subroutine NLAMBDA_check
-        use NPSolveModule, ONLY : NLAMBDA
+        use NPSpecModule, ONLY : NLAMBDA
         call setup
         call assert_equals (NLAMBDA, 800)
     end subroutine NLAMBDA_check
 
     subroutine wavelengths_check
-        use NPSolveModule, ONLY : wavelengths
+        use NPSpecModule, ONLY : wavelengths
         call setup
         call assert_equals(200.0d0, wavelengths(1))
         call assert_equals(201.0d0, wavelengths(2))
@@ -83,7 +83,7 @@ contains
     end subroutine wavelengths_check
 
     subroutine enum_check
-        use NPSolveModule, ONLY : Efficiency, CrossSection, Molar, Absorbtion
+        use NPSpecModule, ONLY : Efficiency, CrossSection, Molar, Absorbtion
         call setup
         call assert_equals(0, Efficiency)
         call assert_equals(1, CrossSection)
@@ -92,7 +92,7 @@ contains
     end subroutine enum_check
 
     subroutine mat_indx
-        use NPSolveModule, ONLY : material_index, make_C_string
+        use NPSpecModule, ONLY : material_index, make_C_string
         character(kind=C_CHAR, len=14) :: mat
         call setup
         call make_C_string("Au", mat)
@@ -106,7 +106,7 @@ contains
     end subroutine mat_indx
 
     subroutine Mie1Layer
-        use NPSolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npsolve
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)

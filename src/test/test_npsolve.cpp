@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "NPSolve.h"
+#include "NPSpec.h"
 
 class TestSolver : public ::testing::Test {
  protected:
