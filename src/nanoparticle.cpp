@@ -63,7 +63,9 @@ int Nanoparticle::calculateSpectrum()
                         absorbance);
 
     // Recalculate the colors
-    RGB(getSpectrum(), increment, false, &red, &blue, &green);
+    double spec[NLAMBDA];
+    getSpectrum(spec);
+    RGB(spec, increment, false, &red, &blue, &green);
     RGB_to_HSV(red, blue, green, &hue, &saturation, &value);
 
     /* 0:  OK! */
@@ -79,15 +81,21 @@ int Nanoparticle::calculateSpectrum()
  * Getters
  *********/
 
-double* Nanoparticle::getSpectrum() const {
+void Nanoparticle::getSpectrum(double spec[NLAMBDA]) const {
     /* Return the spectrum that has been calculated */
     switch(sProp) {
     case Extinction:
-        return extinction;
+        for (int i = 0; i < NLAMBDA; i++)
+            spec[i] = extinction[i];
+        break;
     case Absorbance:
-        return absorbance;
+        for (int i = 0; i < NLAMBDA; i++)
+            spec[i] = absorbance[i];
+        break;
     case Scattering:
-        return scattering;
+        for (int i = 0; i < NLAMBDA; i++)
+            spec[i] = scattering[i];
+        break;
     }
 }
 
@@ -352,7 +360,7 @@ void Nanoparticle::updateRadius(NanoparticleShape npshape) {
     }
 }
 
-void Nanoparticle::updateRelativeRadius(NanaparticleShape npshape) {
+void Nanoparticle::updateRelativeRadius(NanoparticleShape npshape) {
     /* Update the nanoparticle relative radii */
     switch (npshape) {
     case Sphere:

@@ -44,7 +44,7 @@ void RGB(const double spec_in[],
         }
         invmax = max != 0.0 ? 1.0 / max : 1.0;
     }
-    invmax = 1.0
+    invmax = 1.0;
     /* Now normalize to the max */
     int j = 0;
     for (int i = 0; i < NLAMBDA; i += inc) {

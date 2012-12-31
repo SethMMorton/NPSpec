@@ -8,6 +8,7 @@
 
 #include "constants.h"
 #include "standard_color_matching.h"
+using namespace NPSpec;
 
 const double CIE_Mat[3][3] = {
                                {  3.240479, -1.537150, -0.498535 },

@@ -2,11 +2,7 @@
 #define NANOPARTICLE_H
 
 #include <string>
-
-// Add the constants as part of the NPSpec namespace
-namespace NPSpec {
 #include "constants.h"
-}
 
 class Nanoparticle
 {
@@ -16,7 +12,7 @@ public:
     // Calculate the spectra!
     int calculateSpectrum();
     // Get the spectra!
-    double* getSpectrum() const;
+    void getSpectrum(double spec[NPSpec::NLAMBDA]) const;
 
     // Get the colors
     void getRGB(double *r, double *g, double *b) const;

@@ -106,14 +106,14 @@ contains
     end subroutine mat_indx
 
     subroutine Mie1Layer
-        use NPSpecModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve (nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec (nlayers, radius, relative_radius_spheroid1, index1,&
                       medium_refrac, size_correct, 1, 1.0d0, 1.0d0, &
                       Efficiency, qext, qscat, qabs)
 
@@ -134,14 +134,14 @@ contains
     end subroutine Mie1Layer
 
     subroutine Mie2Layer
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 2
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, TRANSPOSE(relative_radius_spheroid2), index2,&
+        retval = npspec(nlayers, radius, TRANSPOSE(relative_radius_spheroid2), index2,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency, &
                          qext, qscat, qabs)
 
@@ -162,14 +162,14 @@ contains
     end subroutine
 
     subroutine Mie3Layer
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 3
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid3, index3,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid3, index3,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -190,14 +190,14 @@ contains
     end subroutine
 
     subroutine Quasi1Layer
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, 10.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -218,14 +218,14 @@ contains
     end subroutine
 
     subroutine Quasi2Layer
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 2
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, 10.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid2, index2,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid2, index2,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -246,14 +246,14 @@ contains
     end subroutine
 
     subroutine Quasi3Layer
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 3
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, 10.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid3, index3,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid3, index3,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -263,14 +263,14 @@ contains
     end subroutine
 
     subroutine QuasiProlate
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, 5.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -291,14 +291,14 @@ contains
     end subroutine
 
     subroutine QuasiOblate
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 5.0d0, 10.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -319,14 +319,14 @@ contains
     end subroutine
 
     subroutine TestIncrement5
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 5, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -356,14 +356,14 @@ contains
     end subroutine
 
     subroutine TestIncrement7
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 7, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -373,14 +373,14 @@ contains
     end subroutine
 
     subroutine TestIncrementNegative
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, -1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -390,14 +390,14 @@ contains
     end subroutine
 
     subroutine TestSizeCorrect
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 5.0d0, -1.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .true.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -418,14 +418,14 @@ contains
     end subroutine
 
     subroutine TestMediumRefractiveIndex
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 2.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
@@ -446,7 +446,7 @@ contains
     end subroutine
 
     subroutine TestMieQuasiSmall
-        use NPsolveModule, ONLY : Efficiency, npsolve
+        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 3.0d0, -1.0d0 /)
@@ -456,12 +456,12 @@ contains
         integer(C_INT) :: retval
         call setup
         ! Mie
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
         call assert_equals(0, retval)
         ! Quasistatic
-        retval = npsolve(nlayers, radius2, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius2, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext2, qscat2, qabs2)
         call assert_equals(0, retval)
@@ -482,7 +482,7 @@ contains
     end subroutine
 
     subroutine TestCrossSection
-        use NPsolveModule, ONLY : Efficiency, CrossSection, npsolve, NLAMBDA
+        use NPSpecModule, ONLY : Efficiency, CrossSection, npspec, NLAMBDA
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -494,11 +494,11 @@ contains
         qext2  = 0.0d0
         qscat2 = 0.0d0
         qabs2  = 0.0d0
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
         call assert_equals(0, retval)
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, CrossSection,&
                          qext2, qscat2, qabs2)
         call assert_equals(0, retval)
@@ -511,7 +511,7 @@ contains
     end subroutine
 
     subroutine TestMolar
-        use NPsolveModule, ONLY : Efficiency, Molar, npsolve, NLAMBDA
+        use NPSpecModule, ONLY : Efficiency, Molar, npspec, NLAMBDA
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -523,11 +523,11 @@ contains
         qext2  = 0.0d0
         qscat2 = 0.0d0
         qabs2  = 0.0d0
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
         call assert_equals(0, retval)
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, Molar,&
                          qext2, qscat2, qabs2)
         call assert_equals(0, retval)
@@ -543,7 +543,7 @@ contains
     end subroutine
 
     subroutine TestAbsorbtion
-        use NPsolveModule, ONLY : Efficiency, Absorbtion, npsolve, NLAMBDA
+        use NPSpecModule, ONLY : Efficiency, Absorbtion, npspec, NLAMBDA
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -557,11 +557,11 @@ contains
         qext2  = 0.0d0
         qscat2 = 0.0d0
         qabs2  = 0.0d0
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
         call assert_equals(0, retval)
-        retval = npsolve(nlayers, radius, relative_radius_spheroid1, index1,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, path_length, molarity,&
                          Absorbtion, qext2, qscat2, qabs2)
         call assert_equals(0, retval)

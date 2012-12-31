@@ -16,7 +16,7 @@ Module NPSpecModule
     Public Absorbtion
     Public wavelengths
     Public material_index
-    Public npsolve
+    Public npspec
     Public RGB
     Public RGB_to_HSV
     Public make_C_string
@@ -35,12 +35,13 @@ Module NPSpecModule
     Interface
         Integer(C_INT) Function material_index (material)  Bind (C)
             use, intrinsic :: iso_c_binding
-            Character(Kind=C_CHAR), Dimension(*), Intent(In) :: material
+            !Character(Kind=C_CHAR), Dimension(*), Intent(In) :: material
+            Character(Kind=C_CHAR), Intent(In) :: material
         End Function material_index
     End Interface
 
     Interface
-        Integer(C_INT) Function npsolve (nlayers, rad, rel_rad, indx, mrefrac,   &
+        Integer(C_INT) Function npspec (nlayers, rad, rel_rad, indx, mrefrac,   &
                             size_correct, increment, path_length, concentration, &
                             spectra_type, qext, qscat, qabs) Bind (C)
             use, intrinsic :: iso_c_binding
@@ -57,7 +58,7 @@ Module NPSpecModule
             Real(C_DOUBLE),  Intent(Out)        :: qext(*)
             Real(C_DOUBLE),  Intent(Out)        :: qscat(*)
             Real(C_DOUBLE),  Intent(Out)        :: qabs(*)
-        End Function npsolve
+        End Function npspec
     End Interface
 
     Interface

@@ -1,9 +1,12 @@
 #ifndef NPSPEC_H
 #define NPSPEC_H
 
+/* Pull in the constants */
+#include <constants.h>
+
 /* Protect as C if C++ so that library can be called from C or Fortran */
 #ifdef __cplusplus
-namespace NPSpec {
+using namespace NPSpec;
 extern "C" {
 #else
 /* If using library in C, use stdbool.h if available */
@@ -16,11 +19,8 @@ const bool true  = 1;
 #endif
 #endif
 
-/* Pull in some constants */
-#include "constants.h"
-
 /* Function to return the index of a material, from material_index.c */
-int material_index(char *material);
+int material_index(const char *material);
 
 /* The actual npsolve function declaration */
 int npspec (const int nlayers,
@@ -56,7 +56,6 @@ void RGB_to_HSV(const double r,
 
 #ifdef __cplusplus
 } // extern 
-} // NPSpec namespace
 #endif
 
 #endif /* NPSPEC_H */

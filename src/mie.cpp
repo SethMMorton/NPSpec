@@ -15,6 +15,7 @@
 #include "constants.h"
 
 using namespace std;
+using namespace NPSpec;
 
 const int MAXNUM        = 1000;
 const complex<double> I = complex<double>(0.0, 1.0);

@@ -2,24 +2,31 @@
 ADD_SUBDIRECTORY(googletest ${LIB}/gtest)
 
 # Specify include dir
-#ExternalProject_Get_Property(googletest source_dir)
 INCLUDE_DIRECTORIES(${INC} googletest/include)
 
 # Specify link dir
-#ExternalProject_Get_Property(googletest binary_dir)
 LINK_DIRECTORIES(${LIB}/gtest)
 
-# Add test executable target
-ADD_EXECUTABLE(testNPSpec test_npsolve.cpp)
+# Create the C++ tests
+SET(CXXTESTS "NPSpec" "Nanoparticle")
+FOREACH (f ${CXXTEST})
 
-# Create dependency of testNPSpec on googletest
-ADD_DEPENDENCIES(testNPSpec googletest)
+    # Make lowercase version of name
+    STRING(TOLOWER f f_lower)
 
-# Specify testNPSpec's link libraries
-TARGET_LINK_LIBRARIES(testNPSpec gtest NPSpec)
+    # Add test executable target
+    ADD_EXECUTABLE(test${f} test_${f_lower}.cpp)
 
-# Add the c++ only unit tests
-ADD_TEST(testNPSpec "testNPSpec")
+    # Create dependency of testNPSpec on googletest
+    ADD_DEPENDENCIES(test${f} googletest)
+
+    # Specify testNPSpec's link libraries
+    TARGET_LINK_LIBRARIES(test${f} gtest NPSpec)
+
+    # Add the c++ only unit tests
+    ADD_TEST(test${f} "test${f}")
+
+ENDFOREACH()
 
 # Test Fortran code?
 IF (FORTRAN)

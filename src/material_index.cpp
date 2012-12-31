@@ -2,7 +2,7 @@
 #include "NPSpec.h"
 using namespace NPSpec;
 
-int material_index(char *material) {
+int material_index(const char *material) {
     /* If the material is not in the list, return -1 */ 
 
     /* The array defining the known materials  */
@@ -63,7 +63,7 @@ int material_index(char *material) {
 
     /* Find the index of the given material */
     for (int i = 0; i < nmat; i++) {
-        if (strcmp(mindx[i], material) == 0) 
+        if (std::strcmp(mindx[i], material) == 0) 
             return i;
     }
 
