@@ -12,11 +12,11 @@
 #include <cmath>
 #include <complex>
 #include "solvers.h"
+#include "constants.h"
 
 using namespace std;
 
-const int maxnum        = 1000;
-const int maxlayers     = 10;
+const int MAXNUM        = 1000;
 const complex<double> I = complex<double>(0.0, 1.0);
 
 /* A square function */
@@ -35,12 +35,12 @@ void aax (const double a, const int num, double ru[]);
 int abn1 (const int nlayers,
           const complex<double> refrac_indx[],
           const int num,
-          complex<double> rrbb[][maxnum],
-          complex<double> rrd1[][maxnum],
-          complex<double> rrd2[][maxnum],
-          complex<double> srbb[][maxnum],
-          complex<double> srd1[][maxnum],
-          complex<double> srd2[][maxnum],
+          complex<double> rrbb[][MAXNUM],
+          complex<double> rrd1[][MAXNUM],
+          complex<double> rrd2[][MAXNUM],
+          complex<double> srbb[][MAXNUM],
+          complex<double> srd1[][MAXNUM],
+          complex<double> srd2[][MAXNUM],
           complex<double> rd11[],
           complex<double> rd3x[],
           complex<double> rcx[],
@@ -81,7 +81,7 @@ int mie (const int nlayers,                   /* Number of layers */
     /* Return code... normally 0, but 1 if outside of reasonable range */
     int retcode = 0;
 
-    double xx[maxlayers];
+    double xx[MAXLAYERS];
     double ax = 1.0 / size_param;
     xx[0] = size_param * rel_rad[0];
     xx[nlayers-1] = size_param;
@@ -94,9 +94,9 @@ int mie (const int nlayers,                   /* Number of layers */
     /* d1(x), rd3(x), rc(x) */
     int num = nm(size_param);
 
-    double d1x[maxnum];
+    double d1x[MAXNUM];
     aax(ax, num, d1x);
-    complex<double> rd3x[maxnum], rcx[maxnum];
+    complex<double> rd3x[MAXNUM], rcx[MAXNUM];
     cd3x(size_param, num, d1x, rd3x, rcx);
 
     double ari = abs(refrac_indx[0]);
@@ -111,13 +111,13 @@ int mie (const int nlayers,                   /* Number of layers */
         /* k*x > 20 AIMAG(refrac_indx(1)) * xx(1) */
         retcode = 1;
     }
-    complex<double> rd11[maxnum];
+    complex<double> rd11[MAXNUM];
     aa1(refrac_indx[0]*xx[0], num2, rd11);
 
-    complex<double> rbb[maxnum], rd1[maxnum], rd2[maxnum];
-    complex<double> rrbb[maxlayers][maxnum], rrd1[maxlayers][maxnum];
-    complex<double> rrd2[maxlayers][maxnum], srbb[maxlayers][maxnum];
-    complex<double> srd1[maxlayers][maxnum], srd2[maxlayers][maxnum];
+    complex<double> rbb[MAXNUM], rd1[MAXNUM], rd2[MAXNUM];
+    complex<double> rrbb[MAXLAYERS][MAXNUM], rrd1[MAXLAYERS][MAXNUM];
+    complex<double> rrd2[MAXLAYERS][MAXNUM], srbb[MAXLAYERS][MAXNUM];
+    complex<double> srd1[MAXLAYERS][MAXNUM], srd2[MAXLAYERS][MAXNUM];
     for (int i = 1; i < nlayers; i++) {
 
         /* rd1(m_i*x_i-1), rd2(m_i*x_i-1), rbb(m_i*x_i-1), rcc(m_i*x_i-1) */
@@ -145,7 +145,7 @@ int mie (const int nlayers,                   /* Number of layers */
         }
     }
 
-    complex<double> ra[maxnum], rb[maxnum];
+    complex<double> ra[MAXNUM], rb[MAXNUM];
     int num1 = abn1(nlayers, refrac_indx, num, rrbb, rrd1, rrd2,
                     srbb, srd1, srd2, rd11, rd3x, rcx, d1x, ra, rb);
     qq1(ax, num1, extinct, scat, backscat, rad_pressure, ra, rb);
@@ -245,12 +245,12 @@ void aax (const double a, const int num, double ru[]) {
 int abn1 (const int nlayers,
           const complex<double> refrac_indx[],
           const int num,
-          complex<double> rrbb[][maxnum],
-          complex<double> rrd1[][maxnum],
-          complex<double> rrd2[][maxnum],
-          complex<double> srbb[][maxnum],
-          complex<double> srd1[][maxnum],
-          complex<double> srd2[][maxnum],
+          complex<double> rrbb[][MAXNUM],
+          complex<double> rrd1[][MAXNUM],
+          complex<double> rrd2[][MAXNUM],
+          complex<double> srbb[][MAXNUM],
+          complex<double> srd1[][MAXNUM],
+          complex<double> srd2[][MAXNUM],
           complex<double> rd11[],
           complex<double> rd3x[],
           complex<double> rcx[],
@@ -260,10 +260,10 @@ int abn1 (const int nlayers,
         )
 {
 
-    complex<double> sa[maxlayers];
-    complex<double> sha[maxlayers];
-    complex<double> sb[maxlayers];
-    complex<double> shb[maxlayers];
+    complex<double> sa[MAXLAYERS];
+    complex<double> sha[MAXLAYERS];
+    complex<double> sb[MAXLAYERS];
+    complex<double> shb[MAXLAYERS];
 
     int num1 = 0;
     for (int i = 0; i < num; i++) {
@@ -353,8 +353,8 @@ void bcd (const complex<double> rx, const int num,
     complex<double> rc0 = -( 1.0 - rxy ) / ( 2.0 * rxy );
     complex<double> rb0 = I * ( 1.0 - rxy ) / ( 1.0 + rxy );
     /* n = 1 */
-    complex<double> rd3[maxnum];
-    complex<double> rcc[maxnum];
+    complex<double> rd3[MAXNUM];
+    complex<double> rcc[MAXNUM];
     rd3[0] = -rx1 + 1.0 / ( rx1 - rd30 );
     rcc[0] = rc0 * ( rx1 + rd3[0] ) / ( rx1 + rd1[0] );
     rd2[0] = ( rcc[0] * rd1[0] - rd3[0] ) / ( rcc[0] - 1.0 );

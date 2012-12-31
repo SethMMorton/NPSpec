@@ -4,18 +4,21 @@
 #include "constants.h"
 #include "standard_color_matching.h"
 #include "NPSolve.h"
+using namespace NPSpec;
 
 /* Static variables that need to be calculated only once */
 static bool first = true;
 static double XARRAY[NLAMBDA], YARRAY[NLAMBDA], ZARRAY[NLAMBDA];
 
+/* Convert a spectrum to RGB color space.  Note that RGV is on [0,1], but
+ * the conversion may result in values <0 or >1, which means that not
+ * all possible colors can be represented by RGB */
 void RGB(const double spec_in[], 
          const int inc, 
          const bool trans, 
          double *r, 
          double *g,
-         double *b,
-         double *o) {
+         double *b) {
 
     /* These produts are the same each time.  Only calculate the first time */
     if (first) {
@@ -39,8 +42,9 @@ void RGB(const double spec_in[],
             if (spec_in[i] > max)
                 max = spec_in[i];
         }
-        invmax = 1.0 / max;
+        invmax = max != 0.0 ? 1.0 / max : 1.0;
     }
+    invmax = 1.0
     /* Now normalize to the max */
     int j = 0;
     for (int i = 0; i < NLAMBDA; i += inc) {
@@ -64,9 +68,24 @@ void RGB(const double spec_in[],
     double XYZ[3] = { XPROD / XSUM, YPROD / YSUM, ZPROD / ZSUM };
 
     /* Transform to RGB by multiplying by the CIE matrix */
-    *r = std::inner_product(CIE_Mat[0], CIE_Mat[0]+3, XYZ, 0);
-    *g = std::inner_product(CIE_Mat[1], CIE_Mat[1]+3, XYZ, 0);
-    *b = std::inner_product(CIE_Mat[2], CIE_Mat[2]+3, XYZ, 0);
+    *r = CIE_Mat[0][0] * XYZ[0] + CIE_Mat[0][1] * XYZ[1] + CIE_Mat[0][2] * XYZ[2];
+    *g = CIE_Mat[1][0] * XYZ[0] + CIE_Mat[1][1] * XYZ[1] + CIE_Mat[1][2] * XYZ[2];
+    *b = CIE_Mat[2][0] * XYZ[0] + CIE_Mat[2][1] * XYZ[1] + CIE_Mat[2][2] * XYZ[2];
+
+    /* One more transformation */
+    double inv = 1.0 / 2.4;
+    if (*r > 0.0031308)
+        *r = 1.055 * std::pow(*r, inv) - 0.055;
+    else
+        *r *= 12.92;
+    if (*g > 0.0031308)
+        *g = 1.055 * std::pow(*g, inv) - 0.055;
+    else
+        *g *= 12.92;
+    if (*b > 0.0031308)
+        *b = 1.055 * std::pow(*b, inv) - 0.055;
+    else
+        *b *= 12.92;
 
     /* Make sure the values are between 0 and 1 */
     if (*r < 0)
@@ -82,13 +101,9 @@ void RGB(const double spec_in[],
     else if (*b > 1)
         *b = 1;
 
-    /* Calculate HSV so we can use the V value as opacity */
-    double dummy1, dummy2;
-    RGB_to_HSV(*r, *g, *b, &dummy1, &dummy2, o);
-
 }
 
-/* Convert RGB to HSV */
+/* Convert RGB to HSV.  h [0, 360], s and v [0, 1] */
 void RGB_to_HSV(const double r,
                 const double g,
                 const double b,

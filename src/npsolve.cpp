@@ -27,12 +27,11 @@
 #include <iostream>
 #include "solvers.h"
 #include "material_parameters.h"
-#include "constants.h"
 #include "NPSolve.h"
 
 using namespace std;
+using namespace NPSpec;
 
-const int    maxlayers = 10;
 const double pi        = 4.0 * atan(1.0);
 const double hbar      = 6.5821189916e-16;
 const double avogadro  = 6.0221412927e23;
@@ -47,20 +46,20 @@ inline complex<double> drude (double om, double plasmon, double gamma, double si
     return sqr(plasmon) / ( om * ( om + complex<double>(0.0, 1.0) * ( gamma + sizecorr ) ) );
 }
 
-int npsolve (const int nlayers,              /* Number of layers */
-             const double rad[2],            /* Radius of object */
-             const double rel_rad[][2],      /* Relative radii of layers */
-             const int indx[],               /* Material index of layers */
-             const double mrefrac,           /* Refractive index of medium */
-             const bool size_correct,        /* Use size correction? */
-             const int increment,            /* Increment of wavelengths */
-             const double path_length,       /* Path length for absorbance */
-             const double concentration,     /* The concentration of solution */
-             const SpectraType spectra_type, /* What spectra to return */
-             double extinct[],               /* Extinction */
-             double scat[],                  /* Scattering */
-             double absorb[]                 /* Absorption */
-           )
+int npspec (const int nlayers,              /* Number of layers */
+            const double rad[2],            /* Radius of object */
+            const double rel_rad[][2],      /* Relative radii of layers */
+            const int indx[],               /* Material index of layers */
+            const double mrefrac,           /* Refractive index of medium */
+            const bool size_correct,        /* Use size correction? */
+            const int increment,            /* Increment of wavelengths */
+            const double path_length,       /* Path length for absorbance */
+            const double concentration,     /* The concentration of solution */
+            const SpectraType spectra_type, /* What spectra to return */
+            double extinct[],               /* Extinction */
+            double scat[],                  /* Scattering */
+            double absorb[]                 /* Absorption */
+          )
 {
 
     /* Make sure the increment is a factor of 800, and is positive */
@@ -86,6 +85,7 @@ int npsolve (const int nlayers,              /* Number of layers */
      * Loop over each wavelength to calculate properties
      ***************************************************/
 
+    int returnvalue = 0;
     for (int i = 0; i < NLAMBDA; i += increment) {
 
         /* Determine size parameter */
@@ -94,13 +94,17 @@ int npsolve (const int nlayers,              /* Number of layers */
         /* Skip if size_param is too small */
         if (size_param < 0.1E-6)
             continue;
+        else if (!lmie && size_param > 3.5)
+            return 4; /* Wicked bad value */
+        else if (!lmie && size_param > 3.0)
+            returnvalue = -1; /* Possibly bad value */
 
         /*****************************************************************
          * Calculate dielectric constant & refractive index for each layer
          *****************************************************************/
 
         /* Dielectric function and refractive index */
-        complex<double> dielec[maxlayers], refrac_indx[maxlayers];
+        complex<double> dielec[MAXLAYERS], refrac_indx[MAXLAYERS];
 
         for (int j = 0; j < nlayers; j++) {
 
@@ -138,23 +142,14 @@ int npsolve (const int nlayers,              /* Number of layers */
         /* Solve using the appropriate inputs and theory */
         if (lmie) {
             /* Relative radius for sphere */
-            double srrad[maxlayers];
+            double srrad[MAXLAYERS];
             for (int k = 0; k < nlayers; k++)
                 srrad[k] = rel_rad[k][0];
             double backscat, rad_pressure, albedo, asymmetry;
-            //if (nlayers == 2 && i == 0) {
-            //    cout << "nlayers " << nlayers << endl;
-            //    cout << "refrac_indx " << refrac_indx[0] << ' ' << refrac_indx[1] << endl;
-            //    cout << "indx " << indx[0] << ' ' << indx[1] << endl;
-            //    cout << "srrad " << srrad[0] << ' ' << srrad[1] << endl;
-            //    cout << "size_param " << size_param << endl;
-            //}
             int retval = mie(nlayers, refrac_indx, srrad, size_param,
                              &extinct[i], &scat[i], &absorb[i],
                              &backscat, &rad_pressure, &albedo, &asymmetry);
             if (retval > 0) return 1;
-            //if (nlayers == 2 && i == 0)
-            //    cout << "extinct " << extinct[i] << endl;
         } else {
             int retval = quasi(nlayers, dielec, sqr(mrefrac), rel_rad,
                                rad, size_param,
@@ -167,12 +162,12 @@ int npsolve (const int nlayers,              /* Number of layers */
             scat[i]    *= pi * sqr(sphere_rad);
             absorb[i]  *= pi * sqr(sphere_rad);
         }
-        if (spectra_type == Molar || spectra_type == Absorbance) {
+        if (spectra_type == Molar || spectra_type == Absorbtion) {
             extinct[i] *= 1E-14 * avogadro / ( 1000 * log(10) );
             scat[i]    *= 1E-14 * avogadro / ( 1000 * log(10) );
             absorb[i]  *= 1E-14 * avogadro / ( 1000 * log(10) );
         }
-        if (spectra_type == Absorbance) {
+        if (spectra_type == Absorbtion) {
             extinct[i] *= path_length * concentration;
             scat[i]    *= path_length * concentration;
             absorb[i]  *= path_length * concentration;
@@ -180,6 +175,6 @@ int npsolve (const int nlayers,              /* Number of layers */
 
     }
 
-    return 0;
+    return returnvalue;
 
 }

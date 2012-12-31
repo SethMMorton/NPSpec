@@ -13,7 +13,7 @@
 #include <complex>
 #include "solvers.h"
 
-const int    maxlayers = 2;
+const int    MAXLAYERS = 2;
 const double pi        = 4.0 * atan(1.0);
 
 /* Square qnd quad functions */
@@ -38,13 +38,13 @@ int quasi (const int nlayers,              /* Number of layers */
      *********************/
 
     /* Too many layers for quasistatic approximation */
-    if (nlayers > maxlayers) return 1;
+    if (nlayers > MAXLAYERS) return 1;
 
     /*******************************
      *Calculate the relative volumes
      *******************************/
 
-    double tmp[maxlayers][3];
+    double tmp[MAXLAYERS][3];
     for (int i = 0; i < nlayers; i++) {
         for (int j = 0; j < 2; j++) {
             if (i == 0) {
@@ -54,7 +54,7 @@ int quasi (const int nlayers,              /* Number of layers */
             }
         }
     }
-    double rel_vol[maxlayers];
+    double rel_vol[MAXLAYERS];
     rel_vol[0] = tmp[0][0] * tmp[0][1] * tmp[0][1];
     for (int i = 1; i < nlayers; i++) {
         for (int j = 0; j < i+1; j++) {
@@ -70,7 +70,7 @@ int quasi (const int nlayers,              /* Number of layers */
      * Calculate the goemetrical factors for each axis and layer
      ***********************************************************/
    
-    double gf[2][maxlayers];
+    double gf[2][MAXLAYERS];
     for (int ilayer = 0; ilayer < nlayers; ilayer++) {
 
         /* Calculate the absolute radii */

@@ -1,6 +1,6 @@
+#include <cstring>
 #include "NPSolve.h"
-
-#include <string.h>
+using namespace NPSpec;
 
 int material_index(char *material) {
     /* If the material is not in the list, return -1 */ 
