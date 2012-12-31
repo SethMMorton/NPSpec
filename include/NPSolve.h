@@ -3,6 +3,7 @@
 
 /* Protect as C if C++ so that library can be called from C or Fortran */
 #ifdef __cplusplus
+namespace NPSpec {
 extern "C" {
 #else
 /* If using library in C, use stdbool.h if available */
@@ -11,7 +12,7 @@ extern "C" {
 #else
 typedef int bool;
 const bool false = 0;
-const bool true  = 1;:
+const bool true  = 1;
 #endif
 #endif
 
@@ -22,20 +23,20 @@ const bool true  = 1;:
 int material_index(char *material);
 
 /* The actual npsolve function declaration */
-int npsolve (const int nlayers,
-             const double rad[],
-             const double rel_rad[][2],
-             const int indx[],
-             const double mrefrac,
-             const bool size_correct,
-             const int increment,
-             const double path_length,
-             const double concentration,
-             const SpectraType spectra_type,
-             double extinct[],
-             double scat[],
-             double absorb[]
-           );
+int npspec (const int nlayers,
+            const double rad[2],
+            const double rel_rad[][2],
+            const int indx[],
+            const double mrefrac,
+            const bool size_correct,
+            const int increment,
+            const double path_length,
+            const double concentration,
+            const SpectraType spectra_type,
+            double extinct[],
+            double scat[],
+            double absorb[]
+          );
 
 /* Determine color based on spectra */
 void RGB(const double spec_in[], 
@@ -43,8 +44,7 @@ void RGB(const double spec_in[],
          const bool trans, 
          double *r, 
          double *g,
-         double *b,
-         double *o);
+         double *b);
 
 /* Color conversion */
 void RGB_to_HSV(const double r,
@@ -56,6 +56,7 @@ void RGB_to_HSV(const double r,
 
 #ifdef __cplusplus
 } // extern 
+} // NPSpec namespace
 #endif
 
 #endif /* NPSOLVE_H */
