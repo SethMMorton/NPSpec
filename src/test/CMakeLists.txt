@@ -9,7 +9,7 @@ LINK_DIRECTORIES(${LIB}/gtest)
 
 # Create the C++ tests
 SET(CXXTESTS "NPSpec" "Nanoparticle")
-FOREACH (f ${CXXTESTS})
+FOREACH(f ${CXXTESTS})
 
     # Make lowercase version of name
     STRING(TOLOWER ${f} f_lower)
@@ -29,7 +29,7 @@ FOREACH (f ${CXXTESTS})
 ENDFOREACH(f)
 
 # Test Fortran code?
-IF (FORTRAN)
+IF(FORTRAN)
     # The following function will properly link Fortran routines to C++
     ENABLE_LANGUAGE(Fortran)
     SET (CMAKE_Fortran_MODULE_DIRECTORY ${LIB}/modules)

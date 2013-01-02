@@ -45,7 +45,7 @@ SET(NPSPEC NPSpec)
 ADD_SUBDIRECTORY(${SRC} ${LIB})
 
 # Unit testing (only if requested)
-IF (TESTING)
+IF(TESTING)
     ENABLE_TESTING()
     ADD_SUBDIRECTORY(${SRC}/test ${TEST})
 ENDIF(TESTING)
