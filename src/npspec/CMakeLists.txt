@@ -15,9 +15,10 @@ SET(NPSpec_SRC npspec.cpp
 )
 
 # These are the headers to be public
-SET(NPSpec_HEADERS ${INC}/NPSpec.h
-                   ${INC}/constants.h
-                   ${INC}/nanoparticle.h
+SET(NPSpec_HEADERS ${NPINC}/npspec.h
+                   ${NPINC}/constants.h
+                   ${NPINC}/nanoparticle.h
+                   ${NPINC}/version.h
 )
 
 # Define the library
@@ -30,7 +31,7 @@ ENDIF(STATIC)
 # These headers are to be installed with the library
 IF(FRAMEWORK)
     SET_PROPERTY(SOURCE ${NPSpec_HEADERS}
-        PROPERTY MACOSX_PACKAGE_LOCATION Headers)
+        PROPERTY MACOSX_PACKAGE_LOCATION Headers/npspec)
 ENDIF()
 
 # Define the framework properties and location if framework
@@ -44,8 +45,8 @@ IF(FRAMEWORK)
     SET(FRAMELIB /Library/Frameworks)
     SET(FRAMENAME ${NPSPEC}.framework)
     INSTALL(TARGETS ${NPSPEC} FRAMEWORK DESTINATION ${FRAMELIB})
-    INSTALL(FILES ${INC}/NPSpecModule.f90 
-        DESTINATION ${FRAMELIB}/${FRAMENAME}/Versions/v${VERSION}/Headers)
+    INSTALL(FILES ${NPINC}/NPSpecModule.f90 
+        DESTINATION ${FRAMELIB}/${FRAMENAME}/Versions/v${VERSION}/Headers/npspec)
 
 # Otherwise install to the usual locations
 ELSE()
@@ -60,7 +61,8 @@ ELSE()
 
     # Install library and header
     INSTALL(TARGETS ${NPSPEC} LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-                               ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}) 
-    INSTALL(FILES ${NPSpec_HEADERS} ${INC}/NPSpecModule.f90 DESTINATION include)
+                              ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}) 
+    INSTALL(FILES ${NPSpec_HEADERS} ${NPINC}/NPSpecModule.f90 
+            DESTINATION include/npspec)
 
 ENDIF(FRAMEWORK)

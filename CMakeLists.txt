@@ -38,11 +38,14 @@ SET(INC  ${CMAKE_SOURCE_DIR}/include)
 SET(LIB  ${CMAKE_SOURCE_DIR}/lib)
 SET(TEST ${CMAKE_SOURCE_DIR}/test)
 
+SET(NPSRC ${SRC}/npspec)
+SET(NPINC ${INC}/npspec)
+
 # Name of NPSpec library
 SET(NPSPEC NPSpec)
 
 # Build the NPSpec library and place it into lib
-ADD_SUBDIRECTORY(${SRC} ${LIB})
+ADD_SUBDIRECTORY(${NPSRC} ${LIB})
 
 # Unit testing (only if requested)
 IF(TESTING)

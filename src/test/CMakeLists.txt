@@ -51,7 +51,7 @@ IF(FORTRAN)
         NO_EXTERNAL_INSTALL TRUE
     )
     ADD_EXECUTABLE(testFortranWrapper test_fortran_wrapper.f90
-                                      ${INC}/NPSpecModule.f90)
+                                      ${NPINC}/NPSpecModule.f90)
     ADD_DEPENDENCIES(testFortranWrapper Fruit NPSpec)
     TARGET_LINK_LIBRARIES(testFortranWrapper Fruit NPSpec)
     ADD_TEST(testFortranWrapper "testFortranWrapper")

@@ -14,8 +14,7 @@ import sys
 
 def current_version():
     # Read the _version.py file for the module version number
-    #VERSIONFILE = os.path.join('include', "NPSpec", 'version.h')
-    VERSIONFILE = os.path.join('include', 'version.h')
+    VERSIONFILE = os.path.join('include', "NPSpec", 'version.h')
     with open(VERSIONFILE, "rt") as fl:
         versionstring = fl.readline().strip()
     m = re.search(r"^#define NPSPEC_VERSION \"(.*)\"", versionstring)
