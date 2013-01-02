@@ -22,6 +22,7 @@ Module NPSpecModule
     Public NanoparticleTooLarge
     Public SizeParameterWarning
     Public InvalidRadius
+    Public InvalidRelativeRadius
     Public InvalidIncrement
     Public InvalidPathLength
     Public InvalidConcentration
@@ -51,6 +52,7 @@ Module NPSpecModule
     Integer(C_INT), Parameter :: NanoparticleTooLarge   = -1
     Integer(C_INT), Parameter :: SizeParameterWarning   = -3
     Integer(C_INT), Parameter :: InvalidRadius          = -4
+    Integer(C_INT), Parameter :: InvalidRelativeRadius  = -5
     Integer(C_INT), Parameter :: InvalidIncrement       = -6
     Integer(C_INT), Parameter :: InvalidPathLength      = -7
     Integer(C_INT), Parameter :: InvalidConcentration   = -8
