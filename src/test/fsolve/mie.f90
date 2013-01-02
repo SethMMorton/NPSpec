@@ -249,7 +249,7 @@ Subroutine ABn1 (nlayers, refrac_indx, num, num1, rrbb, rrd1, rrd2, &
 
    Implicit None
 
-   Integer(C_INT),        Parameter   :: nterms = 10000
+   Integer(C_INT),        Parameter   :: nterms = 100
 
    Integer(C_INT),        Intent(In)  :: nlayers
    Complex(C_DOUBLE_COMPLEX), Intent(In)  :: refrac_indx(nlayers)
@@ -354,7 +354,7 @@ Subroutine bcd (rx, num, rd1, rd2, rbb)
 
    Implicit None
 
-   Integer(C_INT),        Parameter   :: nterms = 10000
+   Integer(C_INT),        Parameter   :: nterms = 100
 
    Complex(C_DOUBLE_COMPLEX), Intent(In)  :: rx
    Integer(C_INT),        Intent(In)  :: num

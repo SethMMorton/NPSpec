@@ -25,9 +25,9 @@
 #include <cmath>
 #include <complex>
 #include <iostream>
-#include "solvers.h"
-#include "material_parameters.h"
-#include "NPSpec.h"
+#include "npspec/private/solvers.h"
+#include "npspec/private/material_parameters.h"
+#include "npspec/npspec.h"
 
 using namespace std;
 using namespace NPSpec;
