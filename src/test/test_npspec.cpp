@@ -78,8 +78,20 @@ protected:
     virtual void SetUp() {
         for (int i = 0; i < NLAMBDA; i++) 
             spec[i] = 0.0;
+        radius[0] = 20.0;
+        radius[1] = -1.0;
+        relative_radius[0][0] = 1.0;
+        relative_radius[0][1] = 1.0;
+        index[0] = material_index((char*) "Ag");
+        npspec(1, radius, relative_radius, index,
+                1.0, false, 1, 1.0, 1.0, Efficiency,
+                qext, qscat, qabs);
     }
 
+    int index[1];
+    double radius[2];
+    double relative_radius[1][2];
+    double qext[NLAMBDA], qabs[NLAMBDA], qscat[NLAMBDA];
     double spec[NLAMBDA];
     double r, g, b, o, h, s, v;
 
@@ -680,6 +692,17 @@ TEST_F(TestColors, TestRed) {
     EXPECT_FLOAT_EQ(1.0,         v);
 }
 */
+
+TEST_F(TestColors, Test20nmAg) {
+    RGB(qabs, 1, false, &r, &g, &b);
+    EXPECT_FLOAT_EQ(0.12381521, r);
+    EXPECT_FLOAT_EQ(0.10589667, g);
+    EXPECT_FLOAT_EQ(0.48082513, b);
+    RGB_to_HSV(r, g, b, &h, &s, &v);
+    EXPECT_FLOAT_EQ(242.86751,  h);
+    EXPECT_FLOAT_EQ(0.77976054, s);
+    EXPECT_FLOAT_EQ(0.48082513, v);
+}
 
 // Run the tests
 int main(int argc, char **argv) {
