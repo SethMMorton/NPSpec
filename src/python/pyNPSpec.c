@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <Python.h>
 #include <numpy/arrayobject.h>
-#include "NPSpec.h"
+#include "npspec/npspec.h"
 
 /* Wrapper for initiallize_material_index */
 static PyObject* npsolve_initiallize_material_index (PyObject *self) {

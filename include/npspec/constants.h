@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "version.h"
+#include "npspec/version.h"
 
 /* Protect as C if C++ so that library can be called from C or Fortran */
 #ifdef __cplusplus

@@ -11,7 +11,7 @@
 
 #include <cmath>
 #include <complex>
-#include "solvers.h"
+#include "npspec/solvers.h"
 
 const int    MAXLAYERS = 2;
 const double pi        = 4.0 * atan(1.0);

@@ -1,5 +1,5 @@
 #include <cstring>
-#include "NPSpec.h"
+#include "npspec/npspec.h"
 using namespace NPSpec;
 
 int material_index(const char *material) {

@@ -1,9 +1,9 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
-#include "constants.h"
-#include "standard_color_matching.h"
-#include "NPSpec.h"
+#include "npspec/constants.h"
+#include "npspec/private/standard_color_matching.h"
+#include "npspec/npspec.h"
 using namespace NPSpec;
 
 /* Static variables that need to be calculated only once */

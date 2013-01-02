@@ -6,8 +6,8 @@
  * ICCMat is the matrix used convert from spectrum to RGB values.
  *****************************************************************************/
 
-#include "constants.h"
-#include "standard_color_matching.h"
+#include "npspec/constants.h"
+#include "npspec/private/standard_color_matching.h"
 using namespace NPSpec;
 
 const double CIE_Mat[3][3] = {

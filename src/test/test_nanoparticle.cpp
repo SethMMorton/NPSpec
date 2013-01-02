@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Nanoparticle.h"
+#include "npspec/nanoparticle.h"
 
 using namespace NPSpec;
 

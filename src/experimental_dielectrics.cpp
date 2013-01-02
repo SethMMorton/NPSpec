@@ -1,5 +1,5 @@
 #include <complex>
-#include "material_parameters.h"
+#include "npspec/private/material_parameters.h"
 
 /* Splined dielectric contstants select materials.
  * All values are taken from the Handbook of Palik.

@@ -2,8 +2,8 @@
 #include <cmath>
 #include <complex>
 #include "gtest/gtest.h"
-#include "solvers.h"
-#include "NPSpec.h"
+#include "npspec/private/solvers.h"
+#include "npspec/npspec.h"
 
 using namespace::std;
 

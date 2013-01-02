@@ -2,7 +2,7 @@
 #define MATERIAL_PARAMETERS_H
 
 #include <complex>
-#include "constants.h"
+#include "npspec/constants.h"
 using namespace std;
 using namespace NPSpec;
 

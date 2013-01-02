@@ -11,8 +11,8 @@
 
 #include <cmath>
 #include <complex>
-#include "solvers.h"
-#include "constants.h"
+#include "npspec/private/solvers.h"
+#include "npspec/constants.h"
 
 using namespace std;
 using namespace NPSpec;

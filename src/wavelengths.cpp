@@ -1,4 +1,4 @@
-#include "NPSpec.h"
+#include "npspec/constants.h"
 
 namespace NPSpec {
 const double wavelengths[NLAMBDA] = 

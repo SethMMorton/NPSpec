@@ -2,7 +2,7 @@
 #define NPSPEC_H
 
 /* Pull in the constants */
-#include <constants.h>
+#include <npspec/constants.h>
 
 /* Protect as C if C++ so that library can be called from C or Fortran */
 #ifdef __cplusplus

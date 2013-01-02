@@ -1,7 +1,7 @@
 #include <cmath>
 #include <iostream>
-#include "nanoparticle.h"
-#include "NPSpec.h"
+#include "npspec/nanoparticle.h"
+#include "npspec/npspec.h"
 
 using namespace NPSpec;
 

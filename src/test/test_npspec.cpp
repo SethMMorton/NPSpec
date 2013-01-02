@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "NPSpec.h"
+#include "npspec/npspec.h"
 
 using namespace NPSpec;
 

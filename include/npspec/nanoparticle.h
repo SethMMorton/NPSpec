@@ -2,7 +2,7 @@
 #define NANOPARTICLE_H
 
 #include <string>
-#include "constants.h"
+#include "npspec/constants.h"
 
 class Nanoparticle
 {
