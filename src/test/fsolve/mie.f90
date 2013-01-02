@@ -27,7 +27,7 @@ Subroutine mie (nlayers, refrac_indx, rel_rad, size_param, &
    Real(C_DOUBLE),    Intent(Out) :: albedo
    Real(C_DOUBLE),    Intent(Out) :: asymmetry
 
-   Integer(C_INT),        Parameter   :: nterms = 10000
+   Integer(C_INT),        Parameter   :: nterms = 100
 
    Real(C_DOUBLE)    :: d1x(nterms) 
    Complex(C_DOUBLE_COMPLEX) :: rd3x(nterms)
