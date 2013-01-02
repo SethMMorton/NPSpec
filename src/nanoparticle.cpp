@@ -1,7 +1,5 @@
-#include "nanoparticle.h"
-#include <cstring>
 #include <cmath>
-/* Wrap this header in a namespace to avoid clobbering things */
+#include "nanoparticle.h"
 #include "NPSpec.h"
 
 using namespace NPSpec;
@@ -14,12 +12,12 @@ Nanoparticle::Nanoparticle() :
     pathLength(1.0),
     concentration(1.0e-6),
     mediumRefractiveIndex(1.0),
-    gotColor(false)
+    increment(1.0)
 {
     /* Initiallize the Nanoparticle class's lists */
 
     // All materials are defaulted to Ag
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < MAXLAYERS; i++) {
         materials[i] = "Ag";
         materialIndex[i] = material_index(materials[i].c_str());
     }
@@ -33,7 +31,7 @@ Nanoparticle::Nanoparticle() :
     sphereRelativeRadius[0] = 1.0;
     ellipsoidRelativeRadius[0][0] = 1.0;
     ellipsoidRelativeRadius[0][1] = 1.0;
-    for (int i = 1; i < 10; i++) {
+    for (int i = 1; i < MAXLAYERS; i++) {
         sphereRelativeRadius[i] = 0.0;
         ellipsoidRelativeRadius[i][0] = 0.0;
         ellipsoidRelativeRadius[i][1] = 0.0;
@@ -43,37 +41,32 @@ Nanoparticle::Nanoparticle() :
     setShape(Sphere);
 }
 
-int Nanoparticle::calculateSpectrum()
+ErrorCode Nanoparticle::calculateSpectrum()
 {
     /* Calculate the spectrum based on the Nanoparticle parameters */
 
     // Call the solver
-    int result = npspec(nLayers,
-                        radius,
-                        relativeRadius,
-                        materialIndex,
-                        mediumRefractiveIndex,
-                        sizeCorrect,
-                        increment,
-                        pathLength,
-                        concentration,
-                        sType,
-                        extinction,
-                        scattering,
-                        absorbance);
+    ErrorCode result = npspec(nLayers,
+                              radius,
+                              relativeRadius,
+                              materialIndex,
+                              mediumRefractiveIndex,
+                              sizeCorrect,
+                              increment,
+                              pathLength,
+                              concentration,
+                              sType,
+                              extinction,
+                              scattering,
+                              absorbance);
 
     // Recalculate the colors
     double spec[NLAMBDA];
     getSpectrum(spec);
+    // TODO: Think about transmission vs. not for RGB
     RGB(spec, increment, false, &red, &blue, &green);
     RGB_to_HSV(red, blue, green, &hue, &saturation, &value);
 
-    /* 0:  OK! */
-    /* 1:  Mie calculation failed */
-    /* 2:  Too many layers for quasistatic */
-    /* 3:  Invalid increment value */
-    /* 4:  Size parameter too large for quazistatic */
-    /* -1: Size_parameter may be too large for quazistatic */
     return result;
 }
 
@@ -153,39 +146,39 @@ double Nanoparticle::getEllipsoidXYRadius() const {
     return ellipsoidRadius[1];
 }
 
-double Nanoparticle::getSphereLayerRelativeRadius(int nlay) const {
+double Nanoparticle::getSphereLayerRelativeRadius(int layer_num) const {
     /* Get the current relative radius for the sphere shape for the given layer */
-    if (nlay > MAXLAYERS || nlay < 1)
-        return -1.0;
-    return sphereRelativeRadius[nlay];
+    if (layer_num > MAXLAYERS || layer_num < 1)
+        return (double) LayerError;
+    return sphereRelativeRadius[layer_num-1];
 }
 
-double Nanoparticle::getEllipsoidLayerZRelativeRadius(int nlay) const {
+double Nanoparticle::getEllipsoidLayerZRelativeRadius(int layer_num) const {
     /* Get the current relative radius for the z-axis of the ellipsoid shape for the given layer */
-    if (nlay > MAXLAYERS || nlay < 1)
-        return -1.0;
-    return ellipsoidRelativeRadius[nlay][0];
+    if (layer_num > MAXLAYERS || layer_num < 1)
+        return (double) LayerError;
+    return ellipsoidRelativeRadius[layer_num-1][0];
 }
 
-double Nanoparticle::getEllipsoidLayerXYRelativeRadius(int nlay) const {
+double Nanoparticle::getEllipsoidLayerXYRelativeRadius(int layer_num) const {
     /* Get the current relative radius for the xy-axis of the ellipsoid shape for the given layer */
-    if (nlay > MAXLAYERS || nlay < 1)
-        return -1.0;
-    return ellipsoidRelativeRadius[nlay][1];
+    if (layer_num > MAXLAYERS || layer_num < 1)
+        return (double) LayerError;
+    return ellipsoidRelativeRadius[layer_num-1][1];
 }
 
-std::string Nanoparticle::getLayerMaterial(int nlay) const {
+std::string Nanoparticle::getLayerMaterial(int layer_num) const {
     /* Get the current layer type for the given layer */
-    if (nlay > MAXLAYERS || nlay < 1)
-        return std::string("ERROR");
-    return materials[nlay];
+    if (layer_num > MAXLAYERS || layer_num < 1)
+        return std::string("LayerError");
+    return materials[layer_num-1];
 }
 
-int Nanoparticle::getLayerIndex(int nlay) const {
+int Nanoparticle::getLayerIndex(int layer_num) const {
     /* Get the current layer index for the given layer */
-    if (nlay > MAXLAYERS || nlay < 1)
-        return -1;
-    return materialIndex[nlay];
+    if (layer_num > MAXLAYERS || layer_num < 1)
+        return (int) LayerError;
+    return materialIndex[layer_num-1];
 }
 
 int Nanoparticle::getIncrement() const {
@@ -217,14 +210,14 @@ double Nanoparticle::getMediumRefractiveIndex() const {
  * Setters
  *********/
 
-int Nanoparticle::setNLayers(int nlay) {
+NPSpec::ErrorCode Nanoparticle::setNLayers(int nlay) {
     /* Set the number of layers */
     // NLayers must be between 1 and maxlayers
     if (nlay > MAXLAYERS || nlay < 1)
-        return 1;
+        return LayerError;
     nLayers = nlay;
     updateRelativeRadius(shape);
-    return 0;
+    return NoError;
 }
 
 void Nanoparticle::setShape(NanoparticleShape npshape) {
@@ -244,89 +237,90 @@ void Nanoparticle::setSpectraProperty(SpectraProperty spec) {
     sProp = spec;
 }
 
-int Nanoparticle::setSphereRadius(double rad) {
+ErrorCode Nanoparticle::setSphereRadius(double rad) {
     /* Set the radius for a sphere */
     if (rad <= 0.0)
-        return 2;
+        return ValueError;
     sphereRadius = rad;
     updateRadius(shape);
-    return 0;
+    return NoError;
 }
 
-int Nanoparticle::setEllipsoidRadius(double zrad, double xyrad) {
+ErrorCode  Nanoparticle::setEllipsoidRadius(double zrad, double xyrad) {
     /* Set the radius for an ellipsoid */
     if (zrad <= 0.0 || xyrad <= 0.0)
-        return 2;
+        return ValueError;
     ellipsoidRadius[0] = zrad;
     ellipsoidRadius[1] = xyrad;
     updateRadius(shape);
-    return 0;
+    return NoError;
 }
 
-int Nanoparticle::setSphereLayerRelativeRadius(int nlay, double rrad) {
+ErrorCode Nanoparticle::setSphereLayerRelativeRadius(int layer_num, double rrad) {
     /* Set the relative radius for the given layer of a sphere */
-    if (nlay > MAXLAYERS || nlay < 1)
-        return 1;
+    if (layer_num > MAXLAYERS || layer_num < 1)
+        return LayerError;
     if (rrad < 0.0 || rrad > 1.0)
-        return 2;
-    sphereRelativeRadius[nlay] = rrad;
-    return 0;
+        return ValueError;
+    sphereRelativeRadius[layer_num-1] = rrad;
+    /* Reset other relative radii so that they sum to 1.0 */
+    double total = 1.0 - rrad;
+    for (int i = 0; i < nLayers; i++) {
+        if (i == ( layer_num - 1 )) continue;
+
+    }
+    return NoError;
 }
 
-int Nanoparticle::setEllipsoidLayerRelativeRadius(int nlay, double zrrad, double xyrrad) {
+ErrorCode Nanoparticle::setEllipsoidLayerRelativeRadius(int layer_num, double zrrad, double xyrrad) {
     /* Set the relative radius for the given layer of an ellipsoid */
-    if (nlay > MAXLAYERS || nlay < 1)
-        return 1;
+    if (layer_num > MAXLAYERS || layer_num < 1)
+        return LayerError;
     if (zrrad < 0.0 || zrrad > 1.0)
-        return 2;
+        return ValueError;
     if (xyrrad < 0.0 || xyrrad > 1.0)
-        return 2;
-    ellipsoidRelativeRadius[nlay][0] = zrrad;
-    ellipsoidRelativeRadius[nlay][1] = xyrrad;
-    return 0;
+        return ValueError;
+    ellipsoidRelativeRadius[layer_num-1][0] = zrrad;
+    ellipsoidRelativeRadius[layer_num-1][1] = xyrrad;
+    return NoError;
 }
 
-int Nanoparticle::setLayerMaterial(int nlay, char *mat) {
+ErrorCode Nanoparticle::setLayerMaterial(int layer_num, std::string mat){
     /* Set the material for the given layer */
-    return setLayerMaterial(nlay, std::string(mat));
-}
-
-int Nanoparticle::setLayerMaterial(int nlay, std::string mat){
-    /* Set the material for the given layer */
-    if (nlay > MAXLAYERS || nlay < 1)
-        return 1;
+    if (layer_num > MAXLAYERS || layer_num < 1)
+        return LayerError;
     int tmp = material_index(mat.c_str());
-    if (tmp < 0)
-        return 2;
-    materialIndex[nlay] = tmp;
-    materials[nlay] = mat;
-    return 0;
+    if ((ErrorCode) tmp == UnknownMaterial)
+        return ValueError;
+    materialIndex[layer_num-1] = tmp;
+    materials[layer_num-1] = mat;
+    return NoError;
 }
 
-int Nanoparticle::setIncrement(int i) {
+ErrorCode Nanoparticle::setIncrement(int i) {
     /* Change the wavelength increment in the solver */
     if (i < 0)
-        return 2;
+        return ValueError;
     else if (std::fmod((double) NLAMBDA, (double) i) > 0.000001)
-        return 2;
+        return ValueError;
     increment = i;
-    return 0;
+    return NoError;
 }
 
-int Nanoparticle::setPathLength(double len) {
+ErrorCode Nanoparticle::setPathLength(double len) {
     /* Change the light path length */
     if (len <= 0.0)
-        return 2;
+        return ValueError;
     pathLength = len;
-    return 0;
+    return NoError;
 }
 
-int Nanoparticle::setConcentration(double conc) {
+ErrorCode Nanoparticle::setConcentration(double conc) {
     /* Change the concentration of the solution */
     if (conc <= 0.0)
-        return 2;
+        return ValueError;
     concentration = conc;
-    return 0;
+    return NoError;
 }
 
 void Nanoparticle::setSizeCorrect(bool corr) {
@@ -334,12 +328,12 @@ void Nanoparticle::setSizeCorrect(bool corr) {
     sizeCorrect = corr;
 }
 
-int Nanoparticle::setMediumRefractiveIndex(double mref) {
+ErrorCode Nanoparticle::setMediumRefractiveIndex(double mref) {
     /* Change the refractive index of the surrounding medium */
-    if (mref < 0.0)
-        return 2;
+    if (mref <= 0.0)
+        return ValueError;
     mediumRefractiveIndex = mref;
-    return 0;
+    return NoError;
 }
 
 /*******************

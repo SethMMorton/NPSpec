@@ -10,7 +10,7 @@ public:
     Nanoparticle();
 
     // Calculate the spectra!
-    int calculateSpectrum();
+    NPSpec::ErrorCode calculateSpectrum();
     // Get the spectra!
     void getSpectrum(double spec[NPSpec::NLAMBDA]) const;
 
@@ -20,21 +20,20 @@ public:
     double getOpacity() const;
 
     // Setters
-    int setNLayers(int nlay);
+    NPSpec::ErrorCode setNLayers(int nlay);
     void setShape(NPSpec::NanoparticleShape npshape);
     void setSpectraType(NPSpec::SpectraType stype);
     void setSpectraProperty(NPSpec::SpectraProperty spec);
-    int setSphereRadius(double rad);
-    int setEllipsoidRadius(double zrad, double xyrad);
-    int setSphereLayerRelativeRadius(int nlay, double rrad);
-    int setEllipsoidLayerRelativeRadius(int nlay, double zrrad, double xyrrad);
-    int setLayerMaterial(int nlay, char *mat);
-    int setLayerMaterial(int nlay, std::string mat);
-    int setIncrement(int i);
-    int setPathLength(double len);
-    int setConcentration(double conc);
+    NPSpec::ErrorCode setSphereRadius(double rad);
+    NPSpec::ErrorCode setEllipsoidRadius(double zrad, double xyrad);
+    NPSpec::ErrorCode setSphereLayerRelativeRadius(int layer_num, double rrad);
+    NPSpec::ErrorCode setEllipsoidLayerRelativeRadius(int layer_num, double zrrad, double xyrrad);
+    NPSpec::ErrorCode setLayerMaterial(int layer_num, std::string mat);
+    NPSpec::ErrorCode setIncrement(int i);
+    NPSpec::ErrorCode setPathLength(double len);
+    NPSpec::ErrorCode setConcentration(double conc);
     void setSizeCorrect(bool corr);
-    int setMediumRefractiveIndex(double mref);
+    NPSpec::ErrorCode setMediumRefractiveIndex(double mref);
 
     // Getters
     int getNLayers() const;
@@ -44,11 +43,11 @@ public:
     double getSphereRadius() const;
     double getEllipsoidZRadius() const;
     double getEllipsoidXYRadius() const;
-    double getSphereLayerRelativeRadius(int nlay) const;
-    double getEllipsoidLayerZRelativeRadius(int nlay) const;
-    double getEllipsoidLayerXYRelativeRadius(int nlay) const;
-    std::string getLayerMaterial(int nlay) const;
-    int getLayerIndex(int nlay) const;
+    double getSphereLayerRelativeRadius(int layer_num) const;
+    double getEllipsoidLayerZRelativeRadius(int layer_num) const;
+    double getEllipsoidLayerXYRelativeRadius(int layer_num) const;
+    std::string getLayerMaterial(int layer_num) const;
+    int getLayerIndex(int layer_num) const;
     int getIncrement() const;
     double getPathLength() const;
     double getConcentration() const;
@@ -80,7 +79,6 @@ private:
     double sphereRelativeRadius[NPSpec::MAXLAYERS];
     double ellipsoidRadius[2];
     double ellipsoidRelativeRadius[NPSpec::MAXLAYERS][2];
-    bool gotColor;
 
     // Results
     double extinction[NPSpec::NLAMBDA];

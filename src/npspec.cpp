@@ -46,33 +46,65 @@ inline complex<double> drude (double om, double plasmon, double gamma, double si
     return sqr(plasmon) / ( om * ( om + complex<double>(0.0, 1.0) * ( gamma + sizecorr ) ) );
 }
 
-int npspec (const int nlayers,              /* Number of layers */
-            const double rad[2],            /* Radius of object */
-            const double rel_rad[][2],      /* Relative radii of layers */
-            const int indx[],               /* Material index of layers */
-            const double mrefrac,           /* Refractive index of medium */
-            const bool size_correct,        /* Use size correction? */
-            const int increment,            /* Increment of wavelengths */
-            const double path_length,       /* Path length for absorbance */
-            const double concentration,     /* The concentration of solution */
-            const SpectraType spectra_type, /* What spectra to return */
-            double extinct[],               /* Extinction */
-            double scat[],                  /* Scattering */
-            double absorb[]                 /* Absorption */
-          )
+ErrorCode npspec(const int nlayers,              /* Number of layers */
+                 const double rad[2],            /* Radius of object */
+                 const double rel_rad[][2],      /* Relative radii of layers */
+                 const int indx[],               /* Material index of layers */
+                 const double mrefrac,           /* Refractive index of medium */
+                 const bool size_correct,        /* Use size correction? */
+                 const int increment,            /* Increment of wavelengths */
+                 const double path_length,       /* Path length for absorbance */
+                 const double concentration,     /* The concentration of solution */
+                 const SpectraType spectra_type, /* What spectra to return */
+                 double extinct[],               /* Extinction */
+                 double scat[],                  /* Scattering */
+                 double absorb[]                 /* Absorption */
+               )
 {
-
-    /* Make sure the increment is a factor of 800, and is positive */
-    if (increment < 0)
-        return 3;
-    else if (fmod((double) NLAMBDA, (double) increment) > 0.000001)
-        return 3;
 
     /* If the second component is negative, it is a sphere
        and thus Mie theory is used.  Otherwise, quasistatic is used. */
     bool lmie = false;
     if (rad[1] < 0.0)
         lmie = true;
+
+    /* Verify conditions are correct */
+    if (nlayers < 1 || nlayers > MAXLAYERS)
+        return InvalidNumberOfLayers;
+    if (path_length <= 0.0)
+        return InvalidPathLength;
+    if (concentration <= 0.0)
+        return InvalidConcentration;
+    if (mrefrac <= 0.0)
+        return InvalidRefractiveIndex;
+    if (rad[0] <= 0.0)
+        return InvalidRadius;
+    if (!lmie && rad[1] <= 0.0)
+        return InvalidRadius;
+
+    /* Relative radii must sum to 1.0 */
+    double rradsum = 0.0;
+    for (int i = 0; i < nlayers; i++) {
+        if (rel_rad[i][0] < 0.0)
+            return InvalidRelativeRadius;
+        rradsum += rel_rad[i][0];
+    }
+    if (abs(rradsum - 1.0) > 1e-6)
+        return InvalidRelativeRadius;
+    rradsum = 0.0;
+    for (int i = 0; i < nlayers; i++) {
+        if (rel_rad[i][1] < 0.0)
+            return InvalidRelativeRadius;
+        rradsum += rel_rad[i][1];
+    }
+    if (!lmie && abs(rradsum - 1.0) > 1e-6)
+        return InvalidRelativeRadius;
+
+    /* Make sure the increment is a factor of 800, and is positive */
+    if (increment < 0)
+        return InvalidIncrement;
+    else if (fmod((double) NLAMBDA, (double) increment) > 0.000001)
+        return InvalidIncrement;
 
     /* Calculate radius of a sphere with an equivalent volume */
     double sphere_rad;
@@ -85,7 +117,7 @@ int npspec (const int nlayers,              /* Number of layers */
      * Loop over each wavelength to calculate properties
      ***************************************************/
 
-    int returnvalue = 0;
+    ErrorCode returnvalue = NoError;
     for (int i = 0; i < NLAMBDA; i += increment) {
 
         /* Determine size parameter */
@@ -94,10 +126,14 @@ int npspec (const int nlayers,              /* Number of layers */
         /* Skip if size_param is too small */
         if (size_param < 0.1E-6)
             continue;
-        else if (!lmie && size_param > 3.5)
-            return 4; /* Wicked bad value */
-        else if (!lmie && size_param > 3.0)
-            returnvalue = -1; /* Possibly bad value */
+        /* Watch out for too large with quasistatic */
+        /* TODO: Optimize these values */
+        else if (!lmie && i == 0) { /* Monitor 200 nm */
+            if (size_param > 0.8)
+                return NanoparticleTooLarge;
+            else if (size_param > 0.6)
+                returnvalue = SizeParameterWarning;
+        }
 
         /*****************************************************************
          * Calculate dielectric constant & refractive index for each layer
@@ -149,12 +185,12 @@ int npspec (const int nlayers,              /* Number of layers */
             int retval = mie(nlayers, refrac_indx, srrad, size_param,
                              &extinct[i], &scat[i], &absorb[i],
                              &backscat, &rad_pressure, &albedo, &asymmetry);
-            if (retval > 0) return 1;
+            if (retval > 0) return NanoparticleTooLarge;
         } else {
             int retval = quasi(nlayers, dielec, sqr(mrefrac), rel_rad,
                                rad, size_param,
                                &extinct[i], &scat[i], &absorb[i]);
-            if (retval > 0) return 2;
+            if (retval > 0) return InvalidNumberOfLayers;
         }
         /* Change the spectra type accordingly */
         if (spectra_type != Efficiency) {
@@ -162,12 +198,12 @@ int npspec (const int nlayers,              /* Number of layers */
             scat[i]    *= pi * sqr(sphere_rad);
             absorb[i]  *= pi * sqr(sphere_rad);
         }
-        if (spectra_type == Molar || spectra_type == Absorbtion) {
+        if (spectra_type == Molar || spectra_type == Absorption) {
             extinct[i] *= 1E-14 * avogadro / ( 1000 * log(10) );
             scat[i]    *= 1E-14 * avogadro / ( 1000 * log(10) );
             absorb[i]  *= 1E-14 * avogadro / ( 1000 * log(10) );
         }
-        if (spectra_type == Absorbtion) {
+        if (spectra_type == Absorption) {
             extinct[i] *= path_length * concentration;
             scat[i]    *= path_length * concentration;
             absorb[i]  *= path_length * concentration;

@@ -23,20 +23,20 @@ const bool true  = 1;
 int material_index(const char *material);
 
 /* The actual npsolve function declaration */
-int npspec (const int nlayers,
-            const double rad[2],
-            const double rel_rad[][2],
-            const int indx[],
-            const double mrefrac,
-            const bool size_correct,
-            const int increment,
-            const double path_length,
-            const double concentration,
-            const SpectraType spectra_type,
-            double extinct[],
-            double scat[],
-            double absorb[]
-          );
+ErrorCode npspec (const int nlayers,
+                  const double rad[2],
+                  const double rel_rad[][2],
+                  const int indx[],
+                  const double mrefrac,
+                  const bool size_correct,
+                  const int increment,
+                  const double path_length,
+                  const double concentration,
+                  const SpectraType spectra_type,
+                  double extinct[],
+                  double scat[],
+                  double absorb[]
+                );
 
 /* Determine color based on spectra */
 void RGB(const double spec_in[], 

@@ -3,7 +3,7 @@
 using namespace NPSpec;
 
 int material_index(const char *material) {
-    /* If the material is not in the list, return -1 */ 
+    /* If the material is not in the list, return UnknownMaterial */
 
     /* The array defining the known materials  */
     static const char mindx[][14] = {
@@ -67,7 +67,7 @@ int material_index(const char *material) {
             return i;
     }
 
-    /* If we have gotten here, the material is not known.  Return -1 */
-    return -1;
+    /* If we have gotten here, the material is not known.  Return UnknownMaterial */
+    return (int) UnknownMaterial;
 
 }
