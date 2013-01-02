@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 #include "nanoparticle.h"
 #include "NPSpec.h"
 
@@ -59,13 +60,14 @@ ErrorCode Nanoparticle::calculateSpectrum()
                               extinction,
                               scattering,
                               absorbance);
+    //for (int i = 0; i < NLAMBDA; i++) { std::cout << absorbance[i] << std::endl; }
 
     // Recalculate the colors
     double spec[NLAMBDA];
     getSpectrum(spec);
     // TODO: Think about transmission vs. not for RGB
-    RGB(spec, increment, false, &red, &blue, &green);
-    RGB_to_HSV(red, blue, green, &hue, &saturation, &value);
+    RGB(spec, increment, false, &red, &green, &blue);
+    RGB_to_HSV(red, green, blue, &hue, &saturation, &value);
 
     return result;
 }
@@ -82,8 +84,10 @@ void Nanoparticle::getSpectrum(double spec[NLAMBDA]) const {
             spec[i] = extinction[i];
         break;
     case Absorbance:
-        for (int i = 0; i < NLAMBDA; i++)
+        for (int i = 0; i < NLAMBDA; i++) {
             spec[i] = absorbance[i];
+        //    std::cout << spec[i] << std::endl;
+        }
         break;
     case Scattering:
         for (int i = 0; i < NLAMBDA; i++)
@@ -262,13 +266,8 @@ ErrorCode Nanoparticle::setSphereLayerRelativeRadius(int layer_num, double rrad)
         return LayerError;
     if (rrad < 0.0 || rrad > 1.0)
         return ValueError;
-    sphereRelativeRadius[layer_num-1] = rrad;
-    /* Reset other relative radii so that they sum to 1.0 */
-    double total = 1.0 - rrad;
-    for (int i = 0; i < nLayers; i++) {
-        if (i == ( layer_num - 1 )) continue;
-
-    }
+    distributeRelativeRadius(layer_num-1, rrad, sphereRelativeRadius);
+    updateRelativeRadius(shape);
     return NoError;
 }
 
@@ -280,8 +279,14 @@ ErrorCode Nanoparticle::setEllipsoidLayerRelativeRadius(int layer_num, double zr
         return ValueError;
     if (xyrrad < 0.0 || xyrrad > 1.0)
         return ValueError;
-    ellipsoidRelativeRadius[layer_num-1][0] = zrrad;
-    ellipsoidRelativeRadius[layer_num-1][1] = xyrrad;
+    double temparr[MAXLAYERS];
+    for (int i = 0; i < MAXLAYERS; i++) { temparr[i] = ellipsoidRelativeRadius[i][0]; }
+    distributeRelativeRadius(layer_num-1, zrrad, temparr);
+    for (int i = 0; i < MAXLAYERS; i++) { ellipsoidRelativeRadius[i][0] = temparr[i]; }
+    for (int i = 0; i < MAXLAYERS; i++) { temparr[i] = ellipsoidRelativeRadius[i][1]; }
+    distributeRelativeRadius(layer_num-1, xyrrad, temparr);
+    for (int i = 0; i < MAXLAYERS; i++) { ellipsoidRelativeRadius[i][1] = temparr[i]; }
+    updateRelativeRadius(shape);
     return NoError;
 }
 
@@ -360,7 +365,7 @@ void Nanoparticle::updateRelativeRadius(NanoparticleShape npshape) {
     case Sphere:
         for (int i = 0; i < nLayers; i++) {
             relativeRadius[i][0] = sphereRelativeRadius[i];
-            relativeRadius[i][1] = -1;
+            relativeRadius[i][1] = sphereRelativeRadius[i];
         }
         break;
     case Ellipsoid:
@@ -370,4 +375,50 @@ void Nanoparticle::updateRelativeRadius(NanoparticleShape npshape) {
         }
         break;
     }
+}
+
+void Nanoparticle::distributeRelativeRadius(int n, double rrad, double array[]) {
+    /* Given a new relative radius for a layer, change the other layers
+       so that they sum to 1.0 */
+
+    /* Make an index array of the order we wish to look through the layers.
+       We want to look at layers higher than the given layer, and then
+       the lower ones in decreasing order. */
+    int index[MAXLAYERS-1], i = 0, k = n + 1;
+    while (k < nLayers) { index[i] = k; i++; k++; }
+    k = n - 1;
+    while (k >= 0) { index[i] = k; i++; k--; }
+
+    /* First set the new value */
+    array[n] = rrad;
+
+    /* Reset other relative radii so that they sum to 1.0 */
+    double sum = 0.0;
+    for (int j = 0; j < nLayers; j++) { sum += array[j]; }
+    double remainder = 1.0 - sum;
+    for (int j = 0; j < nLayers-1; j++) { i = index[j]; /* Get the index order */
+
+        /* Update the other layers if the sum is not yet 1.0 */
+        if (std::abs(1.0 - sum) > 1e-6) {
+            /* Sometimes we need to add excess, sometimes subtract */
+            if (remainder > 0.0) {
+                if (array[i] + remainder < 1.0)
+                    array[i] += remainder;
+                else
+                    array[i] = 1.0;
+            } else { /* Remainder negative or zero */
+                if (array[i] + remainder > 0.0)
+                    array[i] += remainder;
+                else
+                    array[i] = 0.0;
+            }
+        }
+
+        /* Increment the sum */
+        sum = 0.0;
+        for (int m = 0; m < nLayers; m++) { sum += array[m]; }
+        remainder = 1.0 - sum;
+
+    }
+
 }

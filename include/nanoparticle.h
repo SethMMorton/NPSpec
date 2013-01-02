@@ -58,6 +58,7 @@ private:
     // Private functions
     void updateRadius(NPSpec::NanoparticleShape npshape);
     void updateRelativeRadius(NPSpec::NanoparticleShape npshape);
+    void distributeRelativeRadius(int n, double rrad, double array[NPSpec::MAXLAYERS]);
 
     // Input parameters to solvers
     int nLayers;
