@@ -134,7 +134,7 @@ contains
         logical(C_BOOL), parameter :: size_correct = .false.
         integer(C_INT) :: retval
         call setup
-        retval = npspec(nlayers, radius, TRANSPOSE(relative_radius_spheroid2), index2,&
+        retval = npspec(nlayers, radius, relative_radius_spheroid2, index2,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency, &
                          qext, qscat, qabs)
 
