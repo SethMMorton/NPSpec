@@ -9,12 +9,27 @@ Module NPSpecModule
 
     Private
 
+!   Parameters
     Public NLAMBDA
     Public Efficiency
     Public CrossSection
     Public Molar
-    Public Absorbtion
+    Public Absorption
     Public wavelengths
+
+!   ErrorCodes
+    Public NoError
+    Public NanoparticleTooLarge
+    Public SizeParameterWarning
+    Public InvalidRadius
+    Public InvalidIncrement
+    Public InvalidPathLength
+    Public InvalidConcentration
+    Public InvalidRefractiveIndex
+    Public InvalidNumberOfLayers
+    Public UnknownMaterial
+
+!   Functions
     Public material_index
     Public npspec
     Public RGB
@@ -29,7 +44,19 @@ Module NPSpecModule
     Integer(C_INT), Parameter :: Efficiency   = 0
     Integer(C_INT), Parameter :: CrossSection = 1
     Integer(C_INT), Parameter :: Molar        = 2
-    Integer(C_INT), Parameter :: Absorbtion   = 3
+    Integer(C_INT), Parameter :: Absorption   = 3
+
+!   ErrorCode enum
+    Integer(C_INT), Parameter :: NoError                = 0
+    Integer(C_INT), Parameter :: NanoparticleTooLarge   = -1
+    Integer(C_INT), Parameter :: SizeParameterWarning   = -3
+    Integer(C_INT), Parameter :: InvalidRadius          = -4
+    Integer(C_INT), Parameter :: InvalidIncrement       = -6
+    Integer(C_INT), Parameter :: InvalidPathLength      = -7
+    Integer(C_INT), Parameter :: InvalidConcentration   = -8
+    Integer(C_INT), Parameter :: InvalidRefractiveIndex = -9
+    Integer(C_INT), Parameter :: InvalidNumberOfLayers  = -10
+    Integer(C_INT), Parameter :: UnknownMaterial        = -11
 
 !   Interfaces to the C routines
     Interface

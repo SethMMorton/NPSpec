@@ -2,7 +2,7 @@ module test_fortran_wrapper
 
     use, intrinsic :: iso_c_binding
     use fruit
-    use NPSpecModule, ONLY : NLAMBDA
+    use NPSpecModule
 
     implicit none
 
@@ -44,11 +44,10 @@ contains
         call run_test_case(TestMieQuasiSmall, 'TestMieQuasiSmall')
         call run_test_case(TestCrossSection, 'TestCrossSection')
         call run_test_case(TestMolar, 'TestMolar')
-        call run_test_case(TestAbsorbtion, 'TestAbsorbtion')
+        call run_test_case(TestAbsorption, 'TestAbsorption')
     end subroutine
 
     subroutine setup
-        use NPSpecModule, ONLY : material_index, make_C_string
         character(kind=C_CHAR, len=14) :: mat
         call make_C_string("Ag", mat)
         index1(1) = material_index(mat)
@@ -67,13 +66,11 @@ contains
     end subroutine setup
 
     subroutine NLAMBDA_check
-        use NPSpecModule, ONLY : NLAMBDA
         call setup
         call assert_equals (NLAMBDA, 800)
     end subroutine NLAMBDA_check
 
     subroutine wavelengths_check
-        use NPSpecModule, ONLY : wavelengths
         call setup
         call assert_equals(200.0d0, wavelengths(1))
         call assert_equals(201.0d0, wavelengths(2))
@@ -83,16 +80,14 @@ contains
     end subroutine wavelengths_check
 
     subroutine enum_check
-        use NPSpecModule, ONLY : Efficiency, CrossSection, Molar, Absorbtion
         call setup
         call assert_equals(0, Efficiency)
         call assert_equals(1, CrossSection)
         call assert_equals(2, Molar)
-        call assert_equals(3, Absorbtion)
+        call assert_equals(3, Absorption)
     end subroutine enum_check
 
     subroutine mat_indx
-        use NPSpecModule, ONLY : material_index, make_C_string
         character(kind=C_CHAR, len=14) :: mat
         call setup
         call make_C_string("Au", mat)
@@ -102,11 +97,10 @@ contains
         call make_C_string("TiO2", mat)
         call assert_equals(43, material_index(mat))
         call make_C_string("Kryptonite", mat)
-        call assert_equals(-1, material_index(mat))
+        call assert_equals(UnknownMaterial, material_index(mat))
     end subroutine mat_indx
 
     subroutine Mie1Layer
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
@@ -117,7 +111,7 @@ contains
                       medium_refrac, size_correct, 1, 1.0d0, 1.0d0, &
                       Efficiency, qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
 !       Extinction
         call assert_equals(2.2285778886683643d0, qext(1),   1d-14)
         call assert_equals(0.2386953127709600d0, qext(251), 1d-14)
@@ -134,7 +128,6 @@ contains
     end subroutine Mie1Layer
 
     subroutine Mie2Layer
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 2
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
@@ -145,7 +138,7 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency, &
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(0.5373534948346590d0, qext(1),   1d-14)
         call assert_equals(0.3143612207865766d0, qext(251), 1d-14)
@@ -162,7 +155,6 @@ contains
     end subroutine
 
     subroutine Mie3Layer
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 3
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
@@ -173,7 +165,7 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(2.0261050243604539d0, qext(1),   1d-14)
         call assert_equals(0.0248674748630347d0, qext(251), 1d-14)
@@ -190,7 +182,6 @@ contains
     end subroutine
 
     subroutine Quasi1Layer
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, 10.0d0 /)
@@ -201,7 +192,7 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(1.0611537055667197d0, qext(1),   1d-14)
         call assert_equals(0.0764461773630003d0, qext(251), 1d-14)
@@ -218,7 +209,6 @@ contains
     end subroutine
 
     subroutine Quasi2Layer
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 2
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, 10.0d0 /)
@@ -229,7 +219,7 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(0.2170155342365016d0, qext(1),   1d-14)
         call assert_equals(0.1117949449870051d0, qext(251), 1d-14)
@@ -246,7 +236,6 @@ contains
     end subroutine
 
     subroutine Quasi3Layer
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 3
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, 10.0d0 /)
@@ -257,13 +246,12 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        ! This should fail - 2 means too many layers for quasi
-        call assert_equals(2, retval)
+        ! This should fail
+        call assert_equals(InvalidNumberOfLayers, retval)
 
     end subroutine
 
     subroutine QuasiProlate
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, 5.0d0 /)
@@ -274,7 +262,7 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(0.6549347175126272d0, qext(1),   1d-14)
         call assert_equals(0.0713320530670000d0, qext(251), 1d-14)
@@ -291,7 +279,6 @@ contains
     end subroutine
 
     subroutine QuasiOblate
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 5.0d0, 10.0d0 /)
@@ -302,7 +289,7 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(0.8371294510751321d0, qext(1),   1d-14)
         call assert_equals(0.0785298784021552d0, qext(251), 1d-14)
@@ -319,7 +306,6 @@ contains
     end subroutine
 
     subroutine TestIncrement5
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -330,7 +316,7 @@ contains
                          medium_refrac, size_correct, 5, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(1.0981095009299680d0, qext(1), 1d-14)
         call assert_equals(0.0d0, qext(2))
@@ -356,7 +342,6 @@ contains
     end subroutine
 
     subroutine TestIncrement7
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -367,13 +352,12 @@ contains
                          medium_refrac, size_correct, 7, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        ! Bad increment should return 3
-        call assert_equals(3, retval)
+        ! Bad increment
+        call assert_equals(InvalidIncrement, retval)
 
     end subroutine
 
     subroutine TestIncrementNegative
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -384,13 +368,12 @@ contains
                          medium_refrac, size_correct, -1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        ! Bad increment should return 3
-        call assert_equals(3, retval)
+        ! Bad increment
+        call assert_equals(InvalidIncrement, retval)
 
     end subroutine
 
     subroutine TestSizeCorrect
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 5.0d0, -1.0d0 /)
@@ -401,7 +384,7 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(0.5334378505066342d0, qext(1),   1d-14)
         call assert_equals(0.0025491434133546d0, qext(251), 1d-14)
@@ -418,7 +401,6 @@ contains
     end subroutine
 
     subroutine TestMediumRefractiveIndex
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 2.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 20.0d0, -1.0d0 /)
@@ -429,7 +411,7 @@ contains
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
 
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(2.8328562530696506d0, qext(1),   1d-14)
         call assert_equals(2.0565291634339800d0, qext(251), 1d-14)
@@ -446,7 +428,6 @@ contains
     end subroutine
 
     subroutine TestMieQuasiSmall
-        use NPSpecModule, ONLY : Efficiency, npspec
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 3.0d0, -1.0d0 /)
@@ -459,12 +440,12 @@ contains
         retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Quasistatic
         retval = npspec(nlayers, radius2, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, 1, 1.0d0, 1.0d0, Efficiency,&
                          qext2, qscat2, qabs2)
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
 
         ! Extinction
         call assert_equals(qext2(1),   qext(1),   2d-3)
@@ -482,7 +463,6 @@ contains
     end subroutine
 
     subroutine TestCrossSection
-        use NPSpecModule, ONLY : Efficiency, CrossSection, npspec, NLAMBDA
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -497,11 +477,11 @@ contains
         retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, CrossSection,&
                          qext2, qscat2, qabs2)
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(qext2, qext * pi * radius(1)**2, NLAMBDA, 1d-14)
         ! Scattering
@@ -511,7 +491,6 @@ contains
     end subroutine
 
     subroutine TestMolar
-        use NPSpecModule, ONLY : Efficiency, Molar, npspec, NLAMBDA
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -526,11 +505,11 @@ contains
         retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, Molar,&
                          qext2, qscat2, qabs2)
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(qext2, qext * pi * radius(1)**2 * 1d-14 * avogadro &
                                   / ( 1000d0 * log(10d0) ), NLAMBDA, 1d-6)
@@ -542,8 +521,7 @@ contains
                                   / ( 1000d0 * log(10d0) ), NLAMBDA, 1d-6)
     end subroutine
 
-    subroutine TestAbsorbtion
-        use NPSpecModule, ONLY : Efficiency, Absorbtion, npspec, NLAMBDA
+    subroutine TestAbsorption
         integer(C_INT),  parameter :: nlayers = 1
         real(C_DOUBLE),  parameter :: medium_refrac = 1.0d0
         real(C_DOUBLE),  parameter :: radius(2) = (/ 10.0d0, -1.0d0 /)
@@ -560,11 +538,11 @@ contains
         retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, 1.0d0, 1.0d0, Efficiency,&
                          qext, qscat, qabs)
-        call assert_equals(0, retval)
+        call assert_equals(NoError, retval)
         retval = npspec(nlayers, radius, relative_radius_spheroid1, index1,&
                          medium_refrac, size_correct, inc, path_length, molarity,&
-                         Absorbtion, qext2, qscat2, qabs2)
-        call assert_equals(0, retval)
+                         Absorption, qext2, qscat2, qabs2)
+        call assert_equals(NoError, retval)
         ! Extinction
         call assert_equals(qext2, qext * pi * radius(1)**2 &
                                        * 1d-14 * avogadro / ( 1000d0 * log(10d0) ) &
