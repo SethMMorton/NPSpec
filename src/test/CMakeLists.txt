@@ -9,10 +9,10 @@ LINK_DIRECTORIES(${LIB}/gtest)
 
 # Create the C++ tests
 SET(CXXTESTS "NPSpec" "Nanoparticle")
-FOREACH (f ${CXXTEST})
+FOREACH (f ${CXXTESTS})
 
     # Make lowercase version of name
-    STRING(TOLOWER f f_lower)
+    STRING(TOLOWER ${f} f_lower)
 
     # Add test executable target
     ADD_EXECUTABLE(test${f} test_${f_lower}.cpp)
@@ -23,10 +23,10 @@ FOREACH (f ${CXXTEST})
     # Specify testNPSpec's link libraries
     TARGET_LINK_LIBRARIES(test${f} gtest NPSpec)
 
-    # Add the c++ only unit tests
+    # Add the C++ only unit tests
     ADD_TEST(test${f} "test${f}")
 
-ENDFOREACH()
+ENDFOREACH(f)
 
 # Test Fortran code?
 IF (FORTRAN)
