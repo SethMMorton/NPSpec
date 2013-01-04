@@ -19,8 +19,7 @@ Module NPSpecModule
 
 !   ErrorCodes
     Public NoError
-    Public NanoparticleTooLarge
-    Public SizeParameterWarning
+    Public SizeWarning
     Public InvalidRadius
     Public InvalidRelativeRadius
     Public InvalidIncrement
@@ -49,7 +48,6 @@ Module NPSpecModule
 
 !   ErrorCode enum
     Integer(C_INT), Parameter :: NoError                = 0
-    Integer(C_INT), Parameter :: NanoparticleTooLarge   = -1
     Integer(C_INT), Parameter :: SizeParameterWarning   = -3
     Integer(C_INT), Parameter :: InvalidRadius          = -4
     Integer(C_INT), Parameter :: InvalidRelativeRadius  = -5

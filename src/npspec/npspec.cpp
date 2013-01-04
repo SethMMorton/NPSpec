@@ -127,13 +127,9 @@ ErrorCode npspec(const int nlayers,              /* Number of layers */
         if (size_param < 0.1E-6)
             continue;
         /* Watch out for too large with quasistatic */
-        /* TODO: Optimize these values */
-        else if (!lmie && i == 0) { /* Monitor 200 nm */
-            if (size_param > 0.8)
-                return NanoparticleTooLarge;
-            else if (size_param > 0.6)
-                returnvalue = SizeParameterWarning;
-        }
+        /* TODO: Optimize this values */
+        else if (!lmie && i == 0 && size_param > 0.6) /* Monitor 200 nm */
+            returnvalue = SizeWarning;
 
         /*****************************************************************
          * Calculate dielectric constant & refractive index for each layer
@@ -185,7 +181,7 @@ ErrorCode npspec(const int nlayers,              /* Number of layers */
             int retval = mie(nlayers, refrac_indx, srrad, size_param,
                              &extinct[i], &scat[i], &absorb[i],
                              &backscat, &rad_pressure, &albedo, &asymmetry);
-            if (retval > 0) return NanoparticleTooLarge;
+            if (retval > 0) return SizeWarning;
         } else {
             int retval = quasi(nlayers, dielec, sqr(mrefrac), rel_rad,
                                rad, size_param,

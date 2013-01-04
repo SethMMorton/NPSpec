@@ -165,19 +165,13 @@ TEST(SanityTest, ErrorCodes) {
     result = npspec(1, radius, relative_radius, matIndx,
                     1.0, false, 1, 1.0, 1.0, Efficiency,
                     qext, qscat, qabs);
-    EXPECT_EQ(NanoparticleTooLarge, result);
-    radius[0] = 30.0;
-    radius[1] = 30.0;
-    result = npspec(1, radius, relative_radius, matIndx,
-                    1.0, false, 1, 1.0, 1.0, Efficiency,
-                    qext, qscat, qabs);
-    EXPECT_EQ(NanoparticleTooLarge, result);
+    EXPECT_EQ(SizeWarning, result);
     radius[0] = 20.0;
     radius[1] = 20.0;
     result = npspec(1, radius, relative_radius, matIndx,
                     1.0, false, 1, 1.0, 1.0, Efficiency,
                     qext, qscat, qabs);
-    EXPECT_EQ(SizeParameterWarning, result);
+    EXPECT_EQ(SizeWarning, result);
     radius[0] = 10.0;
     radius[1] = 10.0;
     relative_radius[2][0] = -0.4;

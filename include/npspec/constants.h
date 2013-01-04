@@ -26,8 +26,7 @@ enum SpectraProperty { Extinction, Absorbance, Scattering };
 
 /* Enum for npspec errors */
 enum ErrorCode { NoError = 0,
-                 NanoparticleTooLarge = -1,
-                 SizeParameterWarning = -3,
+                 SizeWarning = -3,
                  InvalidRadius = -4,
                  InvalidRelativeRadius = -5,
                  InvalidIncrement = -6,
@@ -35,9 +34,7 @@ enum ErrorCode { NoError = 0,
                  InvalidConcentration = -8,
                  InvalidRefractiveIndex = -9,
                  InvalidNumberOfLayers = -10,
-                 UnknownMaterial = -11,
-                 LayerError = -50,
-                 ValueError = -51 };
+                 UnknownMaterial = -11 };
 
 /* The wavelengths to calculate at as defined in wavelengths.c */
 extern const double wavelengths[];
