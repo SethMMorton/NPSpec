@@ -11,11 +11,12 @@ ELSE()
 ENDIF()
 
 # Find directories and files that we will want to remove
-FILE(GLOB_RECURSE EGGS "${TOPDIR}/*.egg-info")
+FILE(GLOB EGGS "${TOPDIR}/*.egg-info" "${TOPDIR}/python/*.egg-info")
 FILE(GLOB_RECURSE PYCACHE "${TOPDIR}/*__pycache__*")
 FILE(GLOB_RECURSE PYC "${TOPDIR}/*.pyc")
 FILE(GLOB PYBUILDTEMP "${TOPDIR}/build/temp*")
 FILE(GLOB PYBUILDLIB "${TOPDIR}/build/lib*")
+FILE(GLOB PYBUILDBDIST "${TOPDIR}/build/bdist*")
 FILE(GLOB_RECURSE CMAKECACHE "${TOPDIR}/*CMakeCache.txt")
 FILE(GLOB_RECURSE CMAKEINSTALL "${TOPDIR}/*cmake_install.cmake")
 FILE(GLOB_RECURSE MAKEFILE "${TOPDIR}/*Makefile")
@@ -33,6 +34,7 @@ SET(DEL ${TOPDIRECTORIES}
         ${PYC}
         ${PYBUILDTEMP}
         ${PYBUILDLIB}
+        ${PYBUILDBDIST}
         ${CMAKECACHE}
         ${CMAKEINSTALL}
         ${MAKEFILE}
