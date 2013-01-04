@@ -1,5 +1,7 @@
-include pyNPSolve.c
-include README
+include README.rst
+include MANIFEST.in
 include *.py
-include include/*.h
-include src/*.cpp
+include include/npspec/*.h
+include include/npspec/private/*.h
+include src/npspec/*.cpp
+include python/npspec/*
