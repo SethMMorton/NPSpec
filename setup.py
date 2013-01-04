@@ -3,10 +3,10 @@
 # In case setuptools is not installed
 from distribute_setup import use_setuptools
 use_setuptools()
-from setuptools import setup, Extension
-from setuphelp import current_version, PyTest, Clean
+from setuptools import setup, Extension, find_packages
+from setuphelp import current_version, PyTest
 
-from os.path import join
+from os.path import join, abspath
 from glob import glob
 import numpy
 
@@ -18,8 +18,15 @@ except IOError:
     LONG_DESCRIPTION = DESCRIPTION
 
 # Create a list of all the source files
-sourcefiles = ([join('src', 'python','pyNPSpec.c')] 
-             + glob(join('src', '*.cpp')))
+sourcefiles  = [join('python', 'npspec', 'npspec.i')]
+sourcefiles += glob(join('src', 'npspec', '*.cpp'))
+
+# Extension definition
+includes  = [abspath('include'), numpy.get_include()]
+swigopts  = ['-modern', '-c++', '-outputtuple']
+swigopts += ['-I'+i for i in includes]
+ext = Extension('_npspec', sourcefiles, 
+                include_dirs=includes, swig_opts=swigopts)
 
 # Define the build
 setup(name='npspec',
@@ -28,16 +35,15 @@ setup(name='npspec',
       author_email='drtuba78@gmail.com',
       url='https://github.com/SethMMorton/NPSpec',
       license='MIT',
-      ext_modules=[
-        Extension('npspec', sourcefiles,
-                  include_dirs=['include', numpy.get_include()],
-                 )
-        ],
+      ext_modules=[ext],
+      ext_package='npspec',
+      packages=find_packages(join('python')),
+      package_dir={'':join('python')},
       description=DESCRIPTION,
       long_description=LONG_DESCRIPTION,
       use_2to3=True,
-      tests_require=['pytest', 'sphinx'],
-      cmdclass={'test':PyTest, 'distclean':Clean},
+      tests_require=['pytest'],
+      cmdclass={'test':PyTest},
       classifiers=(
                   'Development Status :: 4 - Beta',
                   #'Development Status :: 5 - Production/Stable',
@@ -50,4 +56,4 @@ setup(name='npspec',
                   #'Programming Language :: Python :: 3',
                   'Topic :: Scientific/Engineering',
      )
-    )
+)
