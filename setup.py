@@ -64,7 +64,7 @@ class PyTest(TestCommand):
     '''Define how to use pytest to test the code'''
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = []
+        self.test_args = ['build']
         self.test_suite = True
     def run_tests(self):
         #import here, cause outside the eggs aren't loaded
@@ -90,6 +90,7 @@ setup(name='npspec',
       ext_package='npspec',
       packages=find_packages(join('python')),
       package_dir={'':join('python')},
+      package_data={'': [join('tests', '*.py')]},
       description=DESCRIPTION,
       long_description=LONG_DESCRIPTION,
       use_2to3=True,

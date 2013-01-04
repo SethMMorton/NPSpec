@@ -12,7 +12,7 @@ ENDIF()
 
 # Find directories and files that we will want to remove
 FILE(GLOB EGGS "${TOPDIR}/*.egg-info" "${TOPDIR}/python/*.egg-info")
-FILE(GLOB_RECURSE PYCACHE "${TOPDIR}/*__pycache__*")
+FILE(GLOB PYCACHE "${TOPDIR}/python/npspec/tests/__pycache__")
 FILE(GLOB_RECURSE PYC "${TOPDIR}/*.pyc")
 FILE(GLOB PYBUILDTEMP "${TOPDIR}/build/temp*")
 FILE(GLOB PYBUILDLIB "${TOPDIR}/build/lib*")
