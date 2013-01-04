@@ -25,6 +25,10 @@ lib/*
 test/*
 dist/*
 
+# Swig
+*_wrap.*
+npspec.py
+
 # Mac OS X Frameworks
 *.framework
 

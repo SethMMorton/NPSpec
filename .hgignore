@@ -21,40 +21,18 @@ syntax: glob
 *.pyc
 *egg-info/*
 
-# Testing executables
-ctest
-ftest
-verify
-testNPSolve
-verifyNPSolve
-testFortranWrapper
-
-# CMake
-CMakeCache.txt
-CTestTestfile.cmake
-cmake_install.cmake
-install_manifest.txt
-CMakeFiles/*
-Makefile
+# Result dirs
 build/*
+lib/*
+test/*
 dist/*
-*/CMakeCache.txt
-*/CTestTestfile.cmake
-*/cmake_install.cmake
-*/CMakeFiles/*
-*/install_manifest.txt
-*/*/CMakeCache.txt
-*/*/CTestTestfile.cmake
-*/*/cmake_install.cmake
-*/*/CMakeFiles/*
-*/*/install_manifest.txt
+
+# Swig
+*_wrap.*
+npspec.py
 
 # Mac OS X Frameworks
 *.framework
-
-# GTest
-ThirdParty/*
-Testing/*
 
 # Clang
 *.dSYM
