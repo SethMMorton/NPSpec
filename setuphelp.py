@@ -17,7 +17,7 @@ def current_version():
     VERSIONFILE = os.path.join('include', "NPSpec", 'version.h')
     with open(VERSIONFILE, "rt") as fl:
         versionstring = fl.readline().strip()
-    m = re.search(r"^#define NPSPEC_VERSION \"(.*)\"", versionstring)
+    m = re.search(r"^#define \w+_VERSION \"(.*)\"", versionstring)
     if m:
         return m.group(1)
     else:
@@ -31,74 +31,9 @@ class PyTest(TestCommand):
         self.test_args = []
         self.test_suite = True
     def run_tests(self):
-        errno = self.run_pytest()
-        if errno:
-            sys.exit(errno)
-        else:
-            sys.exit(self.run_doctests())
-    def run_pytest(self):
         #import here, cause outside the eggs aren't loaded
         import pytest
-        return pytest.main(self.test_args)
-    def run_doctests(self):
-        # Recall current directory
-        original_dir = os.path.abspath(os.curdir)
-        # Go to docs directort
-        os.chdir('docs')
-        # Get makefile name
-        if sys.platform == 'win32':
-            make = 'make.bat'
-        else:
-            make = 'make'
-        # Call the make process
-        errno = call([make, 'doctest'])
-        os.chdir(original_dir)
-        return errno
-
-# Clean the directory
-class Clean(Command):
-    description = "custom clean command that fully cleans directory tree"
-    user_options = []
-    def initialize_options(self):
-        self.cwd = None
-    def finalize_options(self):
-        self.cwd = os.getcwd()
-    def run(self):
-        
-        # Get all files in all directories
-        rmfiles = []
-        for d, dirs, files in os.walk(os.getcwd()):
-            # Find the files to remove
-            rmfiles.extend([os.path.join(d, f) for f in ffilter(files, "*.pyc")])
-            rmfiles.extend([os.path.join(d, f) for f in ffilter(dirs, "__pycache__")])
-
-        # Removes the cmake files
-        for f in rmfiles:
-            try:
-                os.remove(f)
-            except OSError:
-                pass
-
-        # Removes directories
-        for d in ['lib', 'dist', 'build', 'test']+glob('*.egg-info'):
-            try:
-                rmtree(d)
-            except OSError:
-                pass
-        
-        # Clean the docs
-        cwd = os.getcwd()
-        try:
-            os.chdir('docs')
-        except OSError:
-            pass
-        else:
-            if sys.platform == 'win32':
-                make = 'make.bat'
-            else:
-                make = 'make'
-            call([make, 'clean'])
-            os.chdir(cwd)
+        sys.exit(pytest.main(self.test_args))
 
 # Class to update the version
 class Updater(Command):

@@ -52,3 +52,9 @@ IF(TESTING)
     ENABLE_TESTING()
     ADD_SUBDIRECTORY(${SRC}/test ${TEST})
 ENDIF(TESTING)
+
+# Add a distclean target to the Makefile
+ADD_CUSTOM_TARGET(distclean 
+    COMMAND ${CMAKE_BUILD_TOOL} clean
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/distclean.cmake
+)
