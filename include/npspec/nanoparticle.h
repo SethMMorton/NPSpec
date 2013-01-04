@@ -10,7 +10,7 @@ public:
     Nanoparticle();
 
     // Calculate the spectra!
-    NPSpec::ErrorCode calculateSpectrum();
+    int calculateSpectrum();
     // Get the spectra!
     void getSpectrum(double spec[NPSpec::NLAMBDA]) const;
 
@@ -20,20 +20,20 @@ public:
     double getOpacity() const;
 
     // Setters
-    NPSpec::ErrorCode setNLayers(int nlay);
+    void setNLayers(int nlay);
     void setShape(NPSpec::NanoparticleShape npshape);
     void setSpectraType(NPSpec::SpectraType stype);
     void setSpectraProperty(NPSpec::SpectraProperty spec);
-    NPSpec::ErrorCode setSphereRadius(double rad);
-    NPSpec::ErrorCode setEllipsoidRadius(double zrad, double xyrad);
-    NPSpec::ErrorCode setSphereLayerRelativeRadius(int layer_num, double rrad);
-    NPSpec::ErrorCode setEllipsoidLayerRelativeRadius(int layer_num, double zrrad, double xyrrad);
-    NPSpec::ErrorCode setLayerMaterial(int layer_num, std::string mat);
-    NPSpec::ErrorCode setIncrement(int i);
-    NPSpec::ErrorCode setPathLength(double len);
-    NPSpec::ErrorCode setConcentration(double conc);
+    void setSphereRadius(double rad);
+    void setEllipsoidRadius(double zrad, double xyrad);
+    void setSphereLayerRelativeRadius(int layer_num, double rrad);
+    void setEllipsoidLayerRelativeRadius(int layer_num, double zrrad, double xyrrad);
+    void setLayerMaterial(int layer_num, std::string mat);
+    void setIncrement(int i);
+    void setPathLength(double len);
+    void setConcentration(double conc);
     void setSizeCorrect(bool corr);
-    NPSpec::ErrorCode setMediumRefractiveIndex(double mref);
+    void setMediumRefractiveIndex(double mref);
 
     // Getters
     int getNLayers() const;

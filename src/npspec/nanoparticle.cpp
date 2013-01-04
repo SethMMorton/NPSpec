@@ -1,5 +1,5 @@
 #include <cmath>
-#include <iostream>
+#include <stdexcept>
 #include "npspec/nanoparticle.h"
 #include "npspec/npspec.h"
 
@@ -42,7 +42,7 @@ Nanoparticle::Nanoparticle() :
     setShape(Sphere);
 }
 
-ErrorCode Nanoparticle::calculateSpectrum()
+int Nanoparticle::calculateSpectrum()
 {
     /* Calculate the spectrum based on the Nanoparticle parameters */
 
@@ -60,7 +60,6 @@ ErrorCode Nanoparticle::calculateSpectrum()
                               extinction,
                               scattering,
                               absorbance);
-    //for (int i = 0; i < NLAMBDA; i++) { std::cout << absorbance[i] << std::endl; }
 
     // Recalculate the colors
     double spec[NLAMBDA];
@@ -69,7 +68,29 @@ ErrorCode Nanoparticle::calculateSpectrum()
     RGB(spec, increment, false, &red, &green, &blue);
     RGB_to_HSV(red, green, blue, &hue, &saturation, &value);
 
-    return result;
+    // Return properly
+    switch(result) {
+    case NoError:
+        return 0;
+    case SizeWarning:
+        return 1;
+    case InvalidNumberOfLayers:
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
+    case InvalidIncrement:
+        throw std::invalid_argument("Increment must be a factor of NLAMBDA");
+    case UnknownMaterial:
+        throw std::invalid_argument("Unknown material given");
+    case InvalidRadius:
+        throw std::domain_error("Radius must be positive");
+    case InvalidRelativeRadius:
+        throw std::domain_error("Relative radius must be positive and sum to 1.0");
+    case InvalidPathLength:
+        throw std::domain_error("Path length must be positive");
+    case InvalidConcentration:
+        throw std::domain_error("Concentration must be positive");
+    case InvalidRefractiveIndex:
+        throw std::domain_error("Refractive index must be positive");
+    }
 }
 
 /*********
@@ -84,10 +105,8 @@ void Nanoparticle::getSpectrum(double spec[NLAMBDA]) const {
             spec[i] = extinction[i];
         break;
     case Absorbance:
-        for (int i = 0; i < NLAMBDA; i++) {
+        for (int i = 0; i < NLAMBDA; i++)
             spec[i] = absorbance[i];
-        //    std::cout << spec[i] << std::endl;
-        }
         break;
     case Scattering:
         for (int i = 0; i < NLAMBDA; i++)
@@ -153,35 +172,35 @@ double Nanoparticle::getEllipsoidXYRadius() const {
 double Nanoparticle::getSphereLayerRelativeRadius(int layer_num) const {
     /* Get the current relative radius for the sphere shape for the given layer */
     if (layer_num > MAXLAYERS || layer_num < 1)
-        return (double) LayerError;
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
     return sphereRelativeRadius[layer_num-1];
 }
 
 double Nanoparticle::getEllipsoidLayerZRelativeRadius(int layer_num) const {
     /* Get the current relative radius for the z-axis of the ellipsoid shape for the given layer */
     if (layer_num > MAXLAYERS || layer_num < 1)
-        return (double) LayerError;
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
     return ellipsoidRelativeRadius[layer_num-1][0];
 }
 
 double Nanoparticle::getEllipsoidLayerXYRelativeRadius(int layer_num) const {
     /* Get the current relative radius for the xy-axis of the ellipsoid shape for the given layer */
     if (layer_num > MAXLAYERS || layer_num < 1)
-        return (double) LayerError;
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
     return ellipsoidRelativeRadius[layer_num-1][1];
 }
 
 std::string Nanoparticle::getLayerMaterial(int layer_num) const {
     /* Get the current layer type for the given layer */
     if (layer_num > MAXLAYERS || layer_num < 1)
-        return std::string("LayerError");
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
     return materials[layer_num-1];
 }
 
 int Nanoparticle::getLayerIndex(int layer_num) const {
     /* Get the current layer index for the given layer */
     if (layer_num > MAXLAYERS || layer_num < 1)
-        return (int) LayerError;
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
     return materialIndex[layer_num-1];
 }
 
@@ -214,14 +233,13 @@ double Nanoparticle::getMediumRefractiveIndex() const {
  * Setters
  *********/
 
-NPSpec::ErrorCode Nanoparticle::setNLayers(int nlay) {
+void Nanoparticle::setNLayers(int nlay) {
     /* Set the number of layers */
     // NLayers must be between 1 and maxlayers
     if (nlay > MAXLAYERS || nlay < 1)
-        return LayerError;
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
     nLayers = nlay;
     updateRelativeRadius(shape);
-    return NoError;
 }
 
 void Nanoparticle::setShape(NanoparticleShape npshape) {
@@ -241,44 +259,41 @@ void Nanoparticle::setSpectraProperty(SpectraProperty spec) {
     sProp = spec;
 }
 
-ErrorCode Nanoparticle::setSphereRadius(double rad) {
+void Nanoparticle::setSphereRadius(double rad) {
     /* Set the radius for a sphere */
     if (rad <= 0.0)
-        return ValueError;
+        throw std::domain_error("Radius must be positive");
     sphereRadius = rad;
     updateRadius(shape);
-    return NoError;
 }
 
-ErrorCode  Nanoparticle::setEllipsoidRadius(double zrad, double xyrad) {
+void  Nanoparticle::setEllipsoidRadius(double zrad, double xyrad) {
     /* Set the radius for an ellipsoid */
     if (zrad <= 0.0 || xyrad <= 0.0)
-        return ValueError;
+        throw std::domain_error("Radius must be positive");
     ellipsoidRadius[0] = zrad;
     ellipsoidRadius[1] = xyrad;
     updateRadius(shape);
-    return NoError;
 }
 
-ErrorCode Nanoparticle::setSphereLayerRelativeRadius(int layer_num, double rrad) {
+void Nanoparticle::setSphereLayerRelativeRadius(int layer_num, double rrad) {
     /* Set the relative radius for the given layer of a sphere */
     if (layer_num > MAXLAYERS || layer_num < 1)
-        return LayerError;
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
     if (rrad < 0.0 || rrad > 1.0)
-        return ValueError;
+        throw std::domain_error("Relative radius must be positive");
     distributeRelativeRadius(layer_num-1, rrad, sphereRelativeRadius);
     updateRelativeRadius(shape);
-    return NoError;
 }
 
-ErrorCode Nanoparticle::setEllipsoidLayerRelativeRadius(int layer_num, double zrrad, double xyrrad) {
+void Nanoparticle::setEllipsoidLayerRelativeRadius(int layer_num, double zrrad, double xyrrad) {
     /* Set the relative radius for the given layer of an ellipsoid */
     if (layer_num > MAXLAYERS || layer_num < 1)
-        return LayerError;
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS"); 
     if (zrrad < 0.0 || zrrad > 1.0)
-        return ValueError;
+        throw std::domain_error("Relative radius must be positive");
     if (xyrrad < 0.0 || xyrrad > 1.0)
-        return ValueError;
+        throw std::domain_error("Relative radius must be positive");
     double temparr[MAXLAYERS];
     for (int i = 0; i < MAXLAYERS; i++) { temparr[i] = ellipsoidRelativeRadius[i][0]; }
     distributeRelativeRadius(layer_num-1, zrrad, temparr);
@@ -287,45 +302,40 @@ ErrorCode Nanoparticle::setEllipsoidLayerRelativeRadius(int layer_num, double zr
     distributeRelativeRadius(layer_num-1, xyrrad, temparr);
     for (int i = 0; i < MAXLAYERS; i++) { ellipsoidRelativeRadius[i][1] = temparr[i]; }
     updateRelativeRadius(shape);
-    return NoError;
 }
 
-ErrorCode Nanoparticle::setLayerMaterial(int layer_num, std::string mat){
+void Nanoparticle::setLayerMaterial(int layer_num, std::string mat){
     /* Set the material for the given layer */
     if (layer_num > MAXLAYERS || layer_num < 1)
-        return LayerError;
+        throw std::out_of_range("Number of layers must be between 1 and MAXLAYERS");
     int tmp = material_index(mat.c_str());
     if ((ErrorCode) tmp == UnknownMaterial)
-        return ValueError;
+        throw std::invalid_argument("Unknown material given");
     materialIndex[layer_num-1] = tmp;
     materials[layer_num-1] = mat;
-    return NoError;
 }
 
-ErrorCode Nanoparticle::setIncrement(int i) {
+void Nanoparticle::setIncrement(int i) {
     /* Change the wavelength increment in the solver */
     if (i < 0)
-        return ValueError;
+        throw std::domain_error("Increment must be positive");
     else if (std::fmod((double) NLAMBDA, (double) i) > 0.000001)
-        return ValueError;
+        throw std::invalid_argument("Increment must be a factor of NLAMBDA");
     increment = i;
-    return NoError;
 }
 
-ErrorCode Nanoparticle::setPathLength(double len) {
+void Nanoparticle::setPathLength(double len) {
     /* Change the light path length */
     if (len <= 0.0)
-        return ValueError;
+        throw std::domain_error("Path length must be positive");
     pathLength = len;
-    return NoError;
 }
 
-ErrorCode Nanoparticle::setConcentration(double conc) {
+void Nanoparticle::setConcentration(double conc) {
     /* Change the concentration of the solution */
     if (conc <= 0.0)
-        return ValueError;
+        throw std::domain_error("Concentration must be positive");
     concentration = conc;
-    return NoError;
 }
 
 void Nanoparticle::setSizeCorrect(bool corr) {
@@ -333,12 +343,11 @@ void Nanoparticle::setSizeCorrect(bool corr) {
     sizeCorrect = corr;
 }
 
-ErrorCode Nanoparticle::setMediumRefractiveIndex(double mref) {
+void Nanoparticle::setMediumRefractiveIndex(double mref) {
     /* Change the refractive index of the surrounding medium */
     if (mref <= 0.0)
-        return ValueError;
+        throw std::domain_error("Refractive index must be positive");
     mediumRefractiveIndex = mref;
-    return NoError;
 }
 
 /*******************
