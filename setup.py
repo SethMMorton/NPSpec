@@ -3,11 +3,11 @@
 # In case setuptools is not installed
 from distribute_setup import use_setuptools
 use_setuptools()
-from setuptools import setup, Extension, find_packages
+from setuptools import setup, Extension, find_packages, Command
 from setuptools.command.test import test as TestCommand
 
 from os.path import join, abspath
-from os import remove
+from os import remove, getcwd
 from glob import glob
 from subprocess import check_call, CalledProcessError
 import re
@@ -40,7 +40,7 @@ class SWIG(Command):
     def initialize_options(self):
         self.cwd = None
     def finalize_options(self):
-        self.cwd = os.getcwd()
+        self.cwd = getcwd()
     def run(self):
         # First delete the previously wrapped files
         wrapped = join('python', 'npspec', 'npspec_wrap.cpp')
@@ -52,7 +52,8 @@ class SWIG(Command):
                 pass
         # Now rewrap the files
         c = ['swig', '-python', '-modern', '-c++', '-outputtuple',
-             '-Iinclude', '-I'+numpy.get_include(), '-o', wrapped, pyfile]
+             '-Iinclude', '-I'+numpy.get_include(), '-o', wrapped,
+             join('python', 'npspec', 'npspec.i')]
         print ' '.join(c)
         try:
             check_call(c)
