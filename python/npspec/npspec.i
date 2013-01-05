@@ -50,14 +50,16 @@ namespace NPSpec {
     enum SpectraProperty { Extinction, Absorbance, Scattering };
 }
 
-/* Make a function to output the wavelengths array to the module namespace
-   and the python code to place it into the namespace */
+/* Make a function to output the wavelengths 
+   array to the module namespace */
 %inline %{
 void _get_wavelengths(double wv[NPSpec::NLAMBDA]) {
     for (int i = 0; i < NPSpec::NLAMBDA; i++)
         wv[i] = NPSpec::wavelengths[i];
 }
 %}
+
+/* Python code to place it into the namespace */
 %pythoncode %{
 # Make the wavelengths a read-only module-level numpy array
 wavelengths = _get_wavelengths()
