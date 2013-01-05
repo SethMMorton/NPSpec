@@ -28,6 +28,12 @@ FOREACH(f ${CXXTESTS})
 
 ENDFOREACH(f)
 
+# Add the C wrapper test
+ENABLE_LANGUAGE(C)
+ADD_EXECUTABLE(testC test_c.c)
+TARGET_LINK_LIBRARIES(testC NPSpec)
+ADD_TEST(testC "testC")
+
 # Test Fortran code?
 IF(FORTRAN)
     # The following function will properly link Fortran routines to C++

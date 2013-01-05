@@ -23,7 +23,11 @@ const bool true  = 1;
 int material_index(const char *material);
 
 /* The actual npsolve function declaration */
+#ifdef __cplusplus
 ErrorCode npspec (const int nlayers,
+#else
+enum ErrorCode npspec (const int nlayers,
+#endif
                   const double rad[2],
                   const double rel_rad[][2],
                   const int indx[],
@@ -32,7 +36,11 @@ ErrorCode npspec (const int nlayers,
                   const int increment,
                   const double path_length,
                   const double concentration,
+#ifdef __cplusplus
                   const SpectraType spectra_type,
+#else
+                  const enum SpectraType spectra_type,
+#endif
                   double extinct[],
                   double scat[],
                   double absorb[]
