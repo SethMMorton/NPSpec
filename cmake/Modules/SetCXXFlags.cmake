@@ -21,22 +21,18 @@ SET_COMPILE_FLAG(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CXX REQUIRED "-O2")
 # Position-independent code.  Required for libraries
 SET_COMPILE_FLAG(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CXX REQUIRED "-fPIC")
 
-# Optimize for the host's architecture
+# There is some bug where -march=native doesn't work on Mac
 IF(APPLE)
-    # There is some bug where -march=native doesn't work on Mac
-    SET_COMPILE_FLAG(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CXX
-                     "-mtune=native" # GNU/Clang
-                     "-xHost"        # Intel
-                     "-ta=host"      # Portland Group
-                    )
+    SET(GNUNATIVE "-mtune=native")
 ELSE()
-    SET_COMPILE_FLAG(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CXX
-                     "-march=native" # GNU/Clang
-                     "-xHost"        # Intel
-                     "-ta=host"      # Portland Group
-                    )
+    SET(GNUNATIVE "-march=native")
 ENDIF()
-
+# Optimize for the host's architecture
+SET_COMPILE_FLAG(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CXX
+                 ${GNUNATIVE}    # GNU/Clang
+                 "-xHost"        # Intel
+                 "-ta=host"      # Portland Group
+                )
 # Debugging warnings
 #SET_COMPILE_FLAG(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" CXX 
 #                  "-Wall"     # GNU/Clang
