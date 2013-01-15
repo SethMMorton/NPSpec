@@ -26,7 +26,7 @@ FOREACH(f ${CXXTESTS})
     # Add the C++ only unit tests
     ADD_TEST(test${f} "test${f}")
 
-ENDFOREACH(f)
+ENDFOREACH(f ${CXXTESTS})
 
 # Add the C wrapper test
 ENABLE_LANGUAGE(C)
