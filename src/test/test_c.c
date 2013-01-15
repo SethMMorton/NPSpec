@@ -1,6 +1,6 @@
 #include <assert.h>
+#include <math.h>
 #include "npspec/npspec.h"
-#include "math.h"
 
 int main() {
 
