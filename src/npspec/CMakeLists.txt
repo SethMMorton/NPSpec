@@ -17,7 +17,7 @@ SET(NPSpec_SRC npspec.cpp
 # These are the headers to be public
 SET(NPSpec_HEADERS ${NPINC}/npspec.h
                    ${NPINC}/constants.h
-                   ${NPINC}/nanoparticle.h
+                   ${NPINC}/nanoparticle.hpp
                    ${NPINC}/version.h
 )
 
