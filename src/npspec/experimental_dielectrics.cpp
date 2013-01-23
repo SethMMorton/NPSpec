@@ -1,15 +1,13 @@
+#include "npspec/private/material_parameters.hpp"
 #include <complex>
-#include "npspec/private/material_parameters.h"
 
 /* Splined dielectric contstants select materials.
  * All values are taken from the Handbook of Palik.
  * Where no values are given, a real one is inserted */
 
-using namespace std;
+#define CMPLX(r, i) (std::complex<double>((r), (i)))
 
-#define CMPLX(r, i) (complex<double>((r), (i)))
-
-const complex<double> experimental_dielectrics[][NLAMBDA] =
+const std::complex<double> experimental_dielectrics[][NPSpec::NLAMBDA] =
 {
   { /* Ag */
     CMPLX( -0.388416,   2.658560), CMPLX( -0.387151,   2.691365),

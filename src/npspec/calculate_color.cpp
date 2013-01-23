@@ -1,9 +1,8 @@
+#include "npspec/npspec.h"
+#include "npspec/private/standard_color_matching.hpp"
 #include <cmath>
 #include <algorithm>
 #include <numeric>
-#include "npspec/constants.h"
-#include "npspec/private/standard_color_matching.h"
-#include "npspec/npspec.h"
 using namespace NPSpec;
 
 /* Static variables that need to be calculated only once */
@@ -22,7 +21,7 @@ void RGB(const double spec_in[],
 
     /* These produts are the same each time.  Only calculate the first time */
     if (first) {
-        for (int i = 0; i < NLAMBDA; i++) {
+        for (int i = 0; i < NLAMBDA; ++i) {
             XARRAY[i] = CIE_X[i] * CIE_D65[i];
             YARRAY[i] = CIE_Y[i] * CIE_D65[i];
             ZARRAY[i] = CIE_Z[i] * CIE_D65[i];

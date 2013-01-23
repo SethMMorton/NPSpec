@@ -1,6 +1,6 @@
-#include <stdexcept>
+#include "npspec/nanoparticle.hpp"
 #include "gtest/gtest.h"
-#include "npspec/nanoparticle.h"
+#include <stdexcept>
 
 using namespace NPSpec;
 
@@ -286,11 +286,11 @@ TEST(CalculatorTest, TestColor) {
     double r, g, b, h, s, v;
     EXPECT_NO_THROW(np.setSphereRadius(20.0));
     EXPECT_NO_THROW(np.calculateSpectrum());
-    np.getRGB(&r, &g, &b);
+    np.getRGB(r, g, b);
     EXPECT_FLOAT_EQ(0.12381521, r);
     EXPECT_FLOAT_EQ(0.10589667, g);
     EXPECT_FLOAT_EQ(0.48082513, b);
-    np.getHSV(&h, &s, &v);
+    np.getHSV(h, s, v);
     EXPECT_FLOAT_EQ(242.86751,  h);
     EXPECT_FLOAT_EQ(0.77976054, s);
     EXPECT_FLOAT_EQ(0.48082513, v);

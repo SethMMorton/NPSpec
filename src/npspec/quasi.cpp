@@ -9,9 +9,9 @@
  * Seth M. Morton
  *******************************************************************/
 
+#include "npspec/private/solvers.hpp"
 #include <cmath>
 #include <complex>
-#include "npspec/private/solvers.h"
 
 const int    MAXLAYERS = 2;
 const double pi        = 4.0 * atan(1.0);
@@ -45,8 +45,8 @@ int quasi (const int nlayers,              /* Number of layers */
      *******************************/
 
     double tmp[MAXLAYERS][3];
-    for (int i = 0; i < nlayers; i++) {
-        for (int j = 0; j < 2; j++) {
+    for (int i = 0; i < nlayers; ++i) {
+        for (int j = 0; j < 2; ++j) {
             if (i == 0) {
                 tmp[i][j] = rel_rad[i][j];
             } else {
@@ -56,9 +56,9 @@ int quasi (const int nlayers,              /* Number of layers */
     }
     double rel_vol[MAXLAYERS];
     rel_vol[0] = tmp[0][0] * tmp[0][1] * tmp[0][1];
-    for (int i = 1; i < nlayers; i++) {
-        for (int j = 0; j < i+1; j++) {
-            for (int k = 0; k < 3; k++) {
+    for (int i = 1; i < nlayers; ++i) {
+        for (int j = 0; j < i+1; ++j) {
+            for (int k = 0; k < 3; ++k) {
                 tmp[i][k] += rel_rad[j][k];
             }
         }
@@ -71,17 +71,17 @@ int quasi (const int nlayers,              /* Number of layers */
      ***********************************************************/
    
     double gf[2][MAXLAYERS];
-    for (int ilayer = 0; ilayer < nlayers; ilayer++) {
+    for (int ilayer = 0; ilayer < nlayers; ++ilayer) {
 
         /* Calculate the absolute radii */
         double radii[2];
-        for (int i = 0; i < 2; i++) { radii[i] = rel_rad[ilayer][i] * rad[i]; }
+        for (int i = 0; i < 2; ++i) { radii[i] = rel_rad[ilayer][i] * rad[i]; }
 
         /* Determine if this is a prolate or oblate spheroid or a sphere */
         if (fabs(radii[0] - radii[1]) < 1E-3) { /* Sphere */
 
             /* All values are 1/3 */
-            for (int i = 0; i < 2; i++) { gf[i][ilayer] = 1.0 / 3.0; }
+            for (int i = 0; i < 2; ++i) { gf[i][ilayer] = 1.0 / 3.0; }
 
         } else if (radii[0] > radii[1]) { /* Prolate (cigar) */
 
@@ -117,7 +117,7 @@ int quasi (const int nlayers,              /* Number of layers */
     complex<double> die[2];
     /* One layer */
     if (nlayers == 1) {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; ++i) {
             die[i] = ( dielec[0] - mdie ) 
                    / ( 3.0 * ( mdie + gf[i][0] * ( dielec[0] - mdie ) ) );
         }
@@ -125,7 +125,7 @@ int quasi (const int nlayers,              /* Number of layers */
     } else if (nlayers == 2) {
         /* Numerator and denominator */
         complex<double> num[2], den[2];//, b = dielec[0] - dielec[1];
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; ++i) {
             /* Numerator */
             num[i] = ( dielec[0] - dielec[1] ) 
                    * ( gf[i][0] - rel_vol[0] * gf[i][1] );

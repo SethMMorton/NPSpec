@@ -1,4 +1,4 @@
-#include "npspec/private/material_parameters.h"
+#include "npspec/private/material_parameters.hpp"
 
 /* The array defining the known materials  
  * Drude parameters are taken from:

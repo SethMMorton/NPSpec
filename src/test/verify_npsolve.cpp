@@ -1,9 +1,9 @@
+#include "npspec/npspec.h"
+#include "npspec/private/solvers.hpp"
+#include "gtest/gtest.h"
 #include <cstdio>
 #include <cmath>
 #include <complex>
-#include "gtest/gtest.h"
-#include "npspec/private/solvers.h"
-#include "npspec/npspec.h"
 
 using namespace::std;
 

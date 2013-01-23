@@ -1,7 +1,7 @@
+#include "npspec/nanoparticle.hpp"
+#include "npspec/npspec.h"
 #include <cmath>
 #include <stdexcept>
-#include "npspec/nanoparticle.h"
-#include "npspec/npspec.h"
 
 using namespace NPSpec;
 
@@ -9,22 +9,39 @@ Nanoparticle::Nanoparticle() :
     nLayers(1),
     sType(Efficiency),
     sProp(Absorbance),
+    shape(Sphere),
+    increment(1.0),
     sizeCorrect(false),
     pathLength(1.0),
     concentration(1.0e-6),
     mediumRefractiveIndex(1.0),
-    increment(1.0)
+    materials(),
+    materialIndex(),
+    radius(),
+    relativeRadius(),
+    sphereRadius(10.0),
+    sphereRelativeRadius(),
+    ellipsoidRadius(),
+    ellipsoidRelativeRadius(),
+    extinction(),
+    scattering(),
+    absorbance(),
+    red(0.0),
+    blue(0.0),
+    green(0.0),
+    hue(0.0),
+    saturation(0.0),
+    value(0.0)
 {
-    /* Initiallize the Nanoparticle class's lists */
+    /* Initiallize the Nanoparticle class's arrays */
 
     // All materials are defaulted to Ag
-    for (int i = 0; i < MAXLAYERS; i++) {
+    for (int i = 0; i < MAXLAYERS; ++i) {
         materials[i] = "Ag";
         materialIndex[i] = material_index(materials[i].c_str());
     }
 
-    // Radius is defaulted to 10 nm (sphere)
-    sphereRadius = 10.0;
+    // Ellipsoid radius
     ellipsoidRadius[0] = 10.0;
     ellipsoidRadius[1] = 10.0;
 
@@ -32,11 +49,6 @@ Nanoparticle::Nanoparticle() :
     sphereRelativeRadius[0] = 1.0;
     ellipsoidRelativeRadius[0][0] = 1.0;
     ellipsoidRelativeRadius[0][1] = 1.0;
-    for (int i = 1; i < MAXLAYERS; i++) {
-        sphereRelativeRadius[i] = 0.0;
-        ellipsoidRelativeRadius[i][0] = 0.0;
-        ellipsoidRelativeRadius[i][1] = 0.0;
-    }
 
     // Start as a sphere
     setShape(Sphere);
@@ -101,32 +113,32 @@ void Nanoparticle::getSpectrum(double spec[NLAMBDA]) const {
     /* Return the spectrum that has been calculated */
     switch(sProp) {
     case Extinction:
-        for (int i = 0; i < NLAMBDA; i++)
+        for (int i = 0; i < NLAMBDA; ++i)
             spec[i] = extinction[i];
         break;
     case Absorbance:
-        for (int i = 0; i < NLAMBDA; i++)
+        for (int i = 0; i < NLAMBDA; ++i)
             spec[i] = absorbance[i];
         break;
     case Scattering:
-        for (int i = 0; i < NLAMBDA; i++)
+        for (int i = 0; i < NLAMBDA; ++i)
             spec[i] = scattering[i];
         break;
     }
 }
 
-void Nanoparticle::getRGB(double *r, double *g, double *b) const {
+void Nanoparticle::getRGB(double &r, double &g, double &b) const {
     /* Get the RGB colors for this spectrum */
-    *r = red;
-    *g = green;
-    *b = blue;
+    r = red;
+    g = green;
+    b = blue;
 }
 
-void Nanoparticle::getHSV(double *h, double *s, double *v) const {
+void Nanoparticle::getHSV(double &h, double &s, double &v) const {
     /* Get the HSV colors for this spectrum */
-    *h = hue;
-    *s = saturation;
-    *v = value;
+    h = hue;
+    s = saturation;
+    v = value;
 }
 
 double Nanoparticle::getOpacity() const {
@@ -372,13 +384,13 @@ void Nanoparticle::updateRelativeRadius(NanoparticleShape npshape) {
     /* Update the nanoparticle relative radii */
     switch (npshape) {
     case Sphere:
-        for (int i = 0; i < nLayers; i++) {
+        for (int i = 0; i < nLayers; ++i) {
             relativeRadius[i][0] = sphereRelativeRadius[i];
             relativeRadius[i][1] = sphereRelativeRadius[i];
         }
         break;
     case Ellipsoid:
-        for (int i = 0; i < nLayers; i++) {
+        for (int i = 0; i < nLayers; ++i) {
             relativeRadius[i][0] = ellipsoidRelativeRadius[i][0];
             relativeRadius[i][1] = ellipsoidRelativeRadius[i][0];
         }
@@ -394,18 +406,18 @@ void Nanoparticle::distributeRelativeRadius(int n, double rrad, double array[]) 
        We want to look at layers higher than the given layer, and then
        the lower ones in decreasing order. */
     int index[MAXLAYERS-1], i = 0, k = n + 1;
-    while (k < nLayers) { index[i] = k; i++; k++; }
+    while (k < nLayers) { index[i] = k; ++i; ++k; }
     k = n - 1;
-    while (k >= 0) { index[i] = k; i++; k--; }
+    while (k >= 0) { index[i] = k; ++i; --k; }
 
     /* First set the new value */
     array[n] = rrad;
 
     /* Reset other relative radii so that they sum to 1.0 */
     double sum = 0.0;
-    for (int j = 0; j < nLayers; j++) { sum += array[j]; }
+    for (int j = 0; j < nLayers; ++j) { sum += array[j]; }
     double remainder = 1.0 - sum;
-    for (int j = 0; j < nLayers-1; j++) { i = index[j]; /* Get the index order */
+    for (int j = 0; j < nLayers-1; ++j) { i = index[j]; /* Get the index order */
 
         /* Update the other layers if the sum is not yet 1.0 */
         if (std::abs(1.0 - sum) > 1e-6) {
@@ -425,7 +437,7 @@ void Nanoparticle::distributeRelativeRadius(int n, double rrad, double array[]) 
 
         /* Increment the sum */
         sum = 0.0;
-        for (int m = 0; m < nLayers; m++) { sum += array[m]; }
+        for (int m = 0; m < nLayers; ++m) { sum += array[m]; }
         remainder = 1.0 - sum;
 
     }

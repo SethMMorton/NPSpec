@@ -1,8 +1,8 @@
 #ifndef NANOPARTICLE_H
 #define NANOPARTICLE_H
 
-#include <string>
 #include "npspec/constants.h"
+#include <string>
 
 class Nanoparticle
 {
@@ -15,8 +15,8 @@ public:
     void getSpectrum(double spec[NPSpec::NLAMBDA]) const;
 
     // Get the colors
-    void getRGB(double *r, double *g, double *b) const;
-    void getHSV(double *h, double *s, double *v) const;
+    void getRGB(double &r, double &g, double &b) const;
+    void getHSV(double &h, double &s, double &v) const;
     double getOpacity() const;
 
     // Setters

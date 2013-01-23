@@ -1,5 +1,5 @@
-#include <cstring>
 #include "npspec/npspec.h"
+#include <cstring>
 using namespace NPSpec;
 
 int material_index(const char *material) {
@@ -62,12 +62,12 @@ int material_index(const char *material) {
     static const int nmat = sizeof(mindx) / sizeof(mindx[0]);
 
     /* Find the index of the given material */
-    for (int i = 0; i < nmat; i++) {
+    for (int i = 0; i < nmat; ++i) {
         if (std::strcmp(mindx[i], material) == 0) 
             return i;
     }
 
     /* If we have gotten here, the material is not known.  Return UnknownMaterial */
-    return (int) UnknownMaterial;
+    return static_cast<int>(UnknownMaterial);
 
 }

@@ -2,11 +2,10 @@
 #define SOLVERS_H
 
 #include <complex>
-using namespace std;
 
 /* Quasistatic approx */
 int quasi (const int nlayers,
-           const complex<double> dielec[],
+           const std::complex<double> dielec[],
            const double mdie,
            const double rel_rad[][2],
            const double rad[],
@@ -18,7 +17,7 @@ int quasi (const int nlayers,
 
 /* Mie theory */
 int mie (const int nlayers,
-         const complex<double> refrac_indx[],
+         const std::complex<double> refrac_indx[],
          const double rel_rad[],
          const double size_param,
          double *extinct,

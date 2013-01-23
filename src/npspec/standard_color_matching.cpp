@@ -7,7 +7,7 @@
  *****************************************************************************/
 
 #include "npspec/constants.h"
-#include "npspec/private/standard_color_matching.h"
+#include "npspec/private/standard_color_matching.hpp"
 using namespace NPSpec;
 
 const double CIE_Mat[3][3] = {

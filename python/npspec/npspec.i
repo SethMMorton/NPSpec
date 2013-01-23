@@ -17,8 +17,8 @@
 %}
 
 /* Tell python how to output multiple return values */
-%apply double *OUTPUT { double *r, double *g, double *b };
-%apply double *OUTPUT { double *h, double *s, double *v };
+%apply double *OUTPUT { double &r, double &g, double &b };
+%apply double *OUTPUT { double &h, double &s, double &v };
 
 /* Tell python how to output C arrays */
 %apply double ARGOUT_ARRAY1[ANY] { double spec[NPSpec::NLAMBDA] };

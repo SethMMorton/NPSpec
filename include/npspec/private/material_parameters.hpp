@@ -1,12 +1,10 @@
 #ifndef MATERIAL_PARAMETERS_H
 #define MATERIAL_PARAMETERS_H
 
-#include <complex>
 #include "npspec/constants.h"
-using namespace std;
-using namespace NPSpec;
+#include <complex>
 
 extern const double drude_parameters[][3];
-extern const complex<double> experimental_dielectrics[][NLAMBDA];
+extern const std::complex<double> experimental_dielectrics[][NPSpec::NLAMBDA];
 
 #endif // MATERIAL_PARAMETERS_H

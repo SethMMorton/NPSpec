@@ -22,12 +22,12 @@
 * Added quasistatic approximation
 *==================================================================*/
 
+#include "npspec/npspec.h"
+#include "npspec/private/solvers.hpp"
+#include "npspec/private/material_parameters.hpp"
 #include <cmath>
 #include <complex>
 #include <iostream>
-#include "npspec/private/solvers.h"
-#include "npspec/private/material_parameters.h"
-#include "npspec/npspec.h"
 
 using namespace std;
 using namespace NPSpec;
@@ -84,7 +84,7 @@ ErrorCode npspec(const int nlayers,              /* Number of layers */
 
     /* Relative radii must sum to 1.0 */
     double rradsum = 0.0;
-    for (int i = 0; i < nlayers; i++) {
+    for (int i = 0; i < nlayers; ++i) {
         if (rel_rad[i][0] < 0.0)
             return InvalidRelativeRadius;
         rradsum += rel_rad[i][0];
@@ -92,7 +92,7 @@ ErrorCode npspec(const int nlayers,              /* Number of layers */
     if (abs(rradsum - 1.0) > 1e-6)
         return InvalidRelativeRadius;
     rradsum = 0.0;
-    for (int i = 0; i < nlayers; i++) {
+    for (int i = 0; i < nlayers; ++i) {
         if (rel_rad[i][1] < 0.0)
             return InvalidRelativeRadius;
         rradsum += rel_rad[i][1];
@@ -103,7 +103,8 @@ ErrorCode npspec(const int nlayers,              /* Number of layers */
     /* Make sure the increment is a factor of 800, and is positive */
     if (increment < 0)
         return InvalidIncrement;
-    else if (fmod((double) NLAMBDA, (double) increment) > 0.000001)
+    else if (fmod(static_cast<double>(NLAMBDA),
+                  static_cast<double>(increment)) > 0.000001)
         return InvalidIncrement;
 
     /* Calculate radius of a sphere with an equivalent volume */
@@ -138,7 +139,7 @@ ErrorCode npspec(const int nlayers,              /* Number of layers */
         /* Dielectric function and refractive index */
         complex<double> dielec[MAXLAYERS], refrac_indx[MAXLAYERS];
 
-        for (int j = 0; j < nlayers; j++) {
+        for (int j = 0; j < nlayers; ++j) {
 
             /* Grab dielectric from experiment */
             dielec[j] = experimental_dielectrics[indx[j]][i];
@@ -175,7 +176,7 @@ ErrorCode npspec(const int nlayers,              /* Number of layers */
         if (lmie) {
             /* Relative radius for sphere */
             double srrad[MAXLAYERS];
-            for (int k = 0; k < nlayers; k++)
+            for (int k = 0; k < nlayers; ++k)
                 srrad[k] = rel_rad[k][0];
             double backscat, rad_pressure, albedo, asymmetry;
             int retval = mie(nlayers, refrac_indx, srrad, size_param,

@@ -9,10 +9,10 @@
 * Note that the lack of documentation is due to the original code
 *****************************************************************/
 
+#include "npspec/constants.h"
+#include "npspec/private/solvers.hpp"
 #include <cmath>
 #include <complex>
-#include "npspec/private/solvers.h"
-#include "npspec/constants.h"
 
 using namespace std;
 using namespace NPSpec;
@@ -86,9 +86,9 @@ int mie (const int nlayers,                   /* Number of layers */
     double ax = 1.0 / size_param;
     xx[0] = size_param * rel_rad[0];
     xx[nlayers-1] = size_param;
-    for (int i = 1; i < nlayers - 1; i++) {
+    for (int i = 1; i < nlayers - 1; ++i) {
         double sum = 0.0;
-        for (int j = 0; j < i + 1; j++) { sum += rel_rad[j]; }
+        for (int j = 0; j < i + 1; ++j) { sum += rel_rad[j]; }
         xx[i] = size_param * sum;
     }
 
@@ -101,7 +101,7 @@ int mie (const int nlayers,                   /* Number of layers */
     cd3x(size_param, num, d1x, rd3x, rcx);
 
     double ari = abs(refrac_indx[0]);
-    for (int i = 1; i < nlayers; i++) {
+    for (int i = 1; i < nlayers; ++i) {
         double tmp = abs(refrac_indx[i]);
         if (tmp > ari) ari = tmp;
     }
@@ -127,7 +127,7 @@ int mie (const int nlayers,                   /* Number of layers */
             retcode = 1;
         }
         bcd(refrac_indx[i]*xx[i-1], num2, rd1, rd2, rbb);
-        for (int j = 0; j < num2; j++) {
+        for (int j = 0; j < num2; ++j) {
             rrbb[i][j] = rbb[j];
             rrd1[i][j] = rd1[j];
             rrd2[i][j] = rd2[j];
@@ -139,7 +139,7 @@ int mie (const int nlayers,                   /* Number of layers */
             retcode = 1;
         }
         bcd(refrac_indx[i]*xx[i], num2, rd1, rd2, rbb);
-        for (int j = 0; j < num2; j++) {
+        for (int j = 0; j < num2; ++j) {
             srbb[i][j] = rbb[j];
             srd1[i][j] = rd1[j];
             srd2[i][j] = rd2[j];
@@ -173,11 +173,11 @@ int mie (const int nlayers,                   /* Number of layers */
 int nm(const double x) {
 
       if (x < 1) {
-         return (int) ( 7.5 * x + 9.0 );
+         return static_cast<int>( 7.5 * x + 9.0 );
       } else if (x > 100) {
-         return (int) ( 1.0625 * x + 28.5 );
+         return static_cast<int>( 1.0625 * x + 28.5 );
       } else {
-         return (int) ( 1.25 * x + 15.5 );
+         return static_cast<int>( 1.25 * x + 15.5 );
       }
 
 }
@@ -199,7 +199,7 @@ void aa1 (const complex<double> rx, const int num, complex<double> ru[]) {
     int num1 = num - 1;
     ru[num1] = double( num + 1 ) * s;
     
-    for (int j = 0; j < num1; j++) {
+    for (int j = 0; j < num1; ++j) {
         int i = num - ( j + 1 );
         int i1 = i + 1;
         complex<double> s1 = double(i1) * s;
@@ -223,7 +223,7 @@ void aax (const double a, const int num, double ru[]) {
     int num1 = num - 1;
     ru[num1] = double( num + 1 ) * a;
 
-    for (int j = 0; j < num1; j++) {
+    for (int j = 0; j < num1; ++j) {
         int i = num - ( j + 1 );
         int i1 = i + 1;
         double s1 = i1 * a;
@@ -267,14 +267,14 @@ int abn1 (const int nlayers,
     complex<double> shb[MAXLAYERS];
 
     int num1 = 0;
-    for (int i = 0; i < num; i++) {
+    for (int i = 0; i < num; ++i) {
 
         sa[0]  = complex<double>(0.0, 0.0);
         sb[0]  = complex<double>(0.0, 0.0);
         sha[0] = rd11[i];
         shb[0] = rd11[i];
 
-        for (int j = 1; j < nlayers; j++) {
+        for (int j = 1; j < nlayers; ++j) {
 
             if (abs(refrac_indx[j]*sha[j-1]-refrac_indx[j-1]*rrd2[j][i]) == 0.0) {
                 sa[j] = rrbb[j][i] * ( refrac_indx[j] * sha[j-1] - refrac_indx[j-1] * rrd1[j][i] )
@@ -317,7 +317,7 @@ int abn1 (const int nlayers,
         rb[i] = rcx[i] * ( refrac_indx[nlayers-1] * shb[nlayers-1] -  d1x[i] ) /
                          ( refrac_indx[nlayers-1] * shb[nlayers-1] - rd3x[i] );
 
-        num1++;
+        ++num1;
         if (abs(ra[i]) + abs(rb[i]) < 1E-40) break;
 
     }
@@ -361,7 +361,7 @@ void bcd (const complex<double> rx, const int num,
     rd2[0] = ( rcc[0] * rd1[0] - rd3[0] ) / ( rcc[0] - 1.0 );
     rbb[0] = rb0 * ( rx1 + rd2[0] ) / ( rx1 + rd1[0] );
 
-    for (int i = 1; i < num; i++) {
+    for (int i = 1; i < num; ++i) {
         complex<double> r1 = double( i + 1 ) * rx1;
         rd3[i] = -r1 + 1.0 / ( r1 - rd3[i-1] );
         rcc[i] = rcc[i-1] * ( r1 + rd3[i] ) / ( r1 + rd1[i] );
@@ -393,7 +393,7 @@ void cd3x (const double x, const int num, double d1x[],
     rd3x[0] = -ax + 1.0 / ( ax - rd30 );
     rcx[0]  = rc0 * ( ax + rd3x[0] ) / ( ax + d1x[0] );
 
-    for (int i = 1; i < num; i++) {
+    for (int i = 1; i < num; ++i) {
         double a1 = double( i + 1 ) * ax;
         rd3x[i] = -a1 + 1.0 / ( a1 - rd3x[i-1] );
         rcx[i] = rcx[i-1] * ( a1 + rd3x[i] ) / ( a1 + d1x[i] );
@@ -419,15 +419,16 @@ void qq1 (const double a, const int num1, double *extinct, double *scat,
     complex<double> r = complex<double>(0.0, 0.0);
     int n = 1;
 
-    for (int i = 0; i < num1-1; i++) {
-        double i1 = double(i + 1);
+    for (int i = 0; i < num1-1; ++i) {
+        double i1 = static_cast<double>(i + 1);
         n += 2;
+        double nd = static_cast<double>(n);
         r += ( i1 + 0.5 ) * pow(-1.0, i1) * ( ra[i] - rb[i] );
         s += i1 * ( i1 + 2.0 ) / ( i1 + 1.0 ) * ( ra[i] * conj(ra[i+1])
-           + rb[i] * conj(rb[i+1]) ) + double(n) / i1 / ( i1 + 1.0 )
+           + rb[i] * conj(rb[i+1]) ) + nd / i1 / ( i1 + 1.0 )
            * ( ra[i] * conj(rb[i]) );
-        c += double(n) * ( real(ra[i]) + real(rb[i]) );
-        d += double(n) * ( real(ra[i] * conj(ra[i])) + real(rb[i] * conj(rb[i])) );
+        c += nd * ( real(ra[i]) + real(rb[i]) );
+        d += nd * ( real(ra[i] * conj(ra[i])) + real(rb[i] * conj(rb[i])) );
     }
 
     *extinct = b * c;

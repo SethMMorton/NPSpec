@@ -2,11 +2,10 @@
 #define NPSPEC_H
 
 /* Pull in the constants */
-#include <npspec/constants.h>
+#include "npspec/constants.h"
 
 /* Protect as C if C++ so that library can be called from C or Fortran */
 #ifdef __cplusplus
-using namespace NPSpec;
 extern "C" {
 #else
 /* If using library in C, use stdbool.h if available */
@@ -24,7 +23,7 @@ int material_index(const char *material);
 
 /* The actual npsolve function declaration */
 #ifdef __cplusplus
-ErrorCode npspec (const int nlayers,
+NPSpec::ErrorCode npspec (const int nlayers,
 #else
 enum ErrorCode npspec (const int nlayers,
 #endif
@@ -37,7 +36,7 @@ enum ErrorCode npspec (const int nlayers,
                   const double path_length,
                   const double concentration,
 #ifdef __cplusplus
-                  const SpectraType spectra_type,
+                  const NPSpec::SpectraType spectra_type,
 #else
                   const enum SpectraType spectra_type,
 #endif
