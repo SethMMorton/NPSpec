@@ -37,6 +37,7 @@ FUNCTION (SET_COMPILE_FLAG FLAGVAR FLAGVAL LANG)
             "ignoring unknown option"             # Intel
             "invalid argument"                    # Intel
             "unrecognized .*option"               # GNU
+            "warning: argument unused"            # Clang
             "[Uu]nknown switch"                   # Portland Group
             "ignoring unknown option"             # MSVC
             "warning D9002"                       # MSVC, any lang

@@ -38,3 +38,7 @@ dist/*
 
 # Qt Creator
 CMakeLists.txt.user
+
+# PyCharm
+.idea
+coverage

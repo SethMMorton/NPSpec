@@ -32,6 +32,7 @@ ENDMACRO()
 FILE(GLOB EGGS "${TOPDIR}/*.egg-info" "${TOPDIR}/python/*.egg-info")
 FILE(GLOB PYCACHE "${TOPDIR}/python/npspec/tests/__pycache__")
 FILE(GLOB_RECURSE PYC "${TOPDIR}/*.pyc")
+FILE(GLOB_RECURSE CBP "${TOPDIR}/*.cbp")
 FILE(GLOB PYBUILDTEMP "${TOPDIR}/build/temp*")
 FILE(GLOB PYBUILDLIB "${TOPDIR}/build/lib*")
 FILE(GLOB PYBUILDBDIST "${TOPDIR}/build/bdist*")
@@ -53,6 +54,7 @@ SET(DEL ${TOPDIRECTORIES}
         ${EGGS}
         ${PYCACHE}
         ${PYC}
+        ${CBP}
         ${PYBUILDTEMP}
         ${PYBUILDLIB}
         ${PYBUILDBDIST}
