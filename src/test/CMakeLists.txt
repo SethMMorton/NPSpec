@@ -24,7 +24,7 @@ FOREACH(f ${CXXTESTS})
     TARGET_LINK_LIBRARIES(test${f} gtest NPSpec)
 
     # Add the C++ only unit tests
-    ADD_TEST(test${f} "test${f}")
+    ADD_TEST("Test${f}" test${f})
 
 ENDFOREACH(f ${CXXTESTS})
 
@@ -32,7 +32,7 @@ ENDFOREACH(f ${CXXTESTS})
 ENABLE_LANGUAGE(C)
 ADD_EXECUTABLE(testC test_c.c)
 TARGET_LINK_LIBRARIES(testC NPSpec)
-ADD_TEST(testC "testC")
+ADD_TEST("TestC" testC)
 
 # Test Fortran code?
 IF(FORTRAN)
@@ -50,7 +50,7 @@ IF(FORTRAN)
     ADD_EXECUTABLE(verifyNPSpec verify_npsolve.cpp)
     ADD_DEPENDENCIES(verifyNPSpec googletest fSolve NPSpec)
     TARGET_LINK_LIBRARIES(verifyNPSpec gtest NPSpec fSolve)
-    ADD_TEST(verifyNPSpec "verifyNPSpec")
+    ADD_TEST("VerifyNPSpec" verifyNPSpec)
     # Create the executable that tests the Fortran wrappers of the C++ code
     CMAKE_ADD_Fortran_SUBDIRECTORY(fruit
         PROJECT FRUIT ARCHIVE_DIR fruit LIBRARIES Fruit
@@ -60,5 +60,5 @@ IF(FORTRAN)
                                       ${NPINC}/NPSpecModule.f90)
     ADD_DEPENDENCIES(testFortranWrapper Fruit NPSpec)
     TARGET_LINK_LIBRARIES(testFortranWrapper Fruit NPSpec)
-    ADD_TEST(testFortranWrapper "testFortranWrapper")
+    ADD_TEST("TestFortranWrapper" testFortranWrapper)
 ENDIF(FORTRAN)
