@@ -1,22 +1,55 @@
+/*! \file nanoparticle.hpp
+ *  \brief The C++-interface to the NPSpec library
+ *
+ *  This header file provides the C++ class that provides an simpler
+ *  interface to the NPSpec library.  Importing this header will give
+ *  access to the [Nanoparticle](\ref Nanoparticle) class as well as everything
+ *  in the [constants](\ref constants.h) header.
+ */
+
 #ifndef NANOPARTICLE_H
 #define NANOPARTICLE_H
 
 #include "npspec/constants.h"
 #include <string>
 
+//! \brief Class to hold nanoparticle definition and calculate its spectrum.
+/*! Blah blah blah... */
 class Nanoparticle
 {
 public:
+    /*! Constructor */
     Nanoparticle();
 
-    // Calculate the spectra!
+    //! \brief Calculate the spectra.
+    /*!This should only be used after the nanoparticle is defined. */
     int calculateSpectrum();
-    // Get the spectra!
+    //! \brief Get the calculated spectrum.
+    /*! This should only be used after calling 
+     *  [calculateSpectrum](\ref calculateSpectrum).
+     *
+     *  \param [out] spec The calculated spectrum. */
     void getSpectrum(double spec[NPSpec::NLAMBDA]) const;
 
-    // Get the colors
+    //! Get the color associated with the calculated spectrum in RGB color space.
+    /*! This should only be used after calling 
+     *  [getSpectrum](\ref getSpectrum).
+     *
+     * \param [out] r The RED part of the color space, between 0 and 1 (inclusive).
+     * \param [out] g The GREEN part of the color space, between 0 and 1 (inclusive).
+     * \param [out] b The BLUE part of the color space, between 0 and 1 (inclusive). */
     void getRGB(double &r, double &g, double &b) const;
+    //! Get the color associated with the calculated spectrum in HSV color space.
+    /*! This should only be used after calling 
+     *  [getSpectrum](\ref getSpectrum).
+     *
+     * \param [out] h The HUE of the color space, between 0 and 360 (inclusive).
+     * \param [out] s The SATURATION part of the color space, between 0 and 1 (inclusive).
+     * \param [out] v The VALUE part of the color space, between 0 and 1 (inclusive). */
     void getHSV(double &h, double &s, double &v) const;
+    //! Get the opacity of the color associated with the calculated spectrum.
+    /*! This should only be used after calling 
+     *  [getSpectrum](\ref getSpectrum). */
     double getOpacity() const;
 
     // Setters
