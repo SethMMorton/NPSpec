@@ -23,7 +23,7 @@ ELSEIF(FRAMEWORK)
     IF(NOT APPLE)
         MESSAGE(FATAL "FRAMEWORK only available on Mac OS X")
     ENDIF(NOT APPLE)
-ELSE()
+ELSEIF(NOT FRAMEWORK AND NOT STATIC AND NOT SHARED)
     # Default to static
     SET(STATIC ON)
 ENDIF()
@@ -53,7 +53,4 @@ IF(TESTING)
 ENDIF(TESTING)
 
 # Add a distclean target to the Makefile
-ADD_CUSTOM_TARGET(distclean 
-    COMMAND ${CMAKE_BUILD_TOOL} clean
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/distclean.cmake
-)
+ADD_CUSTOM_TARGET(distclean COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/distclean.cmake)
