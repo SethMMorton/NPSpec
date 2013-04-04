@@ -26,6 +26,8 @@ test/*
 dist/*
 doc/latex/*
 doc/html/*
+doc/*.aux
+doc/cite*
 
 # Mac OS X Frameworks
 *.framework
@@ -42,3 +44,13 @@ CMakeLists.txt.user
 # PyCharm
 .idea
 coverage
+
+# CMake
+CMakeFiles/*
+CMakeCache.txt
+install_manifest.txt
+cmake_install.cmake
+Makefile
+build/*
+Testing/*
+CTestTestfile.cmake

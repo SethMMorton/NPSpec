@@ -52,5 +52,21 @@ IF(TESTING)
     ADD_SUBDIRECTORY(${SRC}/test ${TEST})
 ENDIF(TESTING)
 
+# Add a target to generate API documentation with Doxygen
+FIND_PACKAGE(Doxygen)
+IF(DOXYGEN_FOUND)
+    ADD_CUSTOM_TARGET(doc 
+        COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/doc
+        COMMENT "Generating API documentation with Doxygen" VERBATIM
+    )
+    ADD_CUSTOM_TARGET(cleandoc 
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_SOURCE_DIR}/doc/html
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_SOURCE_DIR}/doc/latex
+        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_SOURCE_DIR}/doc/bib/*.aux
+        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_SOURCE_DIR}/doc/bib/cite*
+    )
+ENDIF(DOXYGEN_FOUND)
+
 # Add a distclean target to the Makefile
 ADD_CUSTOM_TARGET(distclean COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/distclean.cmake)

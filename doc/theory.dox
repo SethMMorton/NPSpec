@@ -1,0 +1,61 @@
+/*!
+\page theory NPSpec Theory
+
+The nanoparticle simulator allows the students to manipulate the size, shape, composition, and solvent environment of
+the nanoparticle in order to explore how several different physical properties affect the nanoparticle color.  
+It was required that the absorption and scattering spectra be calculated very efficiently, so we chose to use
+Mie theory \cite aple_25_377 \cite Bohren_1983_book to simulate spheres, and the quasistatic
+approximation to simulate spheroids. \cite Bohren_1983_book  Mie theory is an analytical solution to Maxwell's
+equations for spheres; Mie theory will not be derived here, but the reader is directed to
+Chapter 4 of Ref. \cite Bohren_1983_book for an in-depth presentation. The Mie theory code used is
+`n-mie` which is available for free online. \cite nmie `n-mie` is capable of calculating the
+optical efficiencies for an \f$n\f$-layered sphere, but we limited the simulator to up to a 3 layered core\@shell particle
+for practical reasons.  For a discussion of the quasistatic approximation as it applies to spheroids, see Chapter 5 of
+Ref. \cite Bohren_1983_book or TODO Section \ref{twobodysec:theory} in this dissertation.  **TODO** However, because we take into
+account solvent affects,
+Eq.~\ref{twobodyeq:quasi} must be extended to
+\f[
+ \alpha_{\alpha\alpha}(\omega) = V \frac{\epsilon(\omega) - \epsilon_m }
+                                        { \epsilon_m + g_{\alpha,d} (\epsilon(\omega)  - \epsilon_m)}
+ \label{seecoseq:quasi}
+\f]
+where \f$\epsilon_m\f$ is the dielectric of the medium (the solvent), **TODO** and all variables are the same as in Chapter
+\ref{chapter:twobody}.  Additionally, because the simulator allows for the calculation of core\@shell nanoparticle, an
+extended form of the above equation that allows for a two layered particle is necessary and is given by
+\f[
+ \alpha_{\alpha\alpha}(\omega) =
+    V \frac{(\epsilon_\text{shell}(\omega) - \epsilon_m)
+            (\epsilon_\text{shell}(\omega) + ab) + af\epsilon_\text{shell}
+           }
+           {(\epsilon_\text{shell}(\omega) + ab)
+            (\epsilon_m + g_{\alpha,d}^\text{shell}(\epsilon_\text{shell}(\omega) - \epsilon_m))
+      + afg_{\alpha,d}^\text{shell}\epsilon_\text{shell}
+           }
+\f]
+where \f$a = \epsilon_\text{core}(\omega) - \epsilon_\text{shell}(\omega)\f$, \f$b = g_{\alpha,d}^\text{core} -
+fg_{\alpha,d}^\text{shell}\f$, and \f$f\f$ is the fraction of the total nanoparticle volume of the core.
+The formula for the absorption and scattering efficiencies within the quasistatic approximation are given by
+\f{gather}{
+ q^\text{abs}(\omega) = \frac{x}{\pi R^3}\Im\{\bar{\mathbf{\alpha}}\} \\
+ q^\text{scat}(\omega) = \frac{x^4}{6\pi^2 R^6}\left|\bar{\mathbf{\alpha}}\right|^2
+\f}
+where \f$x = 2\pi n_mR/\lambda\f$ is the *size parameter*, \f$n_m\f$ is the refractive index of the medium, \f$\lambda\f$ is
+the wavelength of the incident light, \f$R\f$ is the nanoparticle radius, and \f$\Im\{\bar{\mathbf{\alpha}}\}\f$ is the imaginary
+component of the isotropic polarizability. For spheroids, we use the radius of a sphere with the same volume as the
+spheroid for \f$R\f$. Because spheroids are calculated within the quasistatic approximation, it is necessary to limit the
+size of the spheroid. By comparing the absorption and scattering efficiencies calculated with Mie theory against those
+calculated with the quasistatic approximation for a sphere, we find that an upper limit for the size parameter of 3 is
+acceptable; this corresponds to an effective \f$R\f$ of about 15 nm.  All dielectric constants are taken from
+the handbook of
+Palik. \cite Palik_1997_book
+
+The colors are predicted from the absorption or scattering efficiency spectrum by
+converting the spectrum into RBG colors values using the International Commission on Illumination (CIE)
+1931 color system and D65 daylight illuminant. \cite jce_84_1873 \cite cie_tables  For absorbance, the spectrum is
+converted first to transmission using
+\f[
+ \text{TRAN} = 10^{-q^\text{abs}}
+\f]
+and for scattering the spectrum is simply normalized. 
+
+*/

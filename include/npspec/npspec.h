@@ -30,6 +30,12 @@ const bool true  = 1;
  *                  index of.
  *  \return The integer corresponding to the material.  -1 is returned if
  *          the material is not found.
+ *
+ *  Currently, the following materials are implemented:
+ *  Ag, AlAs, AlSb, Au, Be, CdS, CdSe, Co, Cr, Cu, Cu2O, CuO, Diamond, 
+ *  Diamond_film, GaAs, GaP, Ge, Glass, Graphite, InAs, InP, InSb, Ir, 
+ *  K, Li, Mo, Na, Nb, Ni, Os, PbS, PbSe, PbTe, Pd, Pt, Quartz, Rh, Si,
+ *  SiC, SiO, Ta, Te, TiO2, V, W, ZnS, ZnSe, ZnTe
  */
 int material_index(const char *material);
 
@@ -51,7 +57,9 @@ int material_index(const char *material);
  *  \param [in]  size_correct Should we size correct the dielectric function?
  *  \param [in]  increment This is the increment to use when looping over the
  *                         wavelengths.  There are 800 wavelengths in increments
- *                         of 1 nm.  This value must be a factor 800.
+ *                         of 1 nm.  This value must be a factor 800.  This is
+ *                         useful if you have to repeatedly calculate the spectrum
+ *                         such as in a real-time GUI.
  *  \param [in]  path_length When calculating absorption, this is the
  *                           Beer's law path length in cm to use.
  *  \param [in]  concentration When calculating absorption, this is the
@@ -98,6 +106,8 @@ enum ErrorCode npspec (const int nlayers,
  *  \param [out] r The RED component of RGB color space, between 0 and 1 (inclusive).
  *  \param [out] g The GREEN component of RGB color space, between 0 and 1 (inclusive).
  *  \param [out] b The BLUE component of RGB color space, between 0 and 1 (inclusive).
+ *
+ *  TODO: Calculate the color for absorbtion and transmission differently.
  */
 void RGB(const double spec_in[], 
          const int inc, 
