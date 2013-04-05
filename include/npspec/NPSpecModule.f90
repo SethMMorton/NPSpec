@@ -1,5 +1,8 @@
+!> \file NPSpecModule.f90
+!> Contains the NPSpecModule module
+
 !> \brief This module is a direct wrapper of the functions supplied by the
-!> [NPSpec](\ref npspec.h) header.
+!> [npspec.h](\ref npspec.h) header.
 !>
 !> Each function documented in that
 !> header is called EXACTLY the same way in Fortran, including the return

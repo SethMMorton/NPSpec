@@ -13,8 +13,10 @@
 #include "npspec/constants.h"
 #include <string>
 
-//! \brief Class to hold nanoparticle definition and calculate its spectrum.
-/*! Currently, the following materials are implemented:
+/*! \brief Class to hold nanoparticle definition and calculate its spectrum.  
+ *         The interface for Python is the same as this C++ API.
+ *
+ *  Currently, the following materials are implemented:
  *  Ag, AlAs, AlSb, Au, Be, CdS, CdSe, Co, Cr, Cu, Cu2O, CuO, Diamond, 
  *  Diamond_film, GaAs, GaP, Ge, Glass, Graphite, InAs, InP, InSb, Ir, 
  *  K, Li, Mo, Na, Nb, Ni, Os, PbS, PbSe, PbTe, Pd, Pt, Quartz, Rh, Si,
@@ -41,9 +43,9 @@ public:
 
     //! \brief Calculate the spectra.
     /*! This should only be used after the nanoparticle is defined.
-     *  \return retcode Returns 0 if the calculation was sucessful and
-     *                  returns 1 if the nanoparticle may be too large and
-     *                  thus the spectrum may not be trustworthy.
+     *  \return Returns 0 if the calculation was sucessful and
+     *          returns 1 if the nanoparticle may be too large and
+     *          thus the spectrum may not be trustworthy.
      *  \exception std::out_of_range This is thrown if the number of layers is out of range
      *  \exception std::invalid_argument Unknown material or invalid increment
      *  \exception std::domain_error Radii, path length, concentration, or refractive index is negative, 
@@ -60,7 +62,7 @@ public:
     /*! This should only be used after calling 
      *  [calculateSpectrum](\ref calculateSpectrum).
      *
-     *  \param [out] spec The calculated spectrum.
+     *  \param spec The calculated spectrum.
      *
      *  \note
      *  For Python, `spec` is a numpy array that is returned by the function,
@@ -74,9 +76,9 @@ public:
      *
      *  TODO: Calculate the color for absorbtion and transmission differently.
      *
-     * \param [out] r The RED part of the color space, between 0 and 1 (inclusive).
-     * \param [out] g The GREEN part of the color space, between 0 and 1 (inclusive).
-     * \param [out] b The BLUE part of the color space, between 0 and 1 (inclusive).
+     * \param r The RED part of the color space, between 0 and 1 (inclusive).
+     * \param g The GREEN part of the color space, between 0 and 1 (inclusive).
+     * \param b The BLUE part of the color space, between 0 and 1 (inclusive).
      *
      * \note
      * For Python, `r`, `g`, and `b` are returned as a 3-tuple, so this would be called
@@ -90,9 +92,9 @@ public:
      *
      *  TODO: Calculate the color for absorbtion and transmission differently.
      *
-     * \param [out] h The HUE of the color space, between 0 and 360 (inclusive).
-     * \param [out] s The SATURATION part of the color space, between 0 and 1 (inclusive).
-     * \param [out] v The VALUE part of the color space, between 0 and 1 (inclusive). 
+     * \param h The HUE of the color space, between 0 and 360 (inclusive).
+     * \param s The SATURATION part of the color space, between 0 and 1 (inclusive).
+     * \param v The VALUE part of the color space, between 0 and 1 (inclusive). 
      *
      * \note
      * For Python, `h`, `s`, and `v` are returned as a 3-tuple, so this would be called
@@ -266,6 +268,8 @@ public:
 
     //! Sets the current nanoparticle shape.
     /* \param npshape The new shape of the nanoparticle.
+     *
+     *  \warning For an ellipse a max of two layers are allowed.
      *
      * \remark
      * When you change the shape of the nanoparticle, the parameters for

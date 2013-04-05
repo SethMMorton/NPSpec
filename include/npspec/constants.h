@@ -20,8 +20,8 @@ const int MAXLAYERS = 10;
 
 /*! Enum for spectra type. */
 enum SpectraType { Efficiency,   /*!< Calculate the efficiency spectra (unitless). */
-                   CrossSection, /*!< Calculate the CrossSection spectra (in nm^2). */
-                   Molar,        /*!< Calculate the molar absorbtivitty (in L mol^−1 cm^−1). */
+                   CrossSection, /*!< Calculate the CrossSection spectra (in nm\f$^{2}\f$). */
+                   Molar,        /*!< Calculate the molar absorbtivitty (in L mol\f$^{−1}\f$ cm\f$^{−1}\f$). */
                    Absorption    /*!< Calculate the absorption spectra (unitless). */
                  };
 

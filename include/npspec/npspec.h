@@ -24,7 +24,8 @@ const bool true  = 1;
 /*! \endcond */
 #endif
 
-/*! \brief Function to return the index of a material.
+/*! \brief Function to return the index of a material.  Used internally to 
+ *         locate the parameters for each material.
  *
  *  \param material This is the material/element name to find the integer
  *                  index of.
@@ -72,6 +73,8 @@ int material_index(const char *material);
  *  \param [out] absorb This is the absorbance spectra calculated by the given parameters.
  *  \return The error code indicating what went wrong if the
  *          calculation failed.
+ *
+ *  \warning For an ellipse a max of two layers are allowed.
  */
 #ifdef __cplusplus
 NPSpec::ErrorCode npspec (const int nlayers,
