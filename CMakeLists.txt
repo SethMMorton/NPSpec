@@ -60,12 +60,6 @@ IF(DOXYGEN_FOUND)
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/doc
         COMMENT "Generating API documentation with Doxygen" VERBATIM
     )
-    ADD_CUSTOM_TARGET(cleandoc 
-        COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_SOURCE_DIR}/doc/html
-        COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_SOURCE_DIR}/doc/latex
-        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_SOURCE_DIR}/doc/bib/*.aux
-        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_SOURCE_DIR}/doc/bib/cite*
-    )
 ENDIF(DOXYGEN_FOUND)
 
 # Add a distclean target to the Makefile

@@ -44,11 +44,6 @@ FILE(GLOB TOPDIRECTORIES "${TOPDIR}/lib"
                          "${TOPDIR}/dist" 
                          "${TOPDIR}/test"
 )
-FILE(GLOB DOXYGEN "${TOPDIR}/doc/html"
-                  "${TOPDIR}/doc/latex"
-                  "${TOPDIR}/doc/bib/*.aux"
-                  "${TOPDIR}/doc/bib/cite*"
-)
 # CMake has trouble finding directories recursively, so locate these
 # files and then save the parent directory of the files
 GET_PARENT_DIRECTORIES(Makefile.cmake CMAKEFILES 0)
