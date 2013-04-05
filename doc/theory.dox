@@ -1,26 +1,77 @@
 /*!
 \page theory NPSpec Theory
 
-The nanoparticle simulator allows the students to manipulate the size, shape, composition, and solvent environment of
-the nanoparticle in order to explore how several different physical properties affect the nanoparticle color.  
-It was required that the absorption and scattering spectra be calculated very efficiently, so we chose to use
-Mie theory \cite aple_25_377 \cite Bohren_1983_book to simulate spheres, and the quasistatic
+\tableofcontents
+
+\note The following are modifications of Chapters 8 and 9 of the PhD thesis of Seth M. Morton \cite Morton_2012_phdthesis.
+
+\note Note that the subscripts \f$\alpha\f$ and \f$\beta\f$ indicate the general X, Y, or Z cartesian directions.
+
+\note \f$\omega\f$ is the frequency.
+
+NPSpec calculates the spectral properties of the nanoparticle by determining the frequncy-dependent
+polarizability, from which its optical properties can be calculated. The polarizabiliy is calculated using one 
+of two formulas: Mie theory \cite aple_25_377 \cite Bohren_1983_book to simulate spheres, and the quasistatic
 approximation to simulate spheroids. \cite Bohren_1983_book  Mie theory is an analytical solution to Maxwell's
 equations for spheres; Mie theory will not be derived here, but the reader is directed to
-Chapter 4 of Ref. \cite Bohren_1983_book for an in-depth presentation. The Mie theory code used is
+Chapter 4 of Ref. \cite Bohren_1983_book for an in-depth presentation. The Mie theory code used is based on
 `n-mie` which is available for free online. \cite nmie `n-mie` is capable of calculating the
-optical efficiencies for an \f$n\f$-layered sphere, but we limited the simulator to up to a 3 layered core\@shell particle
-for practical reasons.  For a discussion of the quasistatic approximation as it applies to spheroids, see Chapter 5 of
-Ref. \cite Bohren_1983_book or TODO Section \ref{twobodysec:theory} in this dissertation.  **TODO** However, because we take into
-account solvent affects,
-Eq.~\ref{twobodyeq:quasi} must be extended to
+optical efficiencies for an \f$n\f$-layered sphere, but NPSpec limits this to a 10 layered core\@shell particle
+for practical reasons.  
+
+\section quasi Quasistatic Approximation
+
+\image html prolateoblate.png "A prolate (cigar) and oblate (pancake) ellipsoid." width=5cm
+
+The quasistatic approxomation for spheroids is described in detail in Chapter 5 of Ref. \cite Bohren_1983_book, 
+and will be summarized here.  To use the quasistatic approximation, the nanoparticle volume \f$V\f$, dielectric constant
+\f$\epsilon(\omega)\f$, and geometrical factor \f$g_{\alpha,d}\f$ must be known; if these are known, the frequency-dependent 
+polarizability of the nanoparticle in a vacuum is
+\f[
+ \alpha_{\alpha\alpha}(\omega) = V \frac{\epsilon(\omega) - 1 }{ 1 + g_{\alpha,d} (\epsilon(\omega)  - 1)}
+\f]
+where the diagonal polarizability component that is solved for is based on the direction of \f$g_{\alpha,d}\f$. 
+In NPSpec, the shape of the nanoparticle is limited to spheroids because these shapes have analytical forms for 
+\f$g_{\alpha,d}\f$. Spheroids are defined to have one independent axis \f$a\f$ and two dependent axes \f$b\f$ 
+as shown in the figure above; if \f$a\f$ is longer than \f$b\f$, the spheroid is prolate (cigar-shaped), 
+but if \f$a\f$ is shorter than \f$b\f$ it is oblate (pancake-shaped).  If \f$a=b\f$, it is a sphere. The subscript \f$d\f$ in 
+\f$g_{\alpha,d}\f$ indicates the axis component (\f$a\f$ or \f$b\f$) of the spheroid. The volume of the nanoparticle is given by
+\f[
+ V = \frac{4\pi}{3}ab^2 \ .
+\f]
+In the case of a sphere, the geometry factor is\cite Bohren_1983_book
+\f[
+ g_{\alpha,d}^\text{sphere} = \frac{1}{3} \ .
+\f]
+For a prolate spheroid,
+\f{gather}{
+ g_{\alpha,a}^\text{prolate} = \frac{1-e^2}{e^2}\left(-1 + \frac{1}{2e}\ln\frac{1 + e}{1 - e}\right) \\
+ g_{\alpha,b}^\text{prolate} = \frac{1-g_{\alpha,a}^\text{prolate}}{2}
+\f}
+where
+\f[
+ e = 1 - \frac{b^2}{a^2} \ .
+\f]
+For an oblate spheroid,
+\f{gather}{
+ g_{\alpha,b}^\text{oblate} = \frac{h(e)}{2e^2}\left[\frac{\pi}{2} - \tan^{-1}h(e)\right] - \frac{h^2(e)}{2} \\
+ g_{\alpha,a}^\text{oblate} = 1 - 2g_{\alpha,b}^\text{oblate}
+\f}
+where
+\f{gather*}{
+ h(e) = \sqrt{\frac{1 - e^2}{e^2}} \\
+ e^2 = 1 - \frac{a^2}{b^2} \ .
+\f}
+
+The above formula for the polarizability can be extended to calculate a nanoparticle
+in a dielectric medium as
 \f[
  \alpha_{\alpha\alpha}(\omega) = V \frac{\epsilon(\omega) - \epsilon_m }
                                         { \epsilon_m + g_{\alpha,d} (\epsilon(\omega)  - \epsilon_m)}
  \label{seecoseq:quasi}
 \f]
-where \f$\epsilon_m\f$ is the dielectric of the medium (the solvent), **TODO** and all variables are the same as in Chapter
-\ref{chapter:twobody}.  Additionally, because the simulator allows for the calculation of core\@shell nanoparticle, an
+where \f$\epsilon_m\f$ is the dielectric of the medium (the solvent).  Additionally, because NPSpec allows 
+for the calculation of a core\@shell nanoparticle, an
 extended form of the above equation that allows for a two layered particle is necessary and is given by
 \f[
  \alpha_{\alpha\alpha}(\omega) =
@@ -34,10 +85,14 @@ extended form of the above equation that allows for a two layered particle is ne
 \f]
 where \f$a = \epsilon_\text{core}(\omega) - \epsilon_\text{shell}(\omega)\f$, \f$b = g_{\alpha,d}^\text{core} -
 fg_{\alpha,d}^\text{shell}\f$, and \f$f\f$ is the fraction of the total nanoparticle volume of the core.
-The formula for the absorption and scattering efficiencies within the quasistatic approximation are given by
+
+\section spec Spectral Property Calculation
+
+The formula for the absorption, scattering, and extinction efficiencies within the quasistatic approximation are given by
 \f{gather}{
  q^\text{abs}(\omega) = \frac{x}{\pi R^3}\Im\{\bar{\mathbf{\alpha}}\} \\
- q^\text{scat}(\omega) = \frac{x^4}{6\pi^2 R^6}\left|\bar{\mathbf{\alpha}}\right|^2
+ q^\text{scat}(\omega) = \frac{x^4}{6\pi^2 R^6}\left|\bar{\mathbf{\alpha}}\right|^2 \\
+ q^\text{ext}(\omega) = q^\text{abs}(\omega) + q^\text{scat}(\omega)
 \f}
 where \f$x = 2\pi n_mR/\lambda\f$ is the *size parameter*, \f$n_m\f$ is the refractive index of the medium, \f$\lambda\f$ is
 the wavelength of the incident light, \f$R\f$ is the nanoparticle radius, and \f$\Im\{\bar{\mathbf{\alpha}}\}\f$ is the imaginary
@@ -45,9 +100,35 @@ component of the isotropic polarizability. For spheroids, we use the radius of a
 spheroid for \f$R\f$. Because spheroids are calculated within the quasistatic approximation, it is necessary to limit the
 size of the spheroid. By comparing the absorption and scattering efficiencies calculated with Mie theory against those
 calculated with the quasistatic approximation for a sphere, we find that an upper limit for the size parameter of 3 is
-acceptable; this corresponds to an effective \f$R\f$ of about 15 nm.  All dielectric constants are taken from
-the handbook of
-Palik. \cite Palik_1997_book
+acceptable; this corresponds to an effective \f$R\f$ of about 15 nm.  
+
+\section dielectric Dielectric Function
+
+All dielectric constants are taken from the handbook of Palik. \cite Palik_1997_book  They have been pre-splined
+and hard-coded into the NPSpec library for wavelengths from 200-999 nm (inclusive) in increments of 1 nm.  A select
+few materials also have size-correction parameters implemented, which may be useful for nanoparticles with a
+radius < 3 nm.  Briefly, the free electrons in smaller nanoparticles have a longer mean free path than the size
+of the nanoparticle so the electrons scatter off the surface; this causes the spectrum to broaden.  To perform a size
+correction requires knowing the drude function for the free electrons of the nanoparticle material and the fermi
+velocity of the electrons in the nanoparticle material.  The drude function is given by \cite Bohren_1983_book
+\f[
+ \epsilon(\omega)_\text{drude} = \epsilon_{\infty} - \frac{\omega_p^2}{\omega^2+i\gamma\omega} 
+\f]
+where \f$\epsilon_{\infty}\f$ is the dielectric at infinite frequency, \f$\omega_p\f$ is the free electron plasma frequency,
+\f$\gamma\f$ is the free electron excited state decay rate.  The size correction parameter is given by
+\f[
+ s = \frac{v\hbar}{R} 
+\f]
+where \f$v\f$ is the fermi velocity and \f$R\f$ is the nanoparticle radius.  To perform the size correction,
+the uncorrected drude function is subtracted from the experimental dielectric function, and then the size-corrected
+drude function is then added back in:
+\f[
+ \epsilon(\omega)_\text{corrected} = \epsilon(\omega) + \frac{\omega_p^2}{\omega^2+i\gamma\omega}  - \frac{\omega_p^2}{\omega^2+i(\gamma+s)\omega}
+\f]
+The drude functions and fermi velocities were taken from several sources. 
+\cite ao_37_5271 \cite ss_402_475 \cite prb_23_462 \cite drudes
+
+\section color Color Calculation
 
 The colors are predicted from the absorption or scattering efficiency spectrum by
 converting the spectrum into RBG colors values using the International Commission on Illumination (CIE)
