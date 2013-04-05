@@ -7,7 +7,7 @@ A library for calculating the spectral properties of nanoparticles
 NPSpec provides interfaces for four languages: C, C++, Fortran,
 and Python.  Please see the API documentation for more information.
 
-[API Documentation](https://SethMMorton.github.com/NPSpec)
+[API Documentation](http://SethMMorton.github.com/NPSpec)
 
 Authors
 -------
