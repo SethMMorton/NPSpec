@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['getconcentration',['getConcentration',['../class_nanoparticle.html#af2963472a002e6140f838bd8c16de889',1,'Nanoparticle']]],
+  ['getellipsoidlayerxyrelativeradius',['getEllipsoidLayerXYRelativeRadius',['../class_nanoparticle.html#addaab97fda91ca96562dccf47bb8ea63',1,'Nanoparticle']]],
+  ['getellipsoidlayerzrelativeradius',['getEllipsoidLayerZRelativeRadius',['../class_nanoparticle.html#a821609afbc521340fa182374fef125fb',1,'Nanoparticle']]],
+  ['getellipsoidxyradius',['getEllipsoidXYRadius',['../class_nanoparticle.html#aed457f44e6d5203ff8c23dfe0ed6d2a9',1,'Nanoparticle']]],
+  ['getellipsoidzradius',['getEllipsoidZRadius',['../class_nanoparticle.html#af5cd47a10446bc8a7e8a484ba83350f0',1,'Nanoparticle']]],
+  ['gethsv',['getHSV',['../class_nanoparticle.html#ae4c0c5af5dc913aab82ac5eb4e94a105',1,'Nanoparticle']]],
+  ['getincrement',['getIncrement',['../class_nanoparticle.html#af6b90e4926f6460f54beb20bdabd4163',1,'Nanoparticle']]],
+  ['getlayerindex',['getLayerIndex',['../class_nanoparticle.html#a5c7bcc7acb18d5d9a0ddf9bf173cbbcc',1,'Nanoparticle']]],
+  ['getlayermaterial',['getLayerMaterial',['../class_nanoparticle.html#ae913afb53809268f3ee039f2a92d17b0',1,'Nanoparticle']]],
+  ['getmediumrefractiveindex',['getMediumRefractiveIndex',['../class_nanoparticle.html#a53599a192975c81c8137621a556a816c',1,'Nanoparticle']]],
+  ['getnlayers',['getNLayers',['../class_nanoparticle.html#ade470cef3c9a1066cd453a24e6530ae2',1,'Nanoparticle']]],
+  ['getopacity',['getOpacity',['../class_nanoparticle.html#a78766f9ac874911b58ba88baade4ffab',1,'Nanoparticle']]],
+  ['getpathlength',['getPathLength',['../class_nanoparticle.html#a3726730a58a2c74e98cc1898e79786a3',1,'Nanoparticle']]],
+  ['getrgb',['getRGB',['../class_nanoparticle.html#ad41a50fdd11dd46ea995e2559b54ecad',1,'Nanoparticle']]],
+  ['getshape',['getShape',['../class_nanoparticle.html#af52c456be54e344ebca49a4da3f8457b',1,'Nanoparticle']]],
+  ['getsizecorrect',['getSizeCorrect',['../class_nanoparticle.html#a8079e3fa2bc8056eca3a0f5710f397a4',1,'Nanoparticle']]],
+  ['getspectraproperty',['getSpectraProperty',['../class_nanoparticle.html#ada1fc4ed458455a4a9608b16b4331cb0',1,'Nanoparticle']]],
+  ['getspectratype',['getSpectraType',['../class_nanoparticle.html#acacc35e21a86af8a69a77c096fc37296',1,'Nanoparticle']]],
+  ['getspectrum',['getSpectrum',['../class_nanoparticle.html#ae28a6cada968552743766d6df3ba8243',1,'Nanoparticle']]],
+  ['getspherelayerrelativeradius',['getSphereLayerRelativeRadius',['../class_nanoparticle.html#af07aecc98ec5366fbb5c3d49534b24bb',1,'Nanoparticle']]],
+  ['getsphereradius',['getSphereRadius',['../class_nanoparticle.html#aae62675cb46178cb4aa59ee3cb5b62b4',1,'Nanoparticle']]]
+];

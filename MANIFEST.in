@@ -1,8 +1,0 @@
-include README.rst
-include MANIFEST.in
-include *.py
-include include/npspec/*.h
-include include/npspec/private/*.h
-include src/npspec/*.cpp
-include python/npspec/*
-include python/npspec/tests/*
