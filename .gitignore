@@ -24,10 +24,8 @@ build/*
 lib/*
 test/*
 dist/*
-doc/latex/*
-doc/html/*
-doc/*.aux
-doc/cite*
+doc/latex
+doc/html
 
 # Mac OS X Frameworks
 *.framework
