@@ -6,7 +6,7 @@
  * need to wrap the functions */
 %{
 #define SWIG_FILE_WITH_INIT
-#include "npspec/nanoparticle.h"
+#include "npspec/nanoparticle.hpp"
 #include <stdexcept>
 %}
 
@@ -41,7 +41,7 @@
 }
 
 /* Below is a list of what to wrap */
-%include "npspec/nanoparticle.h"
+%include "npspec/nanoparticle.hpp"
 namespace NPSpec {
     %constant const int NLAMBDA = 800;
     %constant const int MAXLAYERS = 10;

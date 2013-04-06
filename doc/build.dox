@@ -1,0 +1,257 @@
+/*! \page buildpage Building, Installing, and Developing with NPSpec
+
+\tableofcontents
+
+The simplest method to build and install NPSpec is the following steps:
+
+    tar -xzf npspec.tar.gz # Or unzip if npspec.zip
+    cd npspec
+    cmake .
+    make
+    make install 
+
+This assumes that you are on a unix machine... substitute `make` with `nmake`
+if you are on Windows.  You will need to have 
+[CMake](http://www.cmake.org/cmake/help/v2.8.10/cmake.html) installed.
+If you want to build the Python library, you will need 
+[numpy](https://pypi.python.org/pypi/numpy) installed.
+
+For more details, see the sections below.
+
+\section configure Configuring NPSpec for building
+
+NPSpec uses [CMake](http://www.cmake.org/cmake/help/v2.8.10/cmake.html) 
+for its configuration system.  CMake is a platform-independent program
+that creates a build system for your project that is appropriate for
+your operating system and setup.  
+
+When you run 
+
+    cmake .
+
+inside the top-level NPSpec directory, your build system will be generated
+using the defaults settings.  You can customize the build using a series
+of options to CMake.  The options are as follows:
+
+- `-DSTATIC=(ON|OFF)`
+
+    This will cause NPSpec to be built as a static library.  This is the default.
+
+        cmake . -DSTATIC=ON
+
+- `-DSHARED=(ON|OFF)`
+
+    This will cause NPSpec to be built as a shared library.
+
+        cmake . -DSHARED=ON
+
+- `-DFRAMEWORK=(ON|OFF)`
+
+    This will cause NPSpec to be built as a Max OS X framework.  Mac only.
+
+        cmake . -DFRAMEWORK=ON
+
+- `-DCMAKE_INSTALL_PREFIX="prefix"`
+
+    This is the installation prefix to use when installing NPSpec.  On unix,
+    the default is `/usr/local`.  I'm not sure what CMake chooses on Windows.
+    You will not be able to change this at install time as is typical with 
+    GNU make; it must be set at configure time.
+
+        cmake . -DCMAKE_INSTALL_PREFIX=/usr
+
+- `-DMAKE_BUILD_TYPE=(RELEASE|DEBUG)`
+
+    This will determine the compiler flags that are used for compilation.
+    If not specified, RELEASE is assumed.
+
+        cmake . -DCMAKE_BUILD_TYPE=DEBUG
+
+If you want to switch from building (for example) a static library to a shared
+library, you must turn one off as you turn the other off:
+
+    cmake . -DSTATIC=OFF -DSHARED=ON
+
+\section build Building NPSpec
+
+On unix, CMake will typically create a
+`make` build system, and on Windows it might create `nmake`, but if
+you are running `mingw` or `cygwin` it will configure the build for that.
+All instructions are written assuming GNU make (i.e. unix); it should be 
+trivial to substitute your command with what is described below.
+
+Once you have run CMake, actually building is quite straightforward: simply
+type "make":
+
+    make
+
+If you are unsatisfied with the colored output and want to see exactly what 
+make is doing, you can request verbose output with
+
+    make VERBOSE=1
+
+If your build tool supports it, you can request a parallel build with the `-j`
+option.  For example, to build with 4 processors, use:
+
+    make -j4
+
+\subsection pythonbuild Building the Python Binding
+
+If you want to build the python binding, you will need to do so in a separate
+step.  In the same directory, you will need to execute the command
+
+    python setup.py build
+
+\note If for some reason you need to edit the SWIG wrapper, you will need to 
+regenerate the npspec.cc file using `python setup.py swig` before you can build.
+
+\section install Installing NPSpec
+
+Installing NPSpec involves simply typing 
+
+    make install
+
+after building.  NPSpec will be installed into the location you specified at
+configure time.  
+
+CMake does not provide an uninstall command, but after installation a file called
+"install_manifest.txt" is created.  You can use this to uninstall NPSpec with
+
+    cat install_manifest.txt | xargs rm -rf
+
+It is recommended that you save this file if you plan on uninstalling in the
+future. 
+
+\note If you are required to enter `sudo` to install the library, the install
+step may fail if you built the library in your home directory.  This is 
+because `sudo` does not have permissions to read your home directory.  It
+is recommended that you build in a directory such as `/tmp` that has access by
+both you and `sudo`.
+
+\subsection pyinstall Installing the Python Binding
+
+This will build the python library for you.  To install the binary you will use
+
+    python setup.py install
+
+`setup.py` also does not provide an uninstall command, but you can uninstall 
+npspec by cutting and pasteing this command into the terminal
+
+    python -c "import npspec, os, shutil; shutil.rmtree(os.path.join(os.path.split(os.path.split(npspec.__file__)[0])[0]))"
+
+\section use Using NPSpec
+
+\subsection usec C Binding
+
+To use the C binding, in your C code add this line at the top of your file:
+
+    #include "npspec/npspec.h"
+
+If you only want to include the NPSpec constants, you only need this line:
+
+    #include "npspec/constants.h"
+
+You don't need to include this with `npspec/npspec.h` because it will be 
+automatically included.
+
+When you compile your program, add `-lNPSpec` to your link flags 
+(and `-L/path/to/npspec` if it's not installed in a default library path.)
+
+\subsection usecpp C++ Binding
+
+To use the C++ binding, in your C++ code add this line at the top of your file:
+
+    #include "npspec/nanoparticle.hpp"
+
+If you only want to include the NPSpec constants, you only need this line:
+
+    #include "npspec/constants.h"
+
+You don't need to include this with `npspec/nanoparticle.hpp` because it will be 
+automatically included.
+
+When you compile your program, add `-lNPSpec` to your link flags 
+(and `-L/path/to/npspec` if it's not installed in a default library path.)
+
+\subsection usefortran Fortran Binding
+
+To use the Fortran binding, in the "use" section of your code add
+
+    use NPSpecModule
+    use, intrinsic :: iso_c_binding
+
+although the capitalization is optional.  The `iso_c_binding` module is built 
+into modern Fortran compilers and provides tools to use C libraries in Fortran 
+(see the [Fortran examples](\ref fortran) for how this can be done.)
+
+Compiling this is a little tricky.  First, you will need to include 
+NPSpecModule.f90 in the source list.  This file is in the include directory 
+with the C headers; you should copy it to your source directory.  For the
+link step, not only will you have to include the NPSpec library as for C and 
+C++ (`-lNPSpec` and `-L/path/to/npspec` if it's not installed in a default library
+path), but also provide the C++ standard library and runtime.  This can be 
+done by linking with your Fortran compiler (gfortran in this example) and including
+the C++ library:
+
+    gfortran ... -lNPSpec -lstdc++
+
+OR by linking with your C++ compiler (g++ in this example) and including the 
+Fortran library:
+
+    g++ ... -lNPSpec -lgfortran
+
+You should find the appropriate library names for your compiler.
+
+\subsection usepython Python Binding
+
+Using the python binding is perhaps the easiest.  In your python code,
+simply `import npspec` and you will be using the library!  (Just make sure
+you are using the python binary that NPSpec was built against.)
+
+\section tests Testing NPSpec
+
+If you are adding functionality to NPSpec or simply want to check that you 
+compiled it correctly, you can run the built in tests.  To do this, you must use
+the following CMake flag at configure time
+
+    cmake . -DTESTING=ON
+
+This will build the testing code.  If you also want to test the Fortran bindings,
+you must use
+
+    cmake . -DTESTING=ON -DFORTRAN=ON
+
+To perform the tests, simply type (after building)
+
+    make test
+
+However, this command limits the output of the tests and only tells if they
+are successful or not.  If you want to see the output of each test, you will
+need to type
+
+    ctest -V .
+
+\section pythontest Testing the Python Binding
+
+To test the python code, simply type (after building)
+
+    python setup.py test
+
+You will need py.test installed to run the python tests.
+
+\section clean Cleaning Up After Yourself
+
+After building, if you want to remove all the build files you can type 
+
+    make clean
+
+If you want to remove ALL files that were generated after running CMake, you can
+type either
+
+    make distclean
+
+or 
+
+    cmake -P distclean.cmake
+
+*/

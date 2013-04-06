@@ -8,6 +8,7 @@ The NPSpec library aids in solving the optical properties of nanoparticles.
 
 - [API Documentation](http://SethMMorton.github.com/NPSpec)
 - [Source code and packages](https://github.com/SethMMorton/NPSpec)
+- [Building, Installing, and Using  NPSpec](\ref buildpage)
 - [NPSpec Theory](\ref theory)
 - [Example program for each language binding](\ref npspecexamples)
 

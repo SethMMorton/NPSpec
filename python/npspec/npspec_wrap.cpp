@@ -3072,7 +3072,7 @@ namespace swig {
 
 
 #define SWIG_FILE_WITH_INIT
-#include "npspec/nanoparticle.h"
+#include "npspec/nanoparticle.hpp"
 #include <stdexcept>
 
 
@@ -3317,6 +3317,41 @@ SWIG_pchar_descriptor(void)
 }
 
 
+SWIGINTERNINLINE PyObject *
+SWIG_FromCharPtrAndSize(const char* carray, size_t size)
+{
+  if (carray) {
+    if (size > INT_MAX) {
+      swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+      return pchar_descriptor ? 
+	SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
+    } else {
+#if PY_VERSION_HEX >= 0x03000000
+      return PyUnicode_FromStringAndSize(carray, static_cast< int >(size));
+#else
+      return PyString_FromStringAndSize(carray, static_cast< int >(size));
+#endif
+    }
+  } else {
+    return SWIG_Py_Void();
+  }
+}
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_std_string  (const std::string& s)
+{
+  return SWIG_FromCharPtrAndSize(s.data(), s.size());
+}
+
+
+SWIGINTERNINLINE PyObject*
+  SWIG_From_bool  (bool value)
+{
+  return PyBool_FromLong(value ? 1 : 0);
+}
+
+
 SWIGINTERN int
 SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
 {
@@ -3432,41 +3467,6 @@ SWIG_AsVal_bool (PyObject *obj, bool *val)
     return SWIG_ERROR;
   if (val) *val = r ? true : false;
   return SWIG_OK;
-}
-
-
-SWIGINTERNINLINE PyObject *
-SWIG_FromCharPtrAndSize(const char* carray, size_t size)
-{
-  if (carray) {
-    if (size > INT_MAX) {
-      swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
-      return pchar_descriptor ? 
-	SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
-    } else {
-#if PY_VERSION_HEX >= 0x03000000
-      return PyUnicode_FromStringAndSize(carray, static_cast< int >(size));
-#else
-      return PyString_FromStringAndSize(carray, static_cast< int >(size));
-#endif
-    }
-  } else {
-    return SWIG_Py_Void();
-  }
-}
-
-
-SWIGINTERNINLINE PyObject *
-SWIG_From_std_string  (const std::string& s)
-{
-  return SWIG_FromCharPtrAndSize(s.data(), s.size());
-}
-
-
-SWIGINTERNINLINE PyObject*
-  SWIG_From_bool  (bool value)
-{
-  return PyBool_FromLong(value ? 1 : 0);
 }
 
 
@@ -3730,6 +3730,646 @@ SWIGINTERN PyObject *_wrap_Nanoparticle_getOpacity(PyObject *SWIGUNUSEDPARM(self
   {
     try {
       result = (double)((Nanoparticle const *)arg1)->getOpacity();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getNLayers(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getNLayers",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getNLayers" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (int)((Nanoparticle const *)arg1)->getNLayers();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getShape(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  NPSpec::NanoparticleShape result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getShape",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getShape" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (NPSpec::NanoparticleShape)((Nanoparticle const *)arg1)->getShape();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getSpectraType(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  NPSpec::SpectraType result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSpectraType",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSpectraType" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (NPSpec::SpectraType)((Nanoparticle const *)arg1)->getSpectraType();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getSpectraProperty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  NPSpec::SpectraProperty result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSpectraProperty",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSpectraProperty" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (NPSpec::SpectraProperty)((Nanoparticle const *)arg1)->getSpectraProperty();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getSphereRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSphereRadius",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSphereRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getSphereRadius();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getEllipsoidZRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getEllipsoidZRadius",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getEllipsoidZRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getEllipsoidZRadius();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getEllipsoidXYRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getEllipsoidXYRadius",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getEllipsoidXYRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getEllipsoidXYRadius();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getSphereLayerRelativeRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSphereLayerRelativeRadius",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSphereLayerRelativeRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getSphereLayerRelativeRadius" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getSphereLayerRelativeRadius(arg2);
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getEllipsoidLayerZRelativeRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getEllipsoidLayerZRelativeRadius",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getEllipsoidLayerZRelativeRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getEllipsoidLayerZRelativeRadius" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getEllipsoidLayerZRelativeRadius(arg2);
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getEllipsoidLayerXYRelativeRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getEllipsoidLayerXYRelativeRadius",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getEllipsoidLayerXYRelativeRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getEllipsoidLayerXYRelativeRadius" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getEllipsoidLayerXYRelativeRadius(arg2);
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getLayerMaterial(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  std::string result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getLayerMaterial",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getLayerMaterial" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getLayerMaterial" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = ((Nanoparticle const *)arg1)->getLayerMaterial(arg2);
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getLayerIndex(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  int result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getLayerIndex",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getLayerIndex" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getLayerIndex" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (int)((Nanoparticle const *)arg1)->getLayerIndex(arg2);
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getIncrement(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getIncrement",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getIncrement" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (int)((Nanoparticle const *)arg1)->getIncrement();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getPathLength(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getPathLength",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getPathLength" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getPathLength();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getConcentration(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getConcentration",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getConcentration" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getConcentration();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getSizeCorrect(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSizeCorrect",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSizeCorrect" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (bool)((Nanoparticle const *)arg1)->getSizeCorrect();
+    } catch (std::out_of_range& e) {
+      PyErr_SetString(PyExc_IndexError, e.what());
+      return NULL;
+    } catch (std::domain_error& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    } catch (std::invalid_argument& e) {
+      PyErr_SetString(PyExc_ValueError, e.what());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Nanoparticle_getMediumRefractiveIndex(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getMediumRefractiveIndex",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getMediumRefractiveIndex" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
+  }
+  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
+  {
+    try {
+      result = (double)((Nanoparticle const *)arg1)->getMediumRefractiveIndex();
     } catch (std::out_of_range& e) {
       PyErr_SetString(PyExc_IndexError, e.what());
       return NULL;
@@ -4397,646 +5037,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Nanoparticle_getNLayers(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  int result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getNLayers",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getNLayers" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (int)((Nanoparticle const *)arg1)->getNLayers();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getShape(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  NPSpec::NanoparticleShape result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getShape",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getShape" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (NPSpec::NanoparticleShape)((Nanoparticle const *)arg1)->getShape();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getSpectraType(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  NPSpec::SpectraType result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSpectraType",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSpectraType" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (NPSpec::SpectraType)((Nanoparticle const *)arg1)->getSpectraType();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getSpectraProperty(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  NPSpec::SpectraProperty result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSpectraProperty",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSpectraProperty" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (NPSpec::SpectraProperty)((Nanoparticle const *)arg1)->getSpectraProperty();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getSphereRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSphereRadius",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSphereRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getSphereRadius();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getEllipsoidZRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getEllipsoidZRadius",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getEllipsoidZRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getEllipsoidZRadius();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getEllipsoidXYRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getEllipsoidXYRadius",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getEllipsoidXYRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getEllipsoidXYRadius();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getSphereLayerRelativeRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSphereLayerRelativeRadius",2,2,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSphereLayerRelativeRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getSphereLayerRelativeRadius" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getSphereLayerRelativeRadius(arg2);
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getEllipsoidLayerZRelativeRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getEllipsoidLayerZRelativeRadius",2,2,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getEllipsoidLayerZRelativeRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getEllipsoidLayerZRelativeRadius" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getEllipsoidLayerZRelativeRadius(arg2);
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getEllipsoidLayerXYRelativeRadius(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getEllipsoidLayerXYRelativeRadius",2,2,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getEllipsoidLayerXYRelativeRadius" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getEllipsoidLayerXYRelativeRadius" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getEllipsoidLayerXYRelativeRadius(arg2);
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getLayerMaterial(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  std::string result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getLayerMaterial",2,2,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getLayerMaterial" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getLayerMaterial" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  {
-    try {
-      result = ((Nanoparticle const *)arg1)->getLayerMaterial(arg2);
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getLayerIndex(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  int result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getLayerIndex",2,2,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getLayerIndex" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Nanoparticle_getLayerIndex" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  {
-    try {
-      result = (int)((Nanoparticle const *)arg1)->getLayerIndex(arg2);
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getIncrement(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  int result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getIncrement",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getIncrement" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (int)((Nanoparticle const *)arg1)->getIncrement();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getPathLength(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getPathLength",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getPathLength" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getPathLength();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getConcentration(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getConcentration",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getConcentration" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getConcentration();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getSizeCorrect(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  bool result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getSizeCorrect",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getSizeCorrect" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (bool)((Nanoparticle const *)arg1)->getSizeCorrect();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_bool(static_cast< bool >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Nanoparticle_getMediumRefractiveIndex(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Nanoparticle *arg1 = (Nanoparticle *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Nanoparticle_getMediumRefractiveIndex",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Nanoparticle, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Nanoparticle_getMediumRefractiveIndex" "', argument " "1"" of type '" "Nanoparticle const *""'"); 
-  }
-  arg1 = reinterpret_cast< Nanoparticle * >(argp1);
-  {
-    try {
-      result = (double)((Nanoparticle const *)arg1)->getMediumRefractiveIndex();
-    } catch (std::out_of_range& e) {
-      PyErr_SetString(PyExc_IndexError, e.what());
-      return NULL;
-    } catch (std::domain_error& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    } catch (std::invalid_argument& e) {
-      PyErr_SetString(PyExc_ValueError, e.what());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap_delete_Nanoparticle(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Nanoparticle *arg1 = (Nanoparticle *) 0 ;
@@ -5123,20 +5123,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Nanoparticle_getRGB", _wrap_Nanoparticle_getRGB, METH_VARARGS, NULL},
 	 { (char *)"Nanoparticle_getHSV", _wrap_Nanoparticle_getHSV, METH_VARARGS, NULL},
 	 { (char *)"Nanoparticle_getOpacity", _wrap_Nanoparticle_getOpacity, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setNLayers", _wrap_Nanoparticle_setNLayers, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setShape", _wrap_Nanoparticle_setShape, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setSpectraType", _wrap_Nanoparticle_setSpectraType, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setSpectraProperty", _wrap_Nanoparticle_setSpectraProperty, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setSphereRadius", _wrap_Nanoparticle_setSphereRadius, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setEllipsoidRadius", _wrap_Nanoparticle_setEllipsoidRadius, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setSphereLayerRelativeRadius", _wrap_Nanoparticle_setSphereLayerRelativeRadius, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setEllipsoidLayerRelativeRadius", _wrap_Nanoparticle_setEllipsoidLayerRelativeRadius, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setLayerMaterial", _wrap_Nanoparticle_setLayerMaterial, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setIncrement", _wrap_Nanoparticle_setIncrement, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setPathLength", _wrap_Nanoparticle_setPathLength, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setConcentration", _wrap_Nanoparticle_setConcentration, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setSizeCorrect", _wrap_Nanoparticle_setSizeCorrect, METH_VARARGS, NULL},
-	 { (char *)"Nanoparticle_setMediumRefractiveIndex", _wrap_Nanoparticle_setMediumRefractiveIndex, METH_VARARGS, NULL},
 	 { (char *)"Nanoparticle_getNLayers", _wrap_Nanoparticle_getNLayers, METH_VARARGS, NULL},
 	 { (char *)"Nanoparticle_getShape", _wrap_Nanoparticle_getShape, METH_VARARGS, NULL},
 	 { (char *)"Nanoparticle_getSpectraType", _wrap_Nanoparticle_getSpectraType, METH_VARARGS, NULL},
@@ -5154,6 +5140,20 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Nanoparticle_getConcentration", _wrap_Nanoparticle_getConcentration, METH_VARARGS, NULL},
 	 { (char *)"Nanoparticle_getSizeCorrect", _wrap_Nanoparticle_getSizeCorrect, METH_VARARGS, NULL},
 	 { (char *)"Nanoparticle_getMediumRefractiveIndex", _wrap_Nanoparticle_getMediumRefractiveIndex, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setNLayers", _wrap_Nanoparticle_setNLayers, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setShape", _wrap_Nanoparticle_setShape, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setSpectraType", _wrap_Nanoparticle_setSpectraType, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setSpectraProperty", _wrap_Nanoparticle_setSpectraProperty, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setSphereRadius", _wrap_Nanoparticle_setSphereRadius, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setEllipsoidRadius", _wrap_Nanoparticle_setEllipsoidRadius, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setSphereLayerRelativeRadius", _wrap_Nanoparticle_setSphereLayerRelativeRadius, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setEllipsoidLayerRelativeRadius", _wrap_Nanoparticle_setEllipsoidLayerRelativeRadius, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setLayerMaterial", _wrap_Nanoparticle_setLayerMaterial, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setIncrement", _wrap_Nanoparticle_setIncrement, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setPathLength", _wrap_Nanoparticle_setPathLength, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setConcentration", _wrap_Nanoparticle_setConcentration, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setSizeCorrect", _wrap_Nanoparticle_setSizeCorrect, METH_VARARGS, NULL},
+	 { (char *)"Nanoparticle_setMediumRefractiveIndex", _wrap_Nanoparticle_setMediumRefractiveIndex, METH_VARARGS, NULL},
 	 { (char *)"delete_Nanoparticle", _wrap_delete_Nanoparticle, METH_VARARGS, NULL},
 	 { (char *)"Nanoparticle_swigregister", Nanoparticle_swigregister, METH_VARARGS, NULL},
 	 { (char *)"_get_wavelengths", _wrap__get_wavelengths, METH_VARARGS, NULL},
